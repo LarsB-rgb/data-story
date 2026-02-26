@@ -1,0 +1,3795 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGNAL — Samsung Intelligence Briefing</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07090d;
+  --ink: #f0ede8;
+  --ink-dim: rgba(240,237,232,0.75);
+  --ink-faint: rgba(240,237,232,0.55);
+  --ink-ghost: rgba(240,237,232,0.09);
+  --accent: #e8f4f0;
+  --cyan: #4af0c8;
+  --red: #ff4d5a;
+  --amber: #f5c842;
+  --border: rgba(240,237,232,0.1);
+  --border-soft: rgba(240,237,232,0.18);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* ── GRAIN ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ── PROGRESS STRIP ── */
+#progress-strip {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--border);
+  z-index: 1000;
+}
+#progress-fill {
+  height: 100%;
+  background: var(--cyan);
+  width: 0%;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 12px var(--cyan);
+}
+
+/* ── CHAPTER DOTS ── */
+#chapter-dots {
+  position: fixed;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 500;
+}
+
+.ch-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.ch-dot:hover, .ch-dot.active {
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  transform: scale(1.3);
+}
+
+.ch-dot .dot-label {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-dim);
+  letter-spacing: 1px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.ch-dot:hover .dot-label { opacity: 1; }
+
+/* ── MINI NAV ── */
+#mini-nav {
+  position: fixed;
+  top: 20px;
+  left: 32px;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-mark {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 5px;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+}
+
+.briefing-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  border-radius: 1px;
+}
+
+/* ── SECTIONS ── */
+.scene {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 80px 0;
+}
+
+.scene-inner {
+  width: 100%;
+  max-width: 1100px;
+  padding: 0 80px;
+  position: relative;
+}
+
+/* ── OPENING TITLE SCENE ── */
+#scene-opening {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 10vw;
+  position: relative;
+  overflow: hidden;
+}
+
+.opening-bg-text {
+  position: absolute;
+  right: -2%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(120px, 20vw, 260px);
+  color: rgba(255,255,255,0.025);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -8px;
+}
+
+.opening-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: revealUp 0.8s 0.3s ease forwards;
+}
+
+.opening-headline {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(48px, 7vw, 96px);
+  line-height: 1.05;
+  letter-spacing: -2px;
+  color: var(--ink);
+  margin-bottom: 32px;
+  max-width: 700px;
+  opacity: 0;
+  animation: revealUp 0.9s 0.5s ease forwards;
+}
+
+.opening-headline em {
+  font-style: italic;
+  color: var(--ink-dim);
+}
+
+.opening-sub {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--ink-dim);
+  max-width: 480px;
+  margin-bottom: 56px;
+  font-weight: 300;
+  opacity: 0;
+  animation: revealUp 0.8s 0.7s ease forwards;
+}
+
+.opening-meta {
+  display: flex;
+  gap: 40px;
+  opacity: 0;
+  animation: revealUp 0.8s 0.9s ease forwards;
+}
+
+.meta-block {}
+.meta-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.meta-val.neg { color: var(--red); }
+.meta-val.pos { color: var(--cyan); }
+.meta-val.warn { color: var(--amber); }
+.meta-label {
+  font-size: 10px;
+  color: var(--ink-faint);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 40px;
+  left: 10vw;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--ink-faint);
+  opacity: 0;
+  animation: revealUp 0.8s 1.4s ease forwards;
+}
+
+.scroll-line {
+  width: 40px;
+  height: 1px;
+  background: var(--ink-faint);
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll-line::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: var(--cyan);
+  animation: scrollPulse 2s 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* ── FINDING SCENE ── */
+.insight-scene {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  position: relative;
+  border-top: 1px solid var(--border);
+}
+
+.insight-top {
+  padding: 80px 10vw 60px;
+  position: relative;
+}
+
+.insight-top::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 10vw; right: 10vw;
+  height: 1px;
+  background: var(--border);
+}
+
+.priority-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.priority-rank {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--cyan);
+  border: 1px solid rgba(74,240,200,0.3);
+  padding: 2px 7px;
+  border-radius: 1px;
+  letter-spacing: 1px;
+}
+
+.insight-type-tag {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.insight-headline {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 5vw, 64px);
+  line-height: 1.08;
+  letter-spacing: -1.5px;
+  color: var(--ink);
+  max-width: 760px;
+  margin-bottom: 24px;
+}
+
+.insight-headline em {
+  font-style: italic;
+  color: var(--ink-dim);
+}
+
+.insight-thesis {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--ink-dim);
+  max-width: 580px;
+  font-weight: 300;
+}
+
+/* ── FINDING BODY ── */
+.insight-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 50vh;
+}
+
+.insight-evidence {
+  padding: 52px 10vw 52px 10vw;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+
+.insight-sowhat {
+  padding: 52px 7vw 52px 6vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Evidence label */
+.ev-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ev-label::after {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--border-soft);
+}
+
+/* So what */
+.sw-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.sw-text {
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--ink-dim);
+  font-weight: 300;
+  flex: 1;
+  margin-bottom: 32px;
+}
+
+.sw-text strong { color: var(--ink); font-weight: 500; }
+
+/* Connections */
+.connections {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.conn-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.conn-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.conn-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--ink-dim);
+  background: rgba(240,237,232,0.05);
+  border: 1px solid var(--border-soft);
+  padding: 8px 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.conn-pill::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--cyan);
+  opacity: 0.5;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+}
+
+.conn-pill:hover {
+  color: var(--cyan);
+  border-color: rgba(74,240,200,0.5);
+  background: rgba(74,240,200,0.06);
+}
+
+.conn-pill:hover::before { opacity: 1; }
+
+/* ── DATA VIZ COMPONENTS ── */
+
+/* Comparison numbers */
+.compare-nums {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  margin-bottom: 32px;
+}
+
+.c-num-block { }
+
+.c-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(40px, 5vw, 68px);
+  line-height: 1;
+  letter-spacing: -2px;
+  margin-bottom: 6px;
+}
+
+.c-num.dim { color: var(--ink-dim); }
+.c-num.danger { color: var(--red); }
+.c-num.good { color: var(--cyan); }
+.c-num.warn { color: var(--amber); }
+
+.c-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.c-desc {
+  font-size: 11px;
+  color: var(--ink-faint);
+  max-width: 140px;
+  line-height: 1.5;
+}
+
+.c-divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--border);
+  margin: 8px 0;
+}
+
+/* Horizontal bars — minimal */
+.h-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.h-bar-item {}
+
+.h-bar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 7px;
+}
+
+.h-bar-name {
+  font-size: 11px;
+  color: var(--ink-dim);
+  letter-spacing: 0.5px;
+}
+
+.h-bar-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink);
+}
+
+.h-bar-track {
+  height: 3px;
+  background: var(--ink-ghost);
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+}
+
+.h-bar-fill {
+  height: 100%;
+  border-radius: 1px;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.h-bar-fill.cyan { background: var(--cyan); }
+.h-bar-fill.white { background: rgba(240,237,232,0.5); }
+.h-bar-fill.red { background: var(--red); }
+.h-bar-fill.amber { background: var(--amber); }
+.h-bar-fill.ghost { background: var(--ink-faint); }
+
+.h-bar-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+
+/* ── EXPAND OVERLAY ── */
+#expand-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7,9,13,0.97);
+  z-index: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+#expand-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+#expand-inner {
+  max-width: 900px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 60px;
+  border: 1px solid var(--border-soft);
+  position: relative;
+  background: rgba(10,13,18,0.99);
+}
+
+#expand-inner::-webkit-scrollbar { width: 3px; }
+#expand-inner::-webkit-scrollbar-thumb { background: var(--border-soft); }
+
+#expand-close {
+  position: absolute;
+  top: 24px; right: 24px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+}
+
+#expand-close:hover { color: var(--ink); }
+
+#expand-content {}
+
+.expand-headline {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.expand-sub {
+  font-size: 13px;
+  color: var(--ink-faint);
+  margin-bottom: 36px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 1px;
+}
+
+/* Full table in expand */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 32px;
+}
+
+.data-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  text-align: left;
+  padding: 8px 16px 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-weight: 400;
+}
+
+.data-table td {
+  font-size: 13px;
+  padding: 12px 16px 12px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink-dim);
+  vertical-align: top;
+}
+
+.data-table td.highlight { color: var(--ink); font-weight: 500; }
+.data-table td.good { color: var(--cyan); font-family: 'DM Mono', monospace; }
+.data-table td.bad { color: var(--red); font-family: 'DM Mono', monospace; }
+.data-table td.warn { color: var(--amber); font-family: 'DM Mono', monospace; }
+
+.expand-insight {
+  padding: 20px 24px;
+  border-left: 2px solid var(--cyan);
+  background: rgba(74,240,200,0.03);
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--ink-dim);
+  margin-top: 24px;
+}
+
+.expand-insight strong { color: var(--ink); }
+
+/* ── SEGMENT VIZ ── */
+.segment-map {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.seg-row {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.seg-row:hover { background: var(--ink-ghost); margin: 0 -12px; padding: 12px 12px; border-radius: 2px; }
+
+.seg-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.seg-sub {
+  font-size: 10px;
+  color: var(--ink-faint);
+  margin-top: 2px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.5px;
+}
+
+.seg-bar-wrap {
+  position: relative;
+}
+
+.seg-dual {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.seg-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.seg-brand-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.seg-bar-mini {
+  height: 3px;
+  border-radius: 1px;
+  background: var(--ink-ghost);
+  flex: 1;
+  overflow: hidden;
+}
+
+.seg-bar-fill {
+  height: 100%;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1s ease;
+}
+
+.seg-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  text-align: right;
+}
+
+.seg-risk {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  padding: 3px 6px;
+  border-radius: 1px;
+}
+
+.risk-h { color: var(--red); border: 1px solid rgba(255,77,90,0.3); }
+.risk-m { color: var(--amber); border: 1px solid rgba(245,200,66,0.3); }
+.risk-l { color: var(--cyan); border: 1px solid rgba(74,240,200,0.3); }
+
+/* ── CONTRADICTION ── */
+.contra-pair {
+  margin-bottom: 28px;
+  cursor: pointer;
+}
+
+.contra-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2.5px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.contra-body {
+  display: grid;
+  grid-template-columns: 1fr 28px 1fr;
+  align-items: center;
+  gap: 0;
+}
+
+.contra-cell {
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+  border: 1px solid var(--border);
+}
+
+.contra-cell.assumed { border-radius: 2px 0 0 2px; border-right: none; }
+.contra-cell.reality {
+  border-radius: 0 2px 2px 0;
+  border-left: none;
+  border-color: rgba(255,77,90,0.3);
+  background: rgba(255,77,90,0.04);
+  color: var(--red);
+}
+
+.contra-arrow-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--red);
+  background: rgba(255,77,90,0.06);
+}
+
+.contra-pair:hover .contra-cell { border-color: var(--border-soft); }
+
+/* ── TENSION ── */
+.tension-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.t-side {
+  padding: 20px;
+  background: var(--bg);
+}
+
+.t-side.right { background: rgba(255,77,90,0.04); }
+
+.t-role {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.t-brand {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.t-side.left .t-brand { color: var(--cyan); }
+.t-side.right .t-brand { color: var(--red); }
+
+.t-desc {
+  font-size: 12px;
+  color: var(--ink-faint);
+  line-height: 1.6;
+}
+
+/* ── FUNNEL ── */
+.funnel-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.f-step {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: all 0.5s ease;
+}
+
+.f-step.in { opacity: 1; transform: translateX(0); }
+
+.f-step-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-faint);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: right;
+}
+
+.f-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.f-bar-bg {
+  height: 24px;
+  background: var(--ink-ghost);
+  border-radius: 1px;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.f-bar-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  white-space: nowrap;
+}
+
+.f-bar-inner.samsung-f { background: rgba(74,240,200,0.2); color: var(--cyan); }
+.f-bar-inner.apple-f { background: rgba(240,237,232,0.12); color: var(--ink-dim); }
+
+/* ── OPPORTUNITY SCATTER ── */
+.opp-scatter {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.4;
+  max-height: 340px;
+}
+
+.opp-canvas {
+  position: absolute;
+  inset: 24px 0 32px 32px;
+  border-left: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.opp-x-label {
+  position: absolute;
+  bottom: 8px;
+  right: 0;
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.opp-y-label {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.opp-node {
+  position: absolute;
+  transform: translate(-50%, 50%);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: nodeIn 0.6s ease backwards;
+}
+
+@keyframes nodeIn {
+  from { transform: translate(-50%, 50%) scale(0); opacity: 0; }
+  to { transform: translate(-50%, 50%) scale(1); opacity: 1; }
+}
+
+.opp-node:hover { filter: brightness(1.4); transform: translate(-50%, 50%) scale(1.1); }
+
+.opp-node-label {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: var(--ink-dim);
+  white-space: nowrap;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* ── MEDIA VIZ ── */
+.media-allocation {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.ma-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 44px;
+  align-items: center;
+  gap: 12px;
+}
+
+.ma-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--ink-faint);
+  text-align: right;
+}
+
+.ma-track {
+  height: 28px;
+  background: var(--ink-ghost);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.ma-fill {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1s cubic-bezier(0.16,1,0.3,1);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.ma-fill.tv {
+  background: linear-gradient(90deg, rgba(255,77,90,0.5), rgba(255,77,90,0.15));
+  color: var(--red);
+}
+.ma-fill.digital {
+  background: linear-gradient(90deg, rgba(74,240,200,0.3), rgba(74,240,200,0.08));
+  color: var(--cyan);
+}
+.ma-fill.ooh {
+  background: linear-gradient(90deg, rgba(245,200,66,0.25), rgba(245,200,66,0.06));
+  color: var(--amber);
+}
+.ma-fill.print {
+  background: rgba(240,237,232,0.06);
+  color: var(--ink-faint);
+}
+
+.ma-pct {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-dim);
+  text-align: right;
+}
+
+/* ── GENZ SPLIT ── */
+.genz-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.gz-side {
+  padding: 28px 24px;
+  background: var(--bg);
+  text-align: center;
+}
+
+.gz-side.apple-gz { background: rgba(240,237,232,0.02); }
+.gz-side.samsung-gz { background: rgba(74,240,200,0.03); }
+
+.gz-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -2px;
+  margin-bottom: 8px;
+}
+
+.gz-side.apple-gz .gz-num { color: var(--ink-dim); }
+.gz-side.samsung-gz .gz-num { color: var(--cyan); }
+
+.gz-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.gz-desc {
+  font-size: 11px;
+  color: var(--ink-faint);
+  line-height: 1.5;
+}
+
+/* ── EXPAND TRIGGER ── */
+.expand-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 8px 0;
+  margin-top: 12px;
+  transition: color 0.2s;
+  border-bottom: 1px solid var(--border);
+}
+
+.expand-trigger:hover { color: var(--cyan); border-color: rgba(74,240,200,0.4); }
+
+.expand-trigger::after {
+  content: '→';
+  font-size: 11px;
+}
+
+/* ── CLOSING SCENE ── */
+#scene-closing {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 80px 10vw;
+  border-top: 1px solid var(--border);
+}
+
+.closing-headline {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 4vw, 52px);
+  letter-spacing: -1px;
+  color: var(--ink);
+  max-width: 600px;
+  margin-bottom: 20px;
+  line-height: 1.1;
+}
+
+.closing-sub {
+  font-size: 14px;
+  color: rgba(240,237,232,0.6);
+  max-width: 440px;
+  line-height: 1.8;
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+.closing-three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  max-width: 680px;
+  width: 100%;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.c3-cell {
+  padding: 24px 22px;
+  background: rgba(240,237,232,0.03);
+}
+
+.c3-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: rgba(240,237,232,0.5);
+  margin-bottom: 8px;
+}
+
+.c3-fact {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.c3-desc {
+  font-size: 12px;
+  color: rgba(240,237,232,0.65);
+  line-height: 1.6;
+}
+
+
+/* ── OPPORTUNITY LANDSCAPE ── */
+#scene-opportunity {
+  min-height: 100vh;
+  border-top: 1px solid var(--border);
+}
+
+.opp-top {
+  padding: 80px 10vw 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+.opp-body {
+  padding: 52px 10vw 60px;
+  position: relative;
+}
+
+.opp-scatter-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  height: 400px;
+  margin-top: 8px;
+}
+
+.opp-axis-x {
+  position: absolute;
+  bottom: 32px; left: 48px; right: 0;
+  height: 1px;
+  background: var(--border-soft);
+}
+
+.opp-axis-y {
+  position: absolute;
+  left: 48px; top: 0; bottom: 32px;
+  width: 1px;
+  background: var(--border-soft);
+}
+
+.opp-axis-label-x {
+  position: absolute;
+  bottom: 8px; right: 0;
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 2px;
+  color: var(--ink-faint); text-transform: uppercase;
+}
+
+.opp-axis-label-y {
+  position: absolute;
+  top: 0; left: 0;
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 2px;
+  color: var(--ink-faint); text-transform: uppercase;
+  writing-mode: vertical-rl; transform: rotate(180deg);
+}
+
+.opp-bubble-wrap {
+  position: absolute;
+  transform: translate(-50%, 50%);
+  cursor: pointer;
+  z-index: 10;
+}
+
+.opp-bubble-circle {
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.25s;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.opp-bubble-wrap:hover .opp-bubble-circle {
+  transform: scale(1.14);
+  filter: brightness(1.4);
+  box-shadow: 0 0 24px rgba(255,255,255,0.15);
+}
+
+.opp-bubble-inner {
+  font-size: 9px; font-weight: 700;
+  text-align: center; line-height: 1.2; padding: 6px;
+  color: rgba(255,255,255,0.92);
+  pointer-events: none;
+}
+
+.opp-bubble-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px); left: 50%;
+  transform: translateX(-50%);
+  background: rgba(8,9,13,0.97);
+  border: 1px solid var(--border-soft);
+  padding: 8px 12px; border-radius: 2px;
+  white-space: nowrap;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 1px;
+  color: var(--ink-dim);
+  opacity: 0; transition: opacity 0.2s;
+  pointer-events: none; z-index: 20;
+}
+
+.opp-bubble-wrap:hover .opp-bubble-tooltip { opacity: 1; }
+
+.opp-quadrant-label {
+  position: absolute;
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(240,237,232,0.07);
+  pointer-events: none;
+  user-select: none;
+}
+
+.opp-legend {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  margin-top: 36px;
+}
+
+.opp-legend-item {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; color: var(--ink-faint); letter-spacing: 1px;
+}
+
+.opp-legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%; flex-shrink: 0;
+}
+
+
+/* ── SIMULATOR OUTPUT ── */
+.sim-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(240,237,232,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.sim-kpi-cell {
+  padding: 24px 22px;
+  background: var(--bg);
+}
+
+.sim-kpi-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.sim-kpi-baseline {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: rgba(240,237,232,0.2);
+  margin-bottom: 6px;
+  text-decoration: line-through;
+  text-decoration-color: rgba(240,237,232,0.15);
+}
+
+.sim-kpi-val {
+  font-family: 'DM Serif Display', serif;
+  font-size: 38px;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.sim-kpi-val.pos { color: var(--ink); }
+.sim-kpi-val.neg { color: var(--red); }
+.sim-kpi-val.neutral { color: var(--ink); }
+
+.sim-kpi-delta {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+}
+
+.sim-kpi-delta.up {
+  color: var(--cyan);
+  background: rgba(74,240,200,0.08);
+  border: 1px solid rgba(74,240,200,0.2);
+}
+
+.sim-kpi-delta.down {
+  color: var(--red);
+  background: rgba(255,77,90,0.08);
+  border: 1px solid rgba(255,77,90,0.2);
+}
+
+.sim-segment-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(240,237,232,0.08);
+}
+
+.sim-segment-bars {
+  margin-bottom: 8px;
+}
+
+.sim-seg-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 80px;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(240,237,232,0.05);
+}
+
+.sim-seg-row:last-child { border-bottom: none; }
+
+.sim-seg-name {
+  font-size: 11px;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+
+.sim-seg-bar-wrap {
+  position: relative;
+  height: 8px;
+}
+
+.sim-seg-bar-bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(240,237,232,0.05);
+  border-radius: 4px;
+}
+
+.sim-seg-bar-baseline {
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  background: rgba(240,237,232,0.15);
+  border-radius: 4px;
+}
+
+.sim-seg-bar-fill {
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  border-radius: 4px;
+  opacity: 0.8;
+  transition: width 0.9s cubic-bezier(0.16,1,0.3,1);
+}
+
+.sim-seg-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  line-height: 1.2;
+}
+
+.sim-seg-val-main { color: var(--ink); font-weight: 500; }
+.sim-seg-val-delta { font-size: 9px; }
+.sim-seg-val-delta.pos { color: var(--cyan); }
+.sim-seg-val-delta.neg { color: var(--red); }
+
+
+/* ── SIMULATOR PRESETS ── */
+.sim-presets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.sim-preset-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 14px;
+  background: rgba(240,237,232,0.03);
+  border: 1px solid rgba(240,237,232,0.1);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  color: var(--ink-dim);
+}
+
+.sim-preset-card:hover {
+  background: rgba(74,240,200,0.06);
+  border-color: rgba(74,240,200,0.3);
+  color: var(--ink);
+}
+
+.sim-preset-card:hover .sim-preset-icon { color: var(--cyan); }
+
+.sim-preset-reset { border-style: dashed; }
+.sim-preset-reset:hover { background: rgba(240,237,232,0.04); border-color: rgba(240,237,232,0.25); }
+.sim-preset-reset:hover .sim-preset-icon { color: var(--ink-faint); }
+
+.sim-preset-icon {
+  font-size: 14px;
+  color: var(--ink-faint);
+  transition: color 0.2s;
+  margin-bottom: 2px;
+}
+
+.sim-preset-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.sim-preset-desc {
+  font-size: 10px;
+  color: var(--ink-faint);
+  line-height: 1.3;
+  font-weight: 300;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.35s; }
+.reveal-delay-4 { transition-delay: 0.5s; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 1px; }
+
+/* ── MARKETING ACTIONS ── */
+.marketing-actions {
+  margin-top: 24px;
+}
+
+.ma-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(74,240,200,0.07);
+  border: 1px solid rgba(74,240,200,0.35);
+  color: var(--cyan);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 13px 18px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.25s;
+  width: 100%;
+  text-align: left;
+}
+
+.ma-trigger:hover {
+  background: rgba(74,240,200,0.13);
+  border-color: rgba(74,240,200,0.6);
+  box-shadow: 0 0 20px rgba(74,240,200,0.1);
+}
+
+.ma-trigger .ma-spark {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(74,240,200,0.5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  transition: all 0.3s;
+  background: rgba(74,240,200,0.1);
+}
+
+.ma-trigger.loading .ma-spark {
+  animation: spin 1s linear infinite;
+  border-color: var(--cyan);
+  border-right-color: transparent;
+  color: transparent;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ma-trigger .ma-label { flex: 1; font-weight: 500; }
+.ma-trigger .ma-arrow { margin-left: auto; font-size: 14px; transition: transform 0.2s; opacity: 0.6; }
+.ma-trigger.open .ma-arrow { transform: rotate(90deg); }
+.ma-trigger:disabled { opacity: 0.6; cursor: wait; }
+
+.ma-results {
+  display: none;
+  margin-top: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+.ma-results.visible { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.ma-category {
+  margin-bottom: 16px;
+}
+
+.ma-cat-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ma-cat-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ma-cat-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.ma-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 13px;
+  border-left: 1px solid var(--border);
+}
+
+.ma-action-card {
+  padding: 10px 12px;
+  background: var(--ink-ghost);
+  border-radius: 2px;
+  border: 1px solid var(--border);
+  transition: border-color 0.2s;
+  cursor: default;
+}
+
+.ma-action-card:hover { border-color: var(--border-soft); }
+
+.ma-action-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.ma-action-desc {
+  font-size: 11px;
+  color: var(--ink-faint);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.ma-action-meta {
+  display: flex;
+  gap: 8px;
+}
+
+.ma-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border-radius: 1px;
+  border: 1px solid;
+}
+
+.ma-badge.impact-h { color: var(--cyan); border-color: rgba(74,240,200,0.3); }
+.ma-badge.impact-m { color: var(--amber); border-color: rgba(245,200,66,0.3); }
+.ma-badge.effort-h { color: var(--red); border-color: rgba(255,77,90,0.3); }
+.ma-badge.effort-m { color: var(--ink-faint); border-color: var(--border); }
+.ma-badge.effort-l { color: var(--cyan); border-color: rgba(74,240,200,0.3); }
+
+.ma-error {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--red);
+  padding: 12px;
+  border: 1px solid rgba(255,77,90,0.2);
+  border-radius: 2px;
+  background: rgba(255,77,90,0.04);
+}
+
+/* Category dot colors */
+.dot-pricing { background: #f5c842; }
+.dot-promotion { background: #4af0c8; }
+.dot-channel { background: #a78bfa; }
+.dot-distribution { background: #fb923c; }
+.dot-product { background: #34d399; }
+.dot-retail { background: #f472b6; }
+
+</style>
+</head>
+<body>
+
+<!-- Progress -->
+<div id="progress-strip"><div id="progress-fill"></div></div>
+
+<!-- Mini nav -->
+<div id="mini-nav">
+  <div class="logo-mark">Signal</div>
+  <div class="briefing-tag">Samsung DE · 2026</div>
+</div>
+
+<!-- Chapter dots -->
+<div id="chapter-dots">
+  <div class="ch-dot active" data-target="scene-opening"><span class="dot-label">Opening</span></div>
+  <div class="ch-dot" data-target="scene-f1"><span class="dot-label">Foldable Paradox</span></div>
+  <div class="ch-dot" data-target="scene-f2"><span class="dot-label">Gen Z Deficit</span></div>
+  <div class="ch-dot" data-target="scene-f3"><span class="dot-label">Expresser Segment</span></div>
+  <div class="ch-dot" data-target="scene-f4"><span class="dot-label">Media Misallocation</span></div>
+  <div class="ch-dot" data-target="scene-f5"><span class="dot-label">Segment Misalignment</span></div>
+  <div class="ch-dot" data-target="scene-f6"><span class="dot-label">Innovation Story</span></div>
+  <div class="ch-dot" data-target="scene-f7"><span class="dot-label">Premium Gap</span></div>
+  <div class="ch-dot" data-target="scene-f8"><span class="dot-label">Loyalty Gap</span></div>
+  <div class="ch-dot" data-target="scene-opportunity"><span class="dot-label">Opportunity Map</span></div>
+  <div class="ch-dot" data-target="scene-simulator"><span class="dot-label">Impact Simulator</span></div>
+  <div class="ch-dot" data-target="scene-closing"><span class="dot-label">The Brief</span></div>
+</div>
+
+<!-- Expand Overlay -->
+<div id="expand-overlay">
+  <div id="expand-inner">
+    <button id="expand-close" onclick="closeExpand()">[ CLOSE ]</button>
+    <div id="expand-content"></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     OPENING
+═══════════════════════════════════════════ -->
+<section id="scene-opening">
+  <div class="opening-bg-text">DE</div>
+
+  <div class="opening-eyebrow">Samsung Germany · Strategic Intelligence Briefing · 2026</div>
+  <div class="opening-headline">Eight Insights.<br>One <em>convergent brief</em>.</div>
+  <div class="opening-sub">Ordered by team priority. Each insight builds on the last. The data tells a single story — if you know where to look.</div>
+
+  <div class="opening-meta">
+    <div class="meta-block">
+      <div class="meta-val neg">−19pp</div>
+      <div class="meta-label">Gen Z Gap vs Apple</div>
+    </div>
+    <div class="meta-block">
+      <div class="meta-val warn">44×</div>
+      <div class="meta-label">Apple Brand Value Advantage</div>
+    </div>
+    <div class="meta-block">
+      <div class="meta-val neg">12%</div>
+      <div class="meta-label">Foldable Awareness DE</div>
+    </div>
+    <div class="meta-block">
+      <div class="meta-val pos">58%</div>
+      <div class="meta-label">Flagship Market Rate DE</div>
+    </div>
+  </div>
+
+  <div class="scroll-cue">
+    <div class="scroll-line"></div>
+    Scroll to begin
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     FINDING 1 — FOLDABLE PARADOX (Rank #1)
+═══════════════════════════════════════════ -->
+<section class="insight-scene" id="scene-f1">
+  <div class="insight-top">
+    <div class="priority-label">
+      <span class="priority-rank"># 1 · Prioritized</span>
+      MX Strategy
+    </div>
+    <div class="insight-type-tag reveal">Product Paradox</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      Best differentiation.<br><em>Worst awareness.</em>
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      The Z Fold leads every competitor on "new &amp; different" (36%), 11pp ahead of the iPhone 14. Samsung's biggest product advantage in Germany. Yet only 12% of consumers know the device exists. The product is real. The narrative is not.
+    </div>
+  </div>
+
+  <div class="insight-body">
+    <div class="insight-evidence reveal">
+      <div class="ev-label">Evidenz</div>
+
+      <div class="compare-nums">
+        <div class="c-num-block">
+          <div class="c-brand">Z Fold "Neu & Anders"</div>
+          <div class="c-num warn">36%</div>
+          <div class="c-desc">Highest differentiation in market. #1 in DE.</div>
+        </div>
+        <div class="c-divider"></div>
+        <div class="c-num-block">
+          <div class="c-brand">Z Fold Awareness</div>
+          <div class="c-num danger">12%</div>
+          <div class="c-desc">Worst awareness for best product.</div>
+        </div>
+        <div class="c-divider"></div>
+        <div class="c-num-block">
+          <div class="c-brand">iPhone 14 Awareness</div>
+          <div class="c-num dim">14%</div>
+          <div class="c-desc">Marginally higher — despite lower differentiation.</div>
+        </div>
+      </div>
+
+      <div class="h-bars" id="foldable-bars">
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Z Fold — "Neu & Anders"</div>
+            <div class="h-bar-val" style="color:var(--amber)">36%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill amber" data-pct="36"></div></div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">iPhone 14 — "Neu & Anders"</div>
+            <div class="h-bar-val" style="color:var(--ink-dim)">25%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill white" data-pct="25"></div></div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Z Fold Awareness DE</div>
+            <div class="h-bar-val" style="color:var(--red)">12%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill red" data-pct="12"></div></div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Z Flip "Neu & Anders"</div>
+            <div class="h-bar-val" style="color:var(--cyan)">33%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill cyan" data-pct="33"></div></div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Expresser Z Flip Ownership</div>
+            <div class="h-bar-val" style="color:var(--red)">7%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill red" data-pct="7"></div></div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" onclick="openExpand('foldable')">View full data</button>
+    </div>
+
+    <div class="insight-sowhat reveal reveal-delay-1">
+      <div>
+        <div class="sw-label">So What</div>
+        <div class="sw-text">
+          Samsung's strongest product asset in Germany is communicatively invisible. This is not a product problem — it is a <strong>media and creative failure</strong>. Three facts converge into one brief: Germany has the second-highest flagship rate globally (58%). The Z Fold/Flip is the most differentiated product in the market (36%). The segments with the highest premium and AI affinity — <strong>Expressers and Life Maximizers (39% of market)</strong> — are Apple-leaning but reachable. Cheil must connect these three facts into one creative and media strategy.
+        </div>
+      </div>
+      <div class="connections">
+        <div class="conn-label">Connected Insights</div>
+        <div class="conn-pills">
+          <span class="conn-pill" onclick="scrollToScene('scene-f3')">Expresser Segment →</span>
+          <span class="conn-pill" onclick="scrollToScene('scene-f4')">Media Misallocation →</span>
+          <span class="conn-pill" onclick="scrollToScene('scene-f6')">Innovation Story →</span>
+        </div>
+      </div>
+      <div class="marketing-actions">
+        <button class="ma-trigger" onclick="generateActions(this, 'f1')">
+          <span class="ma-spark">✦</span>
+          <span class="ma-label">Generate AI marketing actions</span>
+          <span class="ma-arrow">›</span>
+        </button>
+        <div class="ma-results" id="ma-f1"></div>
+      </div>
+      <div class="best-practice">
+        <button class="bp-trigger" onclick="generateBestPractice(this, 'f1')">
+          <span class="bp-spark">★</span>
+          <span class="bp-label">Show real-world best practice examples</span>
+          <span class="bp-arrow">›</span>
+        </button>
+        <div class="bp-results" id="bp-f1"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     FINDING 2 — GEN Z (Rank #2)
+═══════════════════════════════════════════ -->
+<section class="insight-scene" id="scene-f2">
+  <div class="insight-top">
+    <div class="priority-label">
+      <span class="priority-rank"># 2 · Prioritized</span>
+      Market
+    </div>
+    <div class="insight-type-tag reveal">Structural Threat</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      The next buying generation<br><em>belongs to Apple</em>.
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      Gen Z represents 21% of the German market — but only 15% of Samsung enthusiasts. Apple holds 34%. Every year this cohort ages into purchasing power, Apple's structural advantage widens. This is not a current weakness. It is a compounding problem.
+    </div>
+  </div>
+
+  <div class="insight-body">
+    <div class="insight-evidence reveal">
+      <div class="ev-label">Evidenz</div>
+
+      <div class="genz-split">
+        <div class="gz-side apple-gz">
+          <div class="gz-brand">Apple iPhone</div>
+          <div class="gz-num">34%</div>
+          <div class="gz-desc">Share of enthusiasts. +13pp above market baseline. Lock-in 18–29: 61–66%.</div>
+        </div>
+        <div class="gz-side samsung-gz">
+          <div class="gz-brand">Samsung Galaxy</div>
+          <div class="gz-num">15%</div>
+          <div class="gz-desc">Share of enthusiasts. −6pp below market baseline. 86% of media budget on TV.</div>
+        </div>
+      </div>
+
+      <div class="h-bars" id="genz-bars">
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Apple Gen Z Enthusiasts</div>
+            <div class="h-bar-val" style="color:var(--red)">34%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill red" data-pct="34"></div></div>
+          <div class="h-bar-sub">+13pp above market baseline (21%)</div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Samsung Gen Z Enthusiasts</div>
+            <div class="h-bar-val" style="color:var(--cyan)">15%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill cyan" data-pct="15"></div></div>
+          <div class="h-bar-sub">−6pp below market baseline</div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Samsung Gen X Enthusiasts</div>
+            <div class="h-bar-val" style="color:var(--amber)">38%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill amber" data-pct="38"></div></div>
+          <div class="h-bar-sub">Samsung over-indexes in the aging cohort</div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Apple Gen X Enthusiasts</div>
+            <div class="h-bar-val" style="color:var(--ink-dim)">24%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill white" data-pct="24"></div></div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" onclick="openExpand('genz')">View full cohort analysis</button>
+    </div>
+
+    <div class="insight-sowhat reveal reveal-delay-1">
+      <div>
+        <div class="sw-label">So What</div>
+        <div class="sw-text">
+          Samsung over-indexes in Gen X (38% vs Apple's 24%) — the <strong>aging cohort</strong>. Apple owns Gen Z (34% vs 15%). As purchasing power shifts to younger demographics, this is a <strong>slow-moving structural catastrophe</strong>. Reallocation of media from TV (86% of budget) to digital and social is not optional — it is the minimum viable response. Expressers and Trend Followers, both Gen Z-native segments, must become primary communication targets.
+        </div>
+      </div>
+      <div class="connections">
+        <div class="conn-label">Connected Insights</div>
+        <div class="conn-pills">
+          <span class="conn-pill" onclick="scrollToScene('scene-f3')">Expresser Segment →</span>
+          <span class="conn-pill" onclick="scrollToScene('scene-f4')">Media Misallocation →</span>
+        </div>
+      </div>
+      <div class="marketing-actions">
+        <button class="ma-trigger" onclick="generateActions(this, 'f2')">
+          <span class="ma-spark">✦</span>
+          <span class="ma-label">Generate AI marketing actions</span>
+          <span class="ma-arrow">›</span>
+        </button>
+        <div class="ma-results" id="ma-f2"></div>
+      </div>
+      <div class="best-practice">
+        <button class="bp-trigger" onclick="generateBestPractice(this, 'f2')">
+          <span class="bp-spark">★</span>
+          <span class="bp-label">Show real-world best practice examples</span>
+          <span class="bp-arrow">›</span>
+        </button>
+        <div class="bp-results" id="bp-f2"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     FINDING 3 — EXPRESSERS (Rank #3)
+═══════════════════════════════════════════ -->
+<section class="insight-scene" id="scene-f3">
+  <div class="insight-top">
+    <div class="priority-label">
+      <span class="priority-rank"># 3 · Prioritized</span>
+      Consumers
+    </div>
+    <div class="insight-type-tag reveal">Product-Audience Mismatch</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      Right product.<br><em>Wrong people know it.</em>
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      Expressers (20% of the market) are the perfect Z Flip audience: 75% AI affinity, early 20s, creative-driven, willing to spend €600–800. Apple holds 27.6% vs Samsung's 17.5% in this segment. Only 7% of Expressers own a Z Flip.
+    </div>
+  </div>
+
+  <div class="insight-body">
+    <div class="insight-evidence reveal">
+      <div class="ev-label">Segment Analysis</div>
+
+      <div class="segment-map" id="segment-map">
+        <div class="seg-row" onclick="openExpand('segment-expressers')">
+          <div>
+            <div class="seg-name">Expressers</div>
+            <div class="seg-sub">20% · Apple-leaning · HIGH RISK</div>
+          </div>
+          <div class="seg-dual">
+            <div class="seg-bar-row">
+              <div class="seg-brand-dot" style="background:var(--red)"></div>
+              <div class="seg-bar-mini"><div class="seg-bar-fill" style="background:var(--red);width:27.6%"></div></div>
+              <div class="seg-val" style="color:var(--red)">Apple 27.6%</div>
+            </div>
+            <div class="seg-bar-row">
+              <div class="seg-brand-dot" style="background:var(--cyan)"></div>
+              <div class="seg-bar-mini"><div class="seg-bar-fill" style="background:var(--cyan);width:17.5%"></div></div>
+              <div class="seg-val" style="color:var(--cyan)">Sam 17.5%</div>
+            </div>
+          </div>
+          <div class="seg-risk risk-h">HIGH</div>
+        </div>
+
+        <div class="seg-row" onclick="openExpand('segment-lifemax')">
+          <div>
+            <div class="seg-name">Life Maximizers</div>
+            <div class="seg-sub">19% · Apple-leaning · MED RISK</div>
+          </div>
+          <div class="seg-dual">
+            <div class="seg-bar-row">
+              <div class="seg-brand-dot" style="background:var(--red)"></div>
+              <div class="seg-bar-mini"><div class="seg-bar-fill" style="background:var(--red);width:39%"></div></div>
+              <div class="seg-val" style="color:var(--red)">Apple 39%</div>
+            </div>
+            <div class="seg-bar-row">
+              <div class="seg-brand-dot" style="background:var(--cyan)"></div>
+              <div class="seg-bar-mini"><div class="seg-bar-fill" style="background:var(--cyan);width:28%"></div></div>
+              <div class="seg-val" style="color:var(--cyan)">Sam 28%</div>
+            </div>
+          </div>
+          <div class="seg-risk risk-m">MED</div>
+        </div>
+
+        <div class="seg-row" onclick="openExpand('segment-tech')">
+          <div>
+            <div class="seg-name">Tech Enthusiasts</div>
+            <div class="seg-sub">9% · Apple-leaning · MED RISK</div>
+          </div>
+          <div class="seg-dual">
+            <div class="seg-bar-row">
+              <div class="seg-brand-dot" style="background:var(--red)"></div>
+              <div class="seg-bar-mini"><div class="seg-bar-fill" style="background:var(--red);width:41%"></div></div>
+              <div class="seg-val" style="color:var(--red)">Apple 41%</div>
+            </div>
+            <div class="seg-bar-row">
+              <div class="seg-brand-dot" style="background:var(--cyan)"></div>
+              <div class="seg-bar-mini"><div class="seg-bar-fill" style="background:var(--cyan);width:28%"></div></div>
+              <div class="seg-val" style="color:var(--cyan)">Sam 28%</div>
+            </div>
+          </div>
+          <div class="seg-risk risk-m">MED</div>
+        </div>
+
+        <div class="seg-row" onclick="openExpand('segment-trad')">
+          <div>
+            <div class="seg-name">Traditionalists</div>
+            <div class="seg-sub">36% · Samsung-leaning · HIGH RISK</div>
+          </div>
+          <div class="seg-dual">
+            <div class="seg-bar-row">
+              <div class="seg-brand-dot" style="background:var(--amber)"></div>
+              <div class="seg-bar-mini"><div class="seg-bar-fill" style="background:var(--amber);width:36%"></div></div>
+              <div class="seg-val" style="color:var(--amber)">Sam 36%</div>
+            </div>
+            <div class="seg-bar-row">
+              <div class="seg-brand-dot" style="background:var(--ink-faint)"></div>
+              <div class="seg-bar-mini"><div class="seg-bar-fill" style="background:var(--ink-faint);width:35%"></div></div>
+              <div class="seg-val" style="color:var(--ink-faint)">AI Aff. 35%</div>
+            </div>
+          </div>
+          <div class="seg-risk risk-h">HIGH</div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" onclick="openExpand('all-segments')">View all 5 segments in detail</button>
+    </div>
+
+    <div class="insight-sowhat reveal reveal-delay-1">
+      <div>
+        <div class="sw-label">So What</div>
+        <div class="sw-text">
+          The Expresser segment is <strong>Samsung's most directly actionable opportunity</strong>. Product fit is perfect (Z Flip + Galaxy AI). Budget intent is right (€600–800). The segment is reachable (TikTok, Instagram, creator content). The gap is pure <strong>awareness and aspiration</strong>. A creator-led campaign positioning the Z Flip as a creative companion — not a tech device — is the highest-ROI play available to Cheil.
+        </div>
+      </div>
+      <div class="connections">
+        <div class="conn-label">Connected Insights</div>
+        <div class="conn-pills">
+          <span class="conn-pill" onclick="scrollToScene('scene-f1')">Foldable Paradox →</span>
+          <span class="conn-pill" onclick="scrollToScene('scene-f4')">Media Channel →</span>
+          <span class="conn-pill" onclick="scrollToScene('scene-f2')">Gen Z Deficit →</span>
+        </div>
+      </div>
+      <div class="marketing-actions">
+        <button class="ma-trigger" onclick="generateActions(this, 'f3')">
+          <span class="ma-spark">✦</span>
+          <span class="ma-label">Generate AI marketing actions</span>
+          <span class="ma-arrow">›</span>
+        </button>
+        <div class="ma-results" id="ma-f3"></div>
+      </div>
+      <div class="best-practice">
+        <button class="bp-trigger" onclick="generateBestPractice(this, 'f3')">
+          <span class="bp-spark">★</span>
+          <span class="bp-label">Show real-world best practice examples</span>
+          <span class="bp-arrow">›</span>
+        </button>
+        <div class="bp-results" id="bp-f3"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     FINDING 4 — MEDIA (Rank #4)
+═══════════════════════════════════════════ -->
+<section class="insight-scene" id="scene-f4">
+  <div class="insight-top">
+    <div class="priority-label">
+      <span class="priority-rank"># 4 · Prioritized</span>
+      MX Strategy
+    </div>
+    <div class="insight-type-tag reveal">Channel Mismatch</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      86% budget on TV.<br><em>Gen Z lives elsewhere.</em>
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      Samsung spends 86% of its German ad budget on television — the medium with declining youth reach. Apple dominates digital and social channels where Gen Z and Expressers actually live. Samsung's Share of Voice on TV is substantial. Its share of attention among the next buying generation is not.
+    </div>
+  </div>
+
+  <div class="insight-body">
+    <div class="insight-evidence reveal">
+      <div class="ev-label">Samsung DE Media Allocation 2023 (€134M)</div>
+
+      <div class="media-allocation" id="media-alloc">
+        <div class="ma-row">
+          <div class="ma-label">Television</div>
+          <div class="ma-track"><div class="ma-fill tv" data-pct="86">86% · Declining reach</div></div>
+          <div class="ma-pct" style="color:var(--red)">86%</div>
+        </div>
+        <div class="ma-row">
+          <div class="ma-label">Digital</div>
+          <div class="ma-track"><div class="ma-fill digital" data-pct="9">9%</div></div>
+          <div class="ma-pct" style="color:var(--cyan)">9%</div>
+        </div>
+        <div class="ma-row">
+          <div class="ma-label">OOH / Cinema</div>
+          <div class="ma-track"><div class="ma-fill ooh" data-pct="4">4%</div></div>
+          <div class="ma-pct" style="color:var(--amber)">4%</div>
+        </div>
+        <div class="ma-row">
+          <div class="ma-label">Print</div>
+          <div class="ma-track"><div class="ma-fill print" data-pct="1">1%</div></div>
+          <div class="ma-pct" style="color:var(--ink-faint)">1%</div>
+        </div>
+      </div>
+
+      <div class="contra-pair" style="margin-top:20px">
+        <div class="contra-label">Channel Mismatch Diagnose</div>
+        <div class="contra-body">
+          <div class="contra-cell assumed">Expressers &amp; Trend Followers: 36% of market. TikTok/Instagram-native. Reachable primarily through social and creator channels.</div>
+          <div class="contra-arrow-cell">→</div>
+          <div class="contra-cell reality">Samsung invests 86% in TV — the channel with the lowest reach among under-25s. Digital: only 9%.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-sowhat reveal reveal-delay-1">
+      <div>
+        <div class="sw-label">So What</div>
+        <div class="sw-text">
+          This is the <strong>most directly actionable insight for Cheil</strong>. Shifting media from TV (→ ~60%) to digital and creator-led social (→ ~30%) would triple Samsung's effective reach among Expressers and Trend Followers at similar total budget. The Z Flip, positioned as a <strong>creative self-expression tool</strong>, is the perfect product for a social-first creative campaign. <strong>This is where the pitch can show immediate, measurable ROI.</strong>
+        </div>
+      </div>
+      <div class="connections">
+        <div class="conn-label">Connected Insights</div>
+        <div class="conn-pills">
+          <span class="conn-pill" onclick="scrollToScene('scene-f2')">Gen Z Deficit →</span>
+          <span class="conn-pill" onclick="scrollToScene('scene-f3')">Expresser Segment →</span>
+          <span class="conn-pill" onclick="scrollToScene('scene-f1')">Foldable Paradox →</span>
+        </div>
+      </div>
+      <div class="marketing-actions">
+        <button class="ma-trigger" onclick="generateActions(this, 'f4')">
+          <span class="ma-spark">✦</span>
+          <span class="ma-label">Generate AI marketing actions</span>
+          <span class="ma-arrow">›</span>
+        </button>
+        <div class="ma-results" id="ma-f4"></div>
+      </div>
+      <div class="best-practice">
+        <button class="bp-trigger" onclick="generateBestPractice(this, 'f4')">
+          <span class="bp-spark">★</span>
+          <span class="bp-label">Show real-world best practice examples</span>
+          <span class="bp-arrow">›</span>
+        </button>
+        <div class="bp-results" id="bp-f4"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     FINDING 5 — SEGMENT MISALIGNMENT (Rank #5)
+═══════════════════════════════════════════ -->
+<section class="insight-scene" id="scene-f5">
+  <div class="insight-top">
+    <div class="priority-label">
+      <span class="priority-rank"># 5 · Prioritized</span>
+      Consumers
+    </div>
+    <div class="insight-type-tag reveal">Strategic Paradox</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      Samsung optimises for the<br><em>segment with zero upside</em>.
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      Traditionalists (36% of the base) drive ownership numbers, but not brand equity. Predominantly 40s–50s, sub-€400 devices, 35% AI affinity. The premium opportunity segments — Expressers, Life Maximizers, Tech Enthusiasts — are systematically captured by Apple. 48% of the market, all Apple-leaning, all perfectly mapped to Samsung's best products.
+    </div>
+  </div>
+
+  <div class="insight-body">
+    <div class="insight-evidence reveal">
+      <div class="ev-label">Segment Composition</div>
+
+      <div class="h-bars">
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Traditionalists — Market Share</div>
+            <div class="h-bar-val" style="color:var(--amber)">36%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill amber" data-pct="36"></div></div>
+          <div class="h-bar-sub">Samsung-leaning · Sub-€400 · AI affinity 35% · High churn risk to Xiaomi</div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Expressers — Apple Share in Segment</div>
+            <div class="h-bar-val" style="color:var(--red)">27.6%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill red" data-pct="27.6"></div></div>
+          <div class="h-bar-sub">vs Samsung 17.5% · AI affinity 75% · Perfect Z Flip profile</div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Life Maximizers — Apple Share</div>
+            <div class="h-bar-val" style="color:var(--red)">39%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill red" data-pct="39"></div></div>
+          <div class="h-bar-sub">vs Samsung 28% · Highest WTP in DE · Galaxy AI + DeX = perfect fit</div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Premium Segments Total</div>
+            <div class="h-bar-val" style="color:var(--cyan)">48%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill cyan" data-pct="48"></div></div>
+          <div class="h-bar-sub">Expressers + Life Max + Tech Enthusiasts · All Apple-leaning</div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" onclick="openExpand('all-segments')">Compare all 5 segments</button>
+    </div>
+
+    <div class="insight-sowhat reveal reveal-delay-1">
+      <div>
+        <div class="sw-label">So What</div>
+        <div class="sw-text">
+          Samsung's media and product strategy is optimised for Traditionalists — the segment with the <strong>least premium potential</strong>. Rebalancing the segment focus is the strategic lever Cheil can own. The three premium segments represent 48% of the market, are all Apple-leaning, and map perfectly to Samsung's best products. <strong>This is not a product gap. It is a communication gap.</strong>
+        </div>
+      </div>
+      <div class="connections">
+        <div class="conn-label">Connected Insights</div>
+        <div class="conn-pills">
+          <span class="conn-pill" onclick="scrollToScene('scene-f3')">Expresser Detail →</span>
+          <span class="conn-pill" onclick="scrollToScene('scene-f2')">Gen Z Deficit →</span>
+        </div>
+      </div>
+      <div class="marketing-actions">
+        <button class="ma-trigger" onclick="generateActions(this, 'f5')">
+          <span class="ma-spark">✦</span>
+          <span class="ma-label">Generate AI marketing actions</span>
+          <span class="ma-arrow">›</span>
+        </button>
+        <div class="ma-results" id="ma-f5"></div>
+      </div>
+      <div class="best-practice">
+        <button class="bp-trigger" onclick="generateBestPractice(this, 'f5')">
+          <span class="bp-spark">★</span>
+          <span class="bp-label">Show real-world best practice examples</span>
+          <span class="bp-arrow">›</span>
+        </button>
+        <div class="bp-results" id="bp-f5"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     FINDING 6 — INNOVATION (Rank #6)
+═══════════════════════════════════════════ -->
+<section class="insight-scene" id="scene-f6">
+  <div class="insight-top">
+    <div class="priority-label">
+      <span class="priority-rank"># 6 · Prioritized</span>
+      Brand Health
+    </div>
+    <div class="insight-type-tag reveal">Brand Paradox</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      6,377 patents.<br><em>Zero brand story.</em>
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      Samsung filed 6,377 US patents in 2024 (#1 globally). Yet only 14% of German consumers associate Samsung with "innovative" — tied with Apple. The R&D investment is visible in products; it is invisible in the brand story. This is not an innovation problem. It is a communication failure.
+    </div>
+  </div>
+
+  <div class="insight-body">
+    <div class="insight-evidence reveal">
+      <div class="ev-label">Paradox</div>
+
+      <div class="contra-pair" onclick="openExpand('innovation')">
+        <div class="contra-label">Assumption vs. Reality</div>
+        <div class="contra-body">
+          <div class="contra-cell assumed">Samsung is the world's most innovative hardware company. #1 patents, #1 market share, $100B+ semiconductor revenue.</div>
+          <div class="contra-arrow-cell">→</div>
+          <div class="contra-cell reality">Only 14% of German consumers associate Samsung with "innovative" — tied with Apple despite 6,377 patents.</div>
+        </div>
+      </div>
+
+      <div class="contra-pair" style="margin-top:16px" onclick="openExpand('innovation')">
+        <div class="contra-body">
+          <div class="contra-cell assumed">Brand value roughly correlates with market share and sales volume.</div>
+          <div class="contra-arrow-cell">→</div>
+          <div class="contra-cell reality">Apple brand value: $1,299B. Samsung: $29B. A 44× gap despite #1 global smartphone market share.</div>
+        </div>
+      </div>
+
+      <div class="h-bars" style="margin-top:28px">
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Samsung — "Innovative" Brand Association</div>
+            <div class="h-bar-val" style="color:var(--cyan)">14%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill cyan" data-pct="14"></div></div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Apple — "Innovative" Brand Association</div>
+            <div class="h-bar-val" style="color:var(--ink-dim)">14%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill white" data-pct="14"></div></div>
+          <div class="h-bar-sub">Tied — despite 6,377 vs ~2,000 patents</div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Samsung Patents 2024</div>
+            <div class="h-bar-val" style="color:var(--amber)">6.377 #1</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill amber" data-pct="85"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-sowhat reveal reveal-delay-1">
+      <div>
+        <div class="sw-label">So What</div>
+        <div class="sw-text">
+          Cheil's strategic opportunity is not to <strong>create</strong> Samsung's innovation story — it already exists. It is to <strong>make it visible</strong>. The Z Fold (36% "new &amp; different"), Galaxy AI, and semiconductor leadership are all under-utilised brand assets. A narrative campaign connecting product firsts to cultural moments is the prescription. <strong>The innovation gap is a communication gap.</strong>
+        </div>
+      </div>
+      <div class="connections">
+        <div class="conn-label">Connected Insights</div>
+        <div class="conn-pills">
+          <span class="conn-pill" onclick="scrollToScene('scene-f7')">Premium Perception →</span>
+          <span class="conn-pill" onclick="scrollToScene('scene-f1')">Foldable Paradox →</span>
+        </div>
+      </div>
+      <div class="marketing-actions">
+        <button class="ma-trigger" onclick="generateActions(this, 'f6')">
+          <span class="ma-spark">✦</span>
+          <span class="ma-label">Generate AI marketing actions</span>
+          <span class="ma-arrow">›</span>
+        </button>
+        <div class="ma-results" id="ma-f6"></div>
+      </div>
+      <div class="best-practice">
+        <button class="bp-trigger" onclick="generateBestPractice(this, 'f6')">
+          <span class="bp-spark">★</span>
+          <span class="bp-label">Show real-world best practice examples</span>
+          <span class="bp-arrow">›</span>
+        </button>
+        <div class="bp-results" id="bp-f6"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     FINDING 7 — PREMIUM GAP (Rank #7)
+═══════════════════════════════════════════ -->
+<section class="insight-scene" id="scene-f7">
+  <div class="insight-top">
+    <div class="priority-label">
+      <span class="priority-rank"># 7 · Prioritized</span>
+      Brand Health
+    </div>
+    <div class="insight-type-tag reveal">Market Tension</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      Premium market.<br><em>Non-premium brand.</em>
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      Germany's 58% flagship market rate is double the global average. Premium appetite is real and structural. Yet only 12% of German consumers associate Samsung with "Premium" vs 20% for Apple — an 8pp deficit that directly costs in the market that matters most.
+    </div>
+  </div>
+
+  <div class="insight-body">
+    <div class="insight-evidence reveal">
+      <div class="ev-label">Brand Image vs. Market Context</div>
+
+      <div class="tension-box">
+        <div class="t-side left">
+          <div class="t-role">Market Context</div>
+          <div class="t-brand">Germany is ready</div>
+          <div class="t-desc">58% flagship rate. #2 globally. Korea-level premium appetite. The market is waiting for premium.</div>
+        </div>
+        <div class="t-side right">
+          <div class="t-role">Brand Reality</div>
+          <div class="t-brand">The brand is not</div>
+          <div class="t-desc">12% "Premium" association vs Apple 20%. 8pp deficit in a 58% flagship market.</div>
+        </div>
+      </div>
+
+      <div class="h-bars">
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Apple — "Premium"</div>
+            <div class="h-bar-val" style="color:var(--red)">20%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill red" data-pct="20"></div></div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">Samsung — "Premium"</div>
+            <div class="h-bar-val" style="color:var(--cyan)">12%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill cyan" data-pct="12"></div></div>
+          <div class="h-bar-sub">−8pp deficit in the world's second-largest flagship market</div>
+        </div>
+        <div class="h-bar-item">
+          <div class="h-bar-top">
+            <div class="h-bar-name">DE Flagship Market Rate</div>
+            <div class="h-bar-val" style="color:var(--amber)">58%</div>
+          </div>
+          <div class="h-bar-track"><div class="h-bar-fill amber" data-pct="58"></div></div>
+          <div class="h-bar-sub">Global avg: 27% · 2× premium over-index</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-sowhat reveal reveal-delay-1">
+      <div>
+        <div class="sw-label">So What</div>
+        <div class="sw-text">
+          Germany is the <strong>ideal battleground for premium repositioning</strong> — 58% flagship intent, #2 globally. Samsung has the hardware (S Ultra, Z Fold) and the market. It lacks the perception. A premium brand narrative anchored in product firsts, material craft, and aspirational lifestyle — specifically targeting <strong>Life Maximizers and Tech Enthusiasts</strong> — can close this gap. The market is ready. The brand is not.
+        </div>
+      </div>
+      <div class="connections">
+        <div class="conn-label">Connected Insights</div>
+        <div class="conn-pills">
+          <span class="conn-pill" onclick="scrollToScene('scene-f6')">Innovation Story →</span>
+          <span class="conn-pill" onclick="scrollToScene('scene-f5')">Segment Misalignment →</span>
+        </div>
+      </div>
+      <div class="marketing-actions">
+        <button class="ma-trigger" onclick="generateActions(this, 'f7')">
+          <span class="ma-spark">✦</span>
+          <span class="ma-label">Generate AI marketing actions</span>
+          <span class="ma-arrow">›</span>
+        </button>
+        <div class="ma-results" id="ma-f7"></div>
+      </div>
+      <div class="best-practice">
+        <button class="bp-trigger" onclick="generateBestPractice(this, 'f7')">
+          <span class="bp-spark">★</span>
+          <span class="bp-label">Show real-world best practice examples</span>
+          <span class="bp-arrow">›</span>
+        </button>
+        <div class="bp-results" id="bp-f7"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     FINDING 8 — LOYALTY GAP (Rank #8)
+═══════════════════════════════════════════ -->
+<section class="insight-scene" id="scene-f8">
+  <div class="insight-top">
+    <div class="priority-label">
+      <span class="priority-rank"># 8 · Prioritized</span>
+      Market
+    </div>
+    <div class="insight-type-tag reveal">Structural Gap</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      Volume without<br><em>retention</em>.
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      Samsung's 44% ownership is 11pp above Apple's 33%. Yet Apple's 92% loyalty means its base compounds. Samsung wins the first sale; Apple wins every renewal. In a saturated market where switching is the only growth lever, retention beats acquisition.
+    </div>
+  </div>
+
+  <div class="insight-body">
+    <div class="insight-evidence reveal">
+      <div class="ev-label">Funnel Analysis</div>
+
+      <div class="funnel-steps" id="funnel-steps">
+        <div class="f-step">
+          <div class="f-step-label">Awareness</div>
+          <div class="f-bar-wrap">
+            <div class="f-bar-bg" style="flex:1"><div class="f-bar-inner samsung-f" data-pct="94">Samsung 94%</div></div>
+          </div>
+          <div class="f-bar-wrap">
+            <div class="f-bar-bg" style="flex:1"><div class="f-bar-inner apple-f" data-pct="91">Apple 91%</div></div>
+          </div>
+        </div>
+        <div class="f-step">
+          <div class="f-step-label">Popularity</div>
+          <div class="f-bar-wrap">
+            <div class="f-bar-bg" style="flex:1"><div class="f-bar-inner samsung-f" data-pct="63">Samsung 63%</div></div>
+          </div>
+          <div class="f-bar-wrap">
+            <div class="f-bar-bg" style="flex:1"><div class="f-bar-inner apple-f" data-pct="45">Apple 45%</div></div>
+          </div>
+        </div>
+        <div class="f-step">
+          <div class="f-step-label">Ownership</div>
+          <div class="f-bar-wrap">
+            <div class="f-bar-bg" style="flex:1"><div class="f-bar-inner samsung-f" data-pct="44">Samsung 44%</div></div>
+          </div>
+          <div class="f-bar-wrap">
+            <div class="f-bar-bg" style="flex:1"><div class="f-bar-inner apple-f" data-pct="33">Apple 33%</div></div>
+          </div>
+        </div>
+        <div class="f-step">
+          <div class="f-step-label">Loyalty ↑</div>
+          <div class="f-bar-wrap">
+            <div class="f-bar-bg" style="flex:1"><div class="f-bar-inner samsung-f" data-pct="88">Samsung 88%</div></div>
+          </div>
+          <div class="f-bar-wrap">
+            <div class="f-bar-bg" style="flex:1"><div class="f-bar-inner apple-f" style="background:rgba(255,77,90,0.2);color:var(--red)" data-pct="92">Apple 92% ▲</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-sowhat reveal reveal-delay-1">
+      <div>
+        <div class="sw-label">So What</div>
+        <div class="sw-text">
+          The funnel reversal at <strong>Loyalty</strong> is the smoking gun. Samsung enters bigger, exits smaller. Apple enters smaller, exits stronger. The implication: Samsung has a <strong>retention product problem disguised as a marketing problem</strong>. Galaxy AI, Z Fold/Flip ecosystem depth, and upgrade incentives must become retention instruments — not just acquisition messaging.
+        </div>
+      </div>
+      <div class="connections">
+        <div class="conn-label">Connected Insights</div>
+        <div class="conn-pills">
+          <span class="conn-pill" onclick="scrollToScene('scene-f6')">Innovation Story →</span>
+          <span class="conn-pill" onclick="scrollToScene('scene-f5')">Segment Misalignment →</span>
+        </div>
+      </div>
+      <div class="marketing-actions">
+        <button class="ma-trigger" onclick="generateActions(this, 'f8')">
+          <span class="ma-spark">✦</span>
+          <span class="ma-label">Generate AI marketing actions</span>
+          <span class="ma-arrow">›</span>
+        </button>
+        <div class="ma-results" id="ma-f8"></div>
+      </div>
+      <div class="best-practice">
+        <button class="bp-trigger" onclick="generateBestPractice(this, 'f8')">
+          <span class="bp-spark">★</span>
+          <span class="bp-label">Show real-world best practice examples</span>
+          <span class="bp-arrow">›</span>
+        </button>
+        <div class="bp-results" id="bp-f8"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ═══════════════════════════════════════════
+     OPPORTUNITY LANDSCAPE — SYNTHESIS
+═══════════════════════════════════════════ -->
+<section id="scene-opportunity">
+  <div class="opp-top">
+    <div class="priority-label">
+      <span class="priority-rank">Synthese</span>
+      Strategic Overview
+    </div>
+    <div class="insight-type-tag reveal">Opportunity Landscape</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      Where is the<br><em>strategic lever</em>?
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      All eight insights on one map. Positioned by strategic impact and urgency. The three bubbles top-right converge into a single brief.
+    </div>
+  </div>
+
+  <div class="opp-body">
+    <div class="ev-label">Evidence · Impact vs. Urgency</div>
+
+    <div class="opp-scatter-wrap" id="opp-scatter">
+      <div class="opp-axis-y"></div>
+      <div class="opp-axis-x"></div>
+      <div class="opp-axis-label-x">Urgency →</div>
+      <div class="opp-axis-label-y">Impact →</div>
+
+      <!-- Quadrant labels -->
+      <div class="opp-quadrant-label" style="right:8%;top:8%">ACT NOW</div>
+      <div class="opp-quadrant-label" style="left:10%;top:8%">STRATEGIC</div>
+      <div class="opp-quadrant-label" style="right:8%;bottom:44px">QUICK WINS</div>
+      <div class="opp-quadrant-label" style="left:10%;bottom:44px">MONITOR</div>
+
+      <!-- Bubbles: left% = x (dringlichkeit), bottom% = y (impact) from axis origin -->
+      <!-- f1: Foldable Paradox — high impact, high urgency -->
+      <div class="opp-bubble-wrap" style="left:82%;bottom:78%" data-scene="scene-f1" onclick="scrollToScene('scene-f1')">
+        <div class="opp-bubble-circle" style="width:76px;height:76px;background:rgba(74,240,200,0.25);">
+          <div class="opp-bubble-inner">Foldable<br>Paradox</div>
+        </div>
+        <div class="opp-bubble-tooltip">Insight #1 · MX Strategy · HIGH IMPACT</div>
+      </div>
+
+      <!-- f3: Expresser Segment — high impact, high urgency -->
+      <div class="opp-bubble-wrap" style="left:72%;bottom:84%" data-scene="scene-f3" onclick="scrollToScene('scene-f3')">
+        <div class="opp-bubble-circle" style="width:68px;height:68px;background:rgba(255,77,90,0.22);">
+          <div class="opp-bubble-inner">Expresser<br>Segment</div>
+        </div>
+        <div class="opp-bubble-tooltip">Insight #3 · Consumers · HIGH IMPACT</div>
+      </div>
+
+      <!-- f4: Media Budget — high urgency, high impact -->
+      <div class="opp-bubble-wrap" style="left:88%;bottom:64%" data-scene="scene-f4" onclick="scrollToScene('scene-f4')">
+        <div class="opp-bubble-circle" style="width:62px;height:62px;background:rgba(167,139,250,0.25);">
+          <div class="opp-bubble-inner">Media<br>Realloc.</div>
+        </div>
+        <div class="opp-bubble-tooltip">Insight #4 · MX Strategy · DIRECTLY ACTIONABLE</div>
+      </div>
+
+      <!-- f2: Gen Z — high impact, medium urgency -->
+      <div class="opp-bubble-wrap" style="left:46%;bottom:90%" data-scene="scene-f2" onclick="scrollToScene('scene-f2')">
+        <div class="opp-bubble-circle" style="width:66px;height:66px;background:rgba(245,200,66,0.2);">
+          <div class="opp-bubble-inner">Gen Z<br>Deficit</div>
+        </div>
+        <div class="opp-bubble-tooltip">Insight #2 · Market · STRUCTURAL</div>
+      </div>
+
+      <!-- f5: Segment Misalignment — high impact, medium urgency -->
+      <div class="opp-bubble-wrap" style="left:58%;bottom:74%" data-scene="scene-f5" onclick="scrollToScene('scene-f5')">
+        <div class="opp-bubble-circle" style="width:58px;height:58px;background:rgba(251,146,60,0.2);">
+          <div class="opp-bubble-inner">Segment<br>Align.</div>
+        </div>
+        <div class="opp-bubble-tooltip">Insight #5 · Consumers · MID-TERM</div>
+      </div>
+
+      <!-- f6: Innovation Story — medium impact, medium urgency -->
+      <div class="opp-bubble-wrap" style="left:52%;bottom:58%" data-scene="scene-f6" onclick="scrollToScene('scene-f6')">
+        <div class="opp-bubble-circle" style="width:54px;height:54px;background:rgba(52,211,153,0.18);">
+          <div class="opp-bubble-inner">Innovation<br>Story</div>
+        </div>
+        <div class="opp-bubble-tooltip">Insight #6 · Brand · NARRATIVE</div>
+      </div>
+
+      <!-- f7: Premium Gap — medium-high impact, lower urgency -->
+      <div class="opp-bubble-wrap" style="left:34%;bottom:68%" data-scene="scene-f7" onclick="scrollToScene('scene-f7')">
+        <div class="opp-bubble-circle" style="width:54px;height:54px;background:rgba(244,114,182,0.18);">
+          <div class="opp-bubble-inner">Premium<br>Gap</div>
+        </div>
+        <div class="opp-bubble-tooltip">Insight #7 · Brand · BRAND BUILD</div>
+      </div>
+
+      <!-- f8: Loyalty — medium impact, lower urgency -->
+      <div class="opp-bubble-wrap" style="left:22%;bottom:50%" data-scene="scene-f8" onclick="scrollToScene('scene-f8')">
+        <div class="opp-bubble-circle" style="width:50px;height:50px;background:rgba(240,237,232,0.08);">
+          <div class="opp-bubble-inner">Loyalty<br>Gap</div>
+        </div>
+        <div class="opp-bubble-tooltip">Insight #8 · Market · LONG-TERM</div>
+      </div>
+
+    </div>
+
+    <div class="opp-legend">
+      <div class="opp-legend-item"><div class="opp-legend-dot" style="background:rgba(74,240,200,0.6)"></div>MX Strategy</div>
+      <div class="opp-legend-item"><div class="opp-legend-dot" style="background:rgba(255,77,90,0.6)"></div>Consumers</div>
+      <div class="opp-legend-item"><div class="opp-legend-dot" style="background:rgba(245,200,66,0.6)"></div>Market</div>
+      <div class="opp-legend-item"><div class="opp-legend-dot" style="background:rgba(52,211,153,0.6)"></div>Brand Health</div>
+      <div class="opp-legend-item" style="margin-left:16px;color:var(--ink-faint)">Bubble size = relative strategic leverage</div>
+    </div>
+
+    <!-- Convergence callout -->
+    <div style="margin-top:40px;max-width:640px;border:1px solid rgba(74,240,200,0.25);border-radius:2px;padding:24px 28px;background:rgba(74,240,200,0.04);">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--cyan);margin-bottom:14px;opacity:0.8;">CONVERGENCE BRIEF</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--cyan);margin-bottom:5px;" onclick="scrollToScene('scene-f1')" class="conn-pill" style="display:block">Foldable Paradox</div>
+          <div style="font-size:11px;color:var(--ink-faint);line-height:1.5;">36% differentiation, 12% awareness — the strongest unused asset.</div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:5px;">Expresser Segment</div>
+          <div style="font-size:11px;color:var(--ink-faint);line-height:1.5;">75% AI affinity, perfect Z Flip fit — Apple is winning them right now.</div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:#a78bfa;margin-bottom:5px;">Media Reallocation</div>
+          <div style="font-size:11px;color:var(--ink-faint);line-height:1.5;">TV → Social. 86% on the wrong medium. Directly correctable.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ═══════════════════════════════════════════
+     IMPACT SIMULATOR
+═══════════════════════════════════════════ -->
+<section id="scene-simulator">
+  <div class="sim-top">
+    <div class="priority-label">
+      <span class="priority-rank">Interactive</span>
+      Strategic Simulator
+    </div>
+    <div class="insight-type-tag reveal">Impact Modelling</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      Which levers move<br><em>the numbers</em>?
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      Set investment intensity for each insight lever. The model projects revenue, volume, and market share across segments for the next 3 years — calibrated to Samsung DE 2025 baseline. Run AI analysis for strategic narrative.
+    </div>
+  </div>
+
+  <div class="sim-body">
+
+    <!-- ── CONTROLS ── -->
+    <div class="sim-controls">
+      <div class="sim-section-label">Scenario Presets</div>
+      <div class="sim-presets">
+        <button class="sim-preset-card" onclick="applyPreset('aggressive')">
+          <span class="sim-preset-icon">◈</span>
+          <span class="sim-preset-name">Aggressive</span>
+          <span class="sim-preset-desc">All levers high — max growth bet</span>
+        </button>
+        <button class="sim-preset-card" onclick="applyPreset('focused')">
+          <span class="sim-preset-icon">◎</span>
+          <span class="sim-preset-name">Focused</span>
+          <span class="sim-preset-desc">Foldable + Expressers only</span>
+        </button>
+        <button class="sim-preset-card" onclick="applyPreset('cautious')">
+          <span class="sim-preset-icon">◇</span>
+          <span class="sim-preset-name">Cautious</span>
+          <span class="sim-preset-desc">Conservative, brand-focused</span>
+        </button>
+        <button class="sim-preset-card sim-preset-reset" onclick="applyPreset('reset')">
+          <span class="sim-preset-icon">↺</span>
+          <span class="sim-preset-name">Reset</span>
+          <span class="sim-preset-desc">Back to 50% baseline</span>
+        </button>
+      </div>
+
+      <div class="sim-section-label">Insight Levers</div>
+
+      <div class="sim-lever">
+        <div class="sim-lever-header">
+          <div class="sim-lever-name">Foldable Awareness Campaign</div>
+          <div class="sim-lever-val" id="lv-f1-val">50%</div>
+        </div>
+        <input type="range" class="sim-slider" id="lv-f1" min="0" max="100" value="50" oninput="updateLever('f1',this.value)">
+        <div class="sim-lever-desc">Investment in Z Fold/Flip awareness — from targeted social to mass media</div>
+      </div>
+
+      <div class="sim-lever">
+        <div class="sim-lever-header">
+          <div class="sim-lever-name">Gen Z Channel Shift</div>
+          <div class="sim-lever-val" id="lv-f2-val">50%</div>
+        </div>
+        <input type="range" class="sim-slider" id="lv-f2" min="0" max="100" value="50" oninput="updateLever('f2',this.value)">
+        <div class="sim-lever-desc">Reallocation of media budget toward digital/social channels</div>
+      </div>
+
+      <div class="sim-lever">
+        <div class="sim-lever-header">
+          <div class="sim-lever-name">Expresser Activation</div>
+          <div class="sim-lever-val" id="lv-f3-val">50%</div>
+        </div>
+        <input type="range" class="sim-slider" id="lv-f3" min="0" max="100" value="50" oninput="updateLever('f3',this.value)">
+        <div class="sim-lever-desc">Creator-led campaigns targeting Expresser segment for Z Flip</div>
+      </div>
+
+      <div class="sim-lever">
+        <div class="sim-lever-header">
+          <div class="sim-lever-name">Innovation Narrative</div>
+          <div class="sim-lever-val" id="lv-f6-val">50%</div>
+        </div>
+        <input type="range" class="sim-slider" id="lv-f6" min="0" max="100" value="50" oninput="updateLever('f6',this.value)">
+        <div class="sim-lever-desc">Brand storytelling around patent leadership &amp; product firsts</div>
+      </div>
+
+      <div class="sim-lever">
+        <div class="sim-lever-header">
+          <div class="sim-lever-name">Premium Repositioning</div>
+          <div class="sim-lever-val" id="lv-f7-val">50%</div>
+        </div>
+        <input type="range" class="sim-slider" id="lv-f7" min="0" max="100" value="50" oninput="updateLever('f7',this.value)">
+        <div class="sim-lever-desc">Aspirational brand campaign targeting Life Maximizers &amp; Tech Enthusiasts</div>
+      </div>
+
+      <div class="sim-lever">
+        <div class="sim-lever-header">
+          <div class="sim-lever-name">Loyalty &amp; Ecosystem Depth</div>
+          <div class="sim-lever-val" id="lv-f8-val">50%</div>
+        </div>
+        <input type="range" class="sim-slider" id="lv-f8" min="0" max="100" value="50" oninput="updateLever('f8',this.value)">
+        <div class="sim-lever-desc">Galaxy ecosystem incentives, upgrade programmes, retention</div>
+      </div>
+
+      <button class="sim-run-btn" id="sim-run-btn" onclick="runSimulator()">
+        <div class="sim-spinner"></div>
+        <span id="sim-run-label">Run Projection + AI Analysis</span>
+      </button>
+    </div>
+
+    <!-- ── OUTPUT ── -->
+    <div class="sim-output">
+      <div class="sim-placeholder" id="sim-placeholder">
+        <div class="sim-placeholder-icon">◎</div>
+        <div class="sim-placeholder-text">Set levers and run projection</div>
+      </div>
+
+      <div class="sim-results" id="sim-results">
+        <div class="sim-year-tabs">
+          <button class="sim-year-tab active" onclick="showYear(1)">Year 1 · 2026</button>
+          <button class="sim-year-tab" onclick="showYear(2)">Year 2 · 2027</button>
+          <button class="sim-year-tab" onclick="showYear(3)">Year 3 · 2028</button>
+        </div>
+
+        <!-- Year panels injected by JS -->
+        <div id="sim-year-panels"></div>
+
+        <div class="sim-ai-narrative" id="sim-ai-narrative">
+          <div class="sim-ai-label">AI Strategic Analysis</div>
+          <div id="sim-ai-text"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     CLOSING — THE BRIEF
+═══════════════════════════════════════════ -->
+<section id="scene-closing">
+  <div class="closing-headline reveal">Three Facts.<br>One Brief.</div>
+  <div class="closing-sub reveal reveal-delay-1">All eight insights converge into one single strategic task. This is the pitch.</div>
+
+  <div class="closing-three reveal reveal-delay-2">
+    <div class="c3-cell">
+      <div class="c3-num">01 · MARKET</div>
+      <div class="c3-fact">Germany wants premium</div>
+      <div class="c3-desc">58% flagship rate. #2 globally. The appetite exists.</div>
+    </div>
+    <div class="c3-cell">
+      <div class="c3-num">02 · PRODUCT</div>
+      <div class="c3-fact">Samsung has the weapon</div>
+      <div class="c3-desc">Z Fold/Flip: 36% differentiation. #1 in market. Almost unknown.</div>
+    </div>
+    <div class="c3-cell">
+      <div class="c3-num">03 · AUDIENCE</div>
+      <div class="c3-fact">The audience is reachable</div>
+      <div class="c3-desc">Expressers + Life Maximizers = 39%. Apple-leaning but mapped to Samsung products.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     EXPAND DATA — DETAIL OVERLAYS
+═══════════════════════════════════════════ -->
+<script>
+const expandData = {
+
+  foldable: {
+    headline: 'Foldable Portfolio — Full Data',
+    sub: 'Differentiation · Awareness · Segment Ownership',
+    content: `
+      <table class="data-table">
+        <tr><th>Metrik</th><th>Z Fold</th><th>Z Flip</th><th>iPhone 14</th></tr>
+        <tr><td class="highlight">"Neu &amp; Anders"</td><td class="good">36%</td><td class="good">33%</td><td>25%</td></tr>
+        <tr><td class="highlight">Awareness DE</td><td class="bad">12%</td><td class="bad">12%</td><td>14%</td></tr>
+        <tr><td>Expresser Ownership</td><td>—</td><td class="bad">7%</td><td class="bad">Apple base 50%</td></tr>
+        <tr><td>Galaxy AI Daily Benefit</td><td colspan="2" class="warn">Samsung 25%</td><td class="bad">Apple 36%</td></tr>
+      </table>
+      <div class="expand-insight">
+        <strong>Das Paradox:</strong> Samsung's most differentiated product (Z Fold, 36% "New &amp; Different") has worse awareness than the iPhone 14 (14% vs 12%), despite scoring 11pp higher. Galaxy AI reaches Traditionalists (35% AI affinity) instead of Expressers (75% AI affinity). Both are pure communication and media strategy failures.
+      </div>`
+  },
+
+  genz: {
+    headline: 'Generationenverteilung — View full cohort analysis',
+    sub: 'Enthusiast base by generation · DE Market 2025',
+    content: `
+      <table class="data-table">
+        <tr><th>Generation</th><th>Samsung</th><th>Apple</th><th>Xiaomi</th><th>Pixel</th><th>Market avg</th></tr>
+        <tr><td class="highlight">Gen Z</td><td class="bad">15%</td><td class="bad">34%</td><td>15%</td><td>20%</td><td>21%</td></tr>
+        <tr><td class="highlight">Millennials</td><td>32%</td><td>35%</td><td>35%</td><td>36%</td><td>33%</td></tr>
+        <tr><td class="highlight">Gen X</td><td class="warn">38%</td><td>24%</td><td>39%</td><td>35%</td><td>34%</td></tr>
+        <tr><td class="highlight">Boomers</td><td>15%</td><td>7%</td><td>11%</td><td>9%</td><td>12%</td></tr>
+      </table>
+      <div class="expand-insight">
+        <strong>The Twist:</strong> Samsung over-indexes in Gen X (+4pp above market baseline) and Boomers (+3pp). Apple over-indexes in Gen Z (+13pp) and Millennials (+2pp). This shift is not accidental — it is the result of years of media and brand strategy. Every year Gen Z grows into purchasing power, Apple's structural advantages strengthen.
+      </div>`
+  },
+
+  'all-segments': {
+    headline: 'All 5 Consumer Segments — Full Analysis',
+    sub: 'Samsung MX Segment Map · Germany',
+    content: `
+      <table class="data-table">
+        <tr><th>Segment</th><th>Market share</th><th>Lean</th><th>Risiko</th><th>Profil</th><th>Produkt-Match</th></tr>
+        <tr>
+          <td class="highlight">Traditionalists</td><td class="warn">36%</td><td>Samsung</td><td class="bad">HIGH</td>
+          <td>40s–50s · sub-€400 · AI-Affin. 35%</td><td>A-Series (wird zu Xiaomi abwandern)</td>
+        </tr>
+        <tr>
+          <td class="highlight">Trend Followers</td><td>16%</td><td>Neutral</td><td class="warn">MED</td>
+          <td>20s · 56% female · Privacy-sensitiv · €600–800</td><td>Pro Max konkurriert (24% Anteil)</td>
+        </tr>
+        <tr>
+          <td class="highlight">Expressers</td><td>20%</td><td class="bad">Apple</td><td class="bad">HIGH</td>
+          <td>20s · TikTok/IG-nativ · AI-Affin. 75% · €600–800</td><td class="good">Z Flip — perfekter Fit · nur 7% Ownership</td>
+        </tr>
+        <tr>
+          <td class="highlight">Tech Enthusiasts</td><td>9%</td><td class="bad">Apple</td><td class="warn">MED</td>
+          <td>Ultra-premium · $1200+ · Highest AI-Nutzung</td><td class="good">S Ultra — richtiges Produkt, Positioning-Gap</td>
+        </tr>
+        <tr>
+          <td class="highlight">Life Maximizers</td><td>19%</td><td class="bad">Apple</td><td class="warn">MED</td>
+          <td>Productivity · 46% work/study · Highest WTP DE</td><td class="good">Galaxy AI + DeX + S Pen — perfekter Fit</td>
+        </tr>
+      </table>
+      <div class="expand-insight">
+        <strong>The Misalignment Thesis:</strong> Samsung's communication is optimised for Traditionalists (36%, lowest premium affinity). Expressers, Life Maximizers and Tech Enthusiasts represent 48% of the market, are all Apple-leaning, and all map directly to Samsung's most differentiated products. This is the strategic gap Cheil can own.
+      </div>`
+  },
+
+  'segment-expressers': {
+    headline: 'Expressers — Segment Deep-Dive',
+    sub: '20% Market share · Apple-leaning · HIGH RISK',
+    content: `
+      <table class="data-table">
+        <tr><th>Attribut</th><th>Expresser</th><th>Market avg</th></tr>
+        <tr><td>Market share</td><td class="good">20%</td><td>—</td></tr>
+        <tr><td>Apple share in segment</td><td class="bad">27.6%</td><td>—</td></tr>
+        <tr><td>Samsung share in segment</td><td class="warn">17.5%</td><td>—</td></tr>
+        <tr><td>AI affinity</td><td class="good">75%</td><td>~50%</td></tr>
+        <tr><td>Z Flip Ownership</td><td class="bad">7%</td><td>—</td></tr>
+        <tr><td>Willingness to pay</td><td class="good">€600–800</td><td>—</td></tr>
+        <tr><td>Demographics</td><td>Anfang 20s, female-skewed</td><td>—</td></tr>
+        <tr><td>Primary platforms</td><td>Instagram, TikTok</td><td>—</td></tr>
+        <tr><td>Emotional driver</td><td>Creative Fulfillment</td><td>—</td></tr>
+      </table>
+      <div class="expand-insight">
+        The Z Flip is the perfect Expresser product. Compact form factor ✓. Creative camera features ✓. Galaxy AI for content creation ✓. Budget fit (€600–800) ✓. Only 7% Expresser Z Flip ownership means: the product exists, the communication does not.
+      </div>`
+  },
+
+  'segment-lifemax': {
+    headline: 'Life Maximizers — Segment Deep-Dive',
+    sub: '19% Market share · Apple-leaning · MED RISK',
+    content: `
+      <table class="data-table">
+        <tr><th>Attribut</th><th>Life Maximizer</th><th>Market avg</th></tr>
+        <tr><td>Market share DE</td><td class="good">19%</td><td>17% global</td></tr>
+        <tr><td>Apple Pro Max-Anteil</td><td class="bad">39%</td><td>—</td></tr>
+        <tr><td>Samsung S Ultra share</td><td class="warn">28%</td><td>—</td></tr>
+        <tr><td>Work/Study-Nutzung</td><td class="good">46%</td><td>—</td></tr>
+        <tr><td>Document editing</td><td class="good">54%</td><td>—</td></tr>
+        <tr><td>Willingness to Pay DE</td><td class="good">Highest in market</td><td>—</td></tr>
+        <tr><td>Galaxy AI Fit</td><td class="good">Perfect</td><td>—</td></tr>
+        <tr><td>DeX / S Pen Fit</td><td class="good">Perfect</td><td>—</td></tr>
+      </table>
+      <div class="expand-insight">
+        Life Maximizers are over-represented in Germany (+2pp above global). Their productivity needs map directly to Galaxy AI + DeX + S Pen. Highest willingness to pay in market. Yet Apple Pro Max 39% vs S Ultra 28%. That is a messaging and channel problem, not a product problem.
+      </div>`
+  },
+
+  'segment-tech': {
+    headline: 'Tech Enthusiasts — Segment Deep-Dive',
+    sub: '9% Market share · Apple-leaning · MED RISK',
+    content: `
+      <table class="data-table">
+        <tr><th>Attribut</th><th>Tech Enthusiast</th><th>Market avg</th></tr>
+        <tr><td>Market share</td><td>9%</td><td>—</td></tr>
+        <tr><td>Apple Pro Max-Anteil</td><td class="bad">41%</td><td>—</td></tr>
+        <tr><td>Samsung S Ultra share</td><td class="warn">28%</td><td>—</td></tr>
+        <tr><td>$1,200+ spend</td><td class="good">23.7%</td><td>—</td></tr>
+        <tr><td>AI usage (daily)</td><td class="good">Highest in market</td><td>—</td></tr>
+        <tr><td>Paid AI Subscription</td><td class="good">Highest rate</td><td>—</td></tr>
+        <tr><td>Privacy concerns</td><td class="good">Lowest</td><td>—</td></tr>
+      </table>
+      <div class="expand-insight">
+        S Ultra is the right product for Tech Enthusiasts. The hardware specs are competitive. The problem is positioning — Samsung does not communicate S Ultra as "the best Android for real AI power users". That is the gap Cheil can address.
+      </div>`
+  },
+
+  'segment-trad': {
+    headline: 'Traditionalists — Segment Deep-Dive',
+    sub: '36% Market share · Samsung-leaning · HIGH RISK',
+    content: `
+      <table class="data-table">
+        <tr><th>Attribut</th><th>Traditionalist</th><th>Market avg</th></tr>
+        <tr><td>Market share</td><td class="warn">36%</td><td>—</td></tr>
+        <tr><td>Ownership rate</td><td class="warn">39.6%</td><td>—</td></tr>
+        <tr><td>AI affinity</td><td class="bad">35%</td><td>~50%</td></tr>
+        <tr><td>Price sensitivity</td><td class="bad">Highest</td><td>—</td></tr>
+        <tr><td>Age</td><td>40s–50s</td><td>—</td></tr>
+        <tr><td>Preferred device</td><td>A-Series sub-€400</td><td>—</td></tr>
+        <tr><td>Churn risk</td><td class="bad">Zu Xiaomi (Preis)</td><td>—</td></tr>
+      </table>
+      <div class="expand-insight">
+        Traditionalists are Samsung's ownership backbone — but not the growth foundation. As smartphones commoditise, they defect to Xiaomi on price, not up to Samsung's premium range. Focusing media budget on this group generates volume without equity.
+      </div>`
+  },
+
+  innovation: {
+    headline: 'Innovation Paradox — Full Data',
+    sub: 'Brand Image Attributes · DE Market 2025',
+    content: `
+      <table class="data-table">
+        <tr><th>Brand-Attribut</th><th>Samsung</th><th>Apple</th><th>Delta</th></tr>
+        <tr><td class="highlight">Premium</td><td class="bad">12%</td><td>20%</td><td class="bad">−8pp</td></tr>
+        <tr><td class="highlight">Innovativ</td><td>14%</td><td>14%</td><td>0pp</td></tr>
+        <tr><td class="highlight">Stylish</td><td class="bad">12%</td><td>18%</td><td class="bad">−6pp</td></tr>
+        <tr><td class="highlight">High quality</td><td>20%</td><td>22%</td><td>−2pp</td></tr>
+        <tr><td class="highlight">Trustworthy</td><td class="good">24%</td><td>18%</td><td class="good">+6pp</td></tr>
+        <tr><td class="highlight">Good value for money</td><td class="good">22%</td><td>10%</td><td class="good">+12pp</td></tr>
+      </table>
+      <table class="data-table" style="margin-top:20px">
+        <tr><th>Metrik</th><th>Samsung</th><th>Apple</th><th>Context</th></tr>
+        <tr><td>US Patents 2024</td><td class="good">6.377 (#1)</td><td>~2.000</td><td>3× mehr Patente, gleiche "Innovativ"-Wahrnehmung</td></tr>
+        <tr><td>Brand value</td><td class="bad">$29B</td><td class="bad">$1,299B</td><td>44× gap</td></tr>
+        <tr><td>Globaler Market share</td><td class="good">19.6% (#1)</td><td>16.2%</td><td>Mehr Share, weniger Brand Value</td></tr>
+      </table>
+      <div class="expand-insight">
+        <strong>The Core Thesis:</strong> Samsung is more innovative than Apple by almost every objective metric (patents, product differentiation, hardware firsts). The perception gap is purely communicative. Apple is better at framing its innovations as cultural moments. That is the model.
+      </div>`
+  }
+};
+
+
+// ── EXPAND FUNCTIONS ──
+function openExpand(key) {
+  const data = expandData[key];
+  if (!data) return;
+  const overlay = document.getElementById('expand-overlay');
+  const content = document.getElementById('expand-content');
+  content.innerHTML = `
+    <div class="expand-headline">${data.headline}</div>
+    <div class="expand-sub">${data.sub}</div>
+    ${data.content}
+  `;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeExpand() {
+  document.getElementById('expand-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('expand-overlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('expand-overlay')) closeExpand();
+});
+
+// ── SCROLL TO SCENE ──
+function scrollToScene(id) {
+  closeExpand();
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Chapter dot nav
+document.querySelectorAll('.ch-dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    const target = dot.dataset.target;
+    if (target) scrollToScene(target);
+  });
+});
+
+// ── SCROLL OBSERVER ──
+const scenes = document.querySelectorAll('section');
+const dots = document.querySelectorAll('.ch-dot');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      const idx = Array.from(scenes).indexOf(entry.target);
+
+      // Update dots
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+      // Animate reveals in this section
+      entry.target.querySelectorAll('.reveal').forEach((el, i) => {
+        setTimeout(() => el.classList.add('in'), i * 80);
+      });
+
+      // Animate bars
+      entry.target.querySelectorAll('.h-bar-fill').forEach(bar => {
+        const pct = parseFloat(bar.dataset.pct);
+        if (pct) {
+          setTimeout(() => { bar.style.transform = `scaleX(${pct / 100})`; }, 200);
+        }
+      });
+
+      // Media fills
+      entry.target.querySelectorAll('.ma-fill').forEach(fill => {
+        const pct = parseFloat(fill.dataset.pct);
+        if (pct) setTimeout(() => { fill.style.transform = `scaleX(${pct / 100})`; }, 200);
+      });
+
+      // Funnel bars
+      entry.target.querySelectorAll('.f-bar-inner').forEach(bar => {
+        const pct = parseFloat(bar.dataset.pct);
+        if (pct) setTimeout(() => { bar.style.transform = `scaleX(${pct / 100})`; }, 200);
+      });
+
+      // Funnel steps stagger
+      entry.target.querySelectorAll('.f-step').forEach((step, i) => {
+        setTimeout(() => step.classList.add('in'), i * 100 + 100);
+      });
+
+      // Opportunity bubbles animate in
+      if (entry.target.id === 'scene-opportunity') {
+        entry.target.querySelectorAll('.opp-bubble-wrap').forEach((b, i) => {
+          b.style.opacity = '0';
+          b.style.transform = 'translate(-50%, 50%) scale(0)';
+          setTimeout(() => {
+            b.style.transition = 'opacity 0.5s ease, transform 0.5s cubic-bezier(0.16,1,0.3,1)';
+            b.style.opacity = '1';
+            b.style.transform = 'translate(-50%, 50%) scale(1)';
+          }, i * 80 + 200);
+        });
+      }
+    }
+  });
+}, { threshold: 0.15 });
+
+scenes.forEach(s => observer.observe(s));
+
+// ── PROGRESS BAR ──
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = (scrollTop / docHeight) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+});
+
+
+// ── MARKETING ACTIONS — KI GENERATION ──
+
+const findingContexts = {
+  f1: {
+    title: 'Foldable Paradox',
+    context: `Samsung's Z Fold/Flip has the highest differentiation score in the German market (36% "new & different", #1) but only 12% awareness. The Expresser segment (20% of market, 75% AI affinity, age 20s, TikTok/Instagram native, 600-800 EUR budget) is the perfect audience but only 7% own a Z Flip. Galaxy AI reaches the wrong segment (Traditionalists, 35% AI affinity) instead of Expressers. Germany is the #2 flagship market globally (58% flagship rate).`
+  },
+  f2: {
+    title: 'Gen Z Deficit',
+    context: `Samsung has only 15% Gen Z enthusiasts vs Apple 34% -- a 19pp deficit. Apple achieves 61-66% brand lock-in for ages 18-29. Samsung over-indexes in Gen X (38%) and under-indexes in Gen Z (15% vs 21% market baseline). 86% of Samsung Germany ad budget goes to TV, the channel with declining youth reach. Apple dominates digital and social where Gen Z lives.`
+  },
+  f3: {
+    title: 'Expresser Segment — Missed Opportunity',
+    context: `Expressers (20% of German market): female-skewed, early 20s, Instagram/TikTok-native, 75% AI affinity, creative-driven, 600-800 EUR willingness to pay. Apple has 27.6% share vs Samsung 17.5% in this segment. Z Flip is the perfect product match but only 7% Expresser ownership. Emotional purchase driver: creative fulfillment. This segment needs creator-led campaigns.`
+  },
+  f4: {
+    title: 'Media Budget Misallocation',
+    context: `Samsung Germany spends 86% of its 134M EUR ad budget on TV (declining reach among under-25s), 9% on Digital, 4% OOH/Cinema, 1% Print. Apple dominates digital and social channels. Expressers and Trend Followers (36% of market combined) are reachable primarily through social and creator channels.`
+  },
+  f5: {
+    title: 'Segment Misalignment',
+    context: `Samsung strategy is optimized for Traditionalists (36% of base, 40s-50s, sub-400 EUR, 35% AI affinity, highest churn risk to Xiaomi). The three premium segments -- Expressers (20%), Life Maximizers (19%), Tech Enthusiasts (9%) -- represent 48% of market, all Apple-leaning, all map perfectly to Samsung best products. Life Maximizers are over-represented in Germany (19% vs 17% global) with highest willingness to pay.`
+  },
+  f6: {
+    title: 'Innovation Without Perception',
+    context: `Samsung filed 6,377 US patents in 2024 (#1 globally) but only 14% of German consumers associate Samsung with "innovative" -- tied with Apple. Apple brand value is 1,299B USD vs Samsung 29B USD (44x gap). Samsung brand image scores: Premium 12% (vs Apple 20%), Innovative 14% (tied), Stylish 12% (vs Apple 18%). Samsung leads on Trustworthy 24% and Good Value 22%.`
+  },
+  f7: {
+    title: 'Premium Perception Gap',
+    context: `Germany has 58% flagship market rate (>800 EUR), #2 globally -- double the global average. Samsung "Premium" brand association: 12% vs Apple 20% -- 8pp deficit in world's second-largest premium smartphone market. Samsung has the products (S Ultra, Z Fold) and the market. The problem is purely perception and positioning. High-income share: Apple 40% vs Samsung 31%.`
+  },
+  f8: {
+    title: 'Loyalty Gap',
+    context: `Samsung loyalty 88% vs Apple 92% -- 4pp deficit that compounds annually. Samsung ownership 44% (11pp above Apple 33%), but Apple higher loyalty means its base compounds. 27% of users are open to switching. Apple ecosystem lock-in (AirPods, Watch, iCloud, iMessage) drives retention Samsung lacks. Samsung needs a Galaxy ecosystem retention strategy.`
+  }
+};
+
+const categoryConfig = [
+  { key: 'pricing',      label: 'Pricing',       dotClass: 'dot-pricing' },
+  { key: 'promotion',    label: 'Promotion',     dotClass: 'dot-promotion' },
+  { key: 'channel',      label: 'Channel',       dotClass: 'dot-channel' },
+  { key: 'distribution', label: 'Distribution',  dotClass: 'dot-distribution' },
+  { key: 'product',      label: 'Product',       dotClass: 'dot-product' },
+  { key: 'retail',       label: 'Owned Retail',  dotClass: 'dot-retail' },
+];
+
+async function generateActions(btn, findingId) {
+  const resultsEl = document.getElementById('ma-' + findingId);
+  if (resultsEl.classList.contains('visible')) {
+    resultsEl.classList.remove('visible');
+    btn.classList.remove('open');
+    return;
+  }
+  if (resultsEl.innerHTML.trim() !== '') {
+    resultsEl.classList.add('visible');
+    btn.classList.add('open');
+    return;
+  }
+
+  const ctx = findingContexts[findingId];
+  if (!ctx) return;
+
+  btn.classList.add('loading');
+  btn.querySelector('.ma-label').textContent = 'Analysing…';
+  btn.disabled = true;
+
+  const systemPrompt = `You are a senior marketing strategist specializing in consumer electronics and brand strategy for the German market. Generate concrete, actionable marketing recommendations based on data insights. Always respond with valid JSON only -- no markdown, no explanation outside the JSON structure.`;
+
+  const userPrompt = `Based on this strategic insight about Samsung Germany, generate specific marketing action recommendations across 6 categories.
+
+Insight: ${ctx.title}
+Context: ${ctx.context}
+
+Return ONLY this JSON structure (pure JSON, no markdown):
+{
+  "actions": [
+    {
+      "category": "pricing",
+      "title": "Short action title max 8 words",
+      "description": "Concrete description 2-3 sentences specific and actionable",
+      "impact": "high",
+      "effort": "medium"
+    }
+  ]
+}
+
+Generate exactly 2 actions per category (pricing, promotion, channel, distribution, product, retail) = 12 actions total.
+Make each action specific to Samsung Germany context and this insight. Be concrete not generic.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1800,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }]
+      })
+    });
+
+    const data = await response.json();
+    const raw = data.content?.find(b => b.type === 'text')?.text || '';
+    let parsed;
+    try {
+      const clean = raw.replace(/```json|```/g, '').trim();
+      parsed = JSON.parse(clean);
+    } catch (e) {
+      throw new Error('JSON parse failed: ' + raw.substring(0, 200));
+    }
+
+    const actions = parsed.actions || [];
+    renderActions(resultsEl, actions);
+    resultsEl.classList.add('visible');
+    btn.classList.add('open');
+
+  } catch (err) {
+    resultsEl.innerHTML = `<div class="ma-error">Generierung fehlgeschlagen. Bitte erneut versuchen. (${err.message})</div>`;
+    resultsEl.classList.add('visible');
+    console.error(err);
+  } finally {
+    btn.classList.remove('loading');
+    btn.querySelector('.ma-label').textContent = 'Generate AI marketing actions';
+    btn.disabled = false;
+  }
+}
+
+function renderActions(container, actions) {
+  const grouped = {};
+  actions.forEach(a => {
+    if (!grouped[a.category]) grouped[a.category] = [];
+    grouped[a.category].push(a);
+  });
+
+  let html = '';
+  categoryConfig.forEach(cat => {
+    const catActions = grouped[cat.key];
+    if (!catActions || catActions.length === 0) return;
+    html += `<div class="ma-category">
+      <div class="ma-cat-header">
+        <div class="ma-cat-dot ${cat.dotClass}"></div>
+        <div class="ma-cat-name">${cat.label}</div>
+      </div>
+      <div class="ma-actions-list">`;
+    catActions.forEach(action => {
+      const impactClass = action.impact === 'high' ? 'impact-h' : 'impact-m';
+      const effortClass = action.effort === 'high' ? 'effort-h' : action.effort === 'medium' ? 'effort-m' : 'effort-l';
+      const impactLabel = action.impact === 'high' ? 'HIGH IMPACT' : 'MED IMPACT';
+      const effortLabel = action.effort === 'high' ? 'HIGH EFFORT' : action.effort === 'medium' ? 'MED EFFORT' : 'LOW EFFORT';
+      html += `<div class="ma-action-card">
+        <div class="ma-action-title">${action.title}</div>
+        <div class="ma-action-desc">${action.description}</div>
+        <div class="ma-action-meta">
+          <span class="ma-badge ${impactClass}">${impactLabel}</span>
+          <span class="ma-badge ${effortClass}">${effortLabel}</span>
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  container.innerHTML = html;
+}
+
+
+// ══════════════════════════════════════════════
+// BEST PRACTICE — AI GENERATION
+// ══════════════════════════════════════════════
+
+const bpContexts = {
+  f1: { title: 'Foldable Paradox', context: "Samsung has the most differentiated product in the German market (Z Fold/Flip, 36% 'new & different', #1) but only 12% consumer awareness. The product is invisible despite being best-in-class." },
+  f2: { title: 'Gen Z Deficit', context: "Samsung has only 15% Gen Z enthusiasts vs Apple's 34%. Apple achieves 61-66% brand lock-in with 18-29 year-olds. Samsung's audience is aging while Apple owns the next generation." },
+  f3: { title: 'Expresser Segment Missed', context: "Expressers (20% market, 75% AI affinity, creative-driven, early 20s, EUR600-800 budget) are the perfect Z Flip audience. Apple holds 27.6% in this segment vs Samsung 17.5%. Only 7% own a Z Flip." },
+  f4: { title: 'Media Budget Misallocation', context: "Samsung spends 86% of its EUR134M German ad budget on TV, only 9% on digital. Gen Z and Expressers live on TikTok and Instagram. The channel mix is catastrophically misaligned with the target audience." },
+  f5: { title: 'Segment Misalignment', context: "Samsung optimises for Traditionalists (36%, 40s-50s, sub-EUR400, lowest premium affinity) while premium segments — Expressers, Life Maximizers, Tech Enthusiasts (48% combined) — are Apple-leaning and under-served." },
+  f6: { title: 'Innovation Without Perception', context: "Samsung filed 6,377 US patents in 2024 (#1 globally) but only 14% of Germans associate Samsung with 'innovative' — tied with Apple. Brand value gap: Apple USD1,299B vs Samsung USD29B (44x). R&D investment is product-visible but brand-invisible." },
+  f7: { title: 'Premium Perception Gap', context: "Germany has 58% flagship market rate (#2 globally) but Samsung's 'Premium' brand association is only 12% vs Apple's 20%. An 8pp deficit in the world's most premium-hungry market." },
+  f8: { title: 'Loyalty Gap', context: "Samsung loyalty 88% vs Apple 92%. Samsung owns more (44% vs 33%) but Apple's higher loyalty compounds its base. Samsung wins the first purchase, Apple wins every renewal." },
+};
+
+async function generateBestPractice(btn, insightId) {
+  const resultsEl = document.getElementById('bp-' + insightId);
+  if (resultsEl.classList.contains('visible')) {
+    resultsEl.classList.remove('visible');
+    btn.classList.remove('open');
+    return;
+  }
+  if (resultsEl.innerHTML.trim() !== '') {
+    resultsEl.classList.add('visible');
+    btn.classList.add('open');
+    return;
+  }
+
+  const ctx = bpContexts[insightId];
+  if (!ctx) return;
+
+  btn.classList.add('loading');
+  btn.querySelector('.bp-label').textContent = 'Finding examples…';
+  btn.disabled = true;
+
+  const prompt = `You are a strategic marketing consultant. Based on this challenge Samsung faces in Germany, provide 2 real-world company examples that solved a similar problem — one direct competitor or peer in consumer electronics, one from a completely different industry.
+
+Challenge: ${ctx.title}
+Context: ${ctx.context}
+
+Return ONLY valid JSON (no markdown, no code blocks):
+{
+  "examples": [
+    {
+      "type": "competitor",
+      "company": "Company name",
+      "sector": "Sector",
+      "result_headline": "Quantified result in ~6 words",
+      "problem": "The specific problem they faced (2 sentences)",
+      "action": "The specific action they took (2 sentences)",
+      "result": "The measurable outcome (2 sentences with specific numbers)"
+    },
+    {
+      "type": "cross-industry",
+      "company": "Company name",
+      "sector": "Sector",
+      "result_headline": "Quantified result in ~6 words",
+      "problem": "The specific problem they faced (2 sentences)",
+      "action": "The specific action they took (2 sentences)",
+      "result": "The measurable outcome (2 sentences with specific numbers)"
+    }
+  ]
+}
+
+Use real companies with real documented cases. Be specific with numbers.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1200,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await response.json();
+    const raw = data.content?.find(b => b.type === 'text')?.text || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    let html = '';
+    (parsed.examples || []).forEach(ex => {
+      const tagClass = ex.type === 'competitor' ? 'competitor' : 'cross-industry';
+      const tagLabel = ex.type === 'competitor' ? 'Direct Peer' : 'Cross-Industry';
+      html += `<div class="bp-example">
+        <div class="bp-example-header">
+          <span class="bp-company-tag ${tagClass}">${tagLabel}</span>
+          <span class="bp-company-name">${ex.company}</span>
+          <span style="font-size:10px;color:var(--ink-faint);font-family:'DM Mono',monospace;letter-spacing:1px;">${ex.sector}</span>
+          <span class="bp-result-badge">${ex.result_headline}</span>
+        </div>
+        <div class="bp-example-body">
+          <div>
+            <div class="bp-col-label">Problem</div>
+            <div class="bp-col-text">${ex.problem}</div>
+          </div>
+          <div>
+            <div class="bp-col-label">Action</div>
+            <div class="bp-col-text">${ex.action}</div>
+          </div>
+          <div>
+            <div class="bp-col-label">Result</div>
+            <div class="bp-col-text"><strong>${ex.result}</strong></div>
+          </div>
+        </div>
+      </div>`;
+    });
+
+    resultsEl.innerHTML = html;
+    resultsEl.classList.add('visible');
+    btn.classList.add('open');
+  } catch(err) {
+    resultsEl.innerHTML = `<div class="ma-error">Failed to load examples. Please try again.</div>`;
+    resultsEl.classList.add('visible');
+    console.error(err);
+  } finally {
+    btn.classList.remove('loading');
+    btn.querySelector('.bp-label').textContent = 'Show real-world best practice examples';
+    btn.disabled = false;
+  }
+}
+
+// ══════════════════════════════════════════════
+// IMPACT SIMULATOR
+// ══════════════════════════════════════════════
+
+// Samsung DE 2025 Baseline
+const BASELINE = {
+  revenue: 2.8,      // EUR billion
+  volume: 7.4,       // million units
+  marketShare: 37.0, // %
+  segments: {
+    Traditionalists:  { share: 36, samPct: 40 },
+    Expressers:       { share: 20, samPct: 18 },
+    'Life Maximizers':{ share: 19, samPct: 28 },
+    'Trend Followers':{ share: 16, samPct: 24 },
+    'Tech Enthusiasts':{ share: 9, samPct: 28 },
+  }
+};
+
+const leverState = { f1:50, f2:50, f3:50, f6:50, f7:50, f8:50 };
+
+// Lever impact coefficients (per 100% investment, annual effect)
+const LEVER_IMPACT = {
+  f1: { revenueBoost: 0.08, volumeBoost: 0.06, msBoost: 1.2,
+        segEffect: { Expressers: 0.18, 'Life Maximizers': 0.10, 'Tech Enthusiasts': 0.08 } },
+  f2: { revenueBoost: 0.05, volumeBoost: 0.07, msBoost: 0.9,
+        segEffect: { Expressers: 0.22, 'Trend Followers': 0.18 } },
+  f3: { revenueBoost: 0.06, volumeBoost: 0.08, msBoost: 1.0,
+        segEffect: { Expressers: 0.28, 'Trend Followers': 0.12 } },
+  f6: { revenueBoost: 0.04, volumeBoost: 0.03, msBoost: 0.6,
+        segEffect: { 'Tech Enthusiasts': 0.15, 'Life Maximizers': 0.10 } },
+  f7: { revenueBoost: 0.09, volumeBoost: 0.04, msBoost: 0.8,
+        segEffect: { 'Life Maximizers': 0.20, 'Tech Enthusiasts': 0.12, Expressers: 0.08 } },
+  f8: { revenueBoost: 0.06, volumeBoost: 0.05, msBoost: 0.7,
+        segEffect: { Traditionalists: 0.05, Expressers: 0.08, 'Life Maximizers': 0.10 } },
+};
+
+function updateLever(id, val) {
+  leverState[id] = parseInt(val);
+  document.getElementById('lv-' + id + '-val').textContent = val + '%';
+}
+
+function applyPreset(name) {
+  const presets = {
+    aggressive: { f1:90, f2:85, f3:90, f6:70, f7:80, f8:75 },
+    focused:    { f1:90, f2:80, f3:90, f6:30, f7:40, f8:30 },
+    cautious:   { f1:30, f2:40, f3:30, f6:50, f7:50, f8:60 },
+    reset:      { f1:50, f2:50, f3:50, f6:50, f7:50, f8:50 },
+  };
+  const p = presets[name] || presets.reset;
+  Object.entries(p).forEach(([id, val]) => {
+    leverState[id] = val;
+    const slider = document.getElementById('lv-' + id);
+    if (slider) slider.value = val;
+    const valEl = document.getElementById('lv-' + id + '-val');
+    if (valEl) valEl.textContent = val + '%';
+  });
+}
+
+function computeYear(yearIdx) {
+  // yearIdx: 1, 2, 3
+  let revMult = 1, volMult = 1, msDelta = 0;
+  const segDeltas = {};
+  Object.keys(BASELINE.segments).forEach(s => segDeltas[s] = 0);
+
+  Object.entries(leverState).forEach(([id, pct]) => {
+    const impact = LEVER_IMPACT[id];
+    if (!impact) return;
+    const intensity = pct / 100;
+    const yearFactor = yearIdx; // cumulative effect grows each year
+
+    revMult += impact.revenueBoost * intensity * (0.5 + yearFactor * 0.5);
+    volMult += impact.volumeBoost * intensity * (0.5 + yearFactor * 0.5);
+    msDelta += impact.msBoost * intensity * (0.4 + yearFactor * 0.3);
+
+    if (impact.segEffect) {
+      Object.entries(impact.segEffect).forEach(([seg, coeff]) => {
+        segDeltas[seg] = (segDeltas[seg] || 0) + coeff * intensity * (0.5 + yearFactor * 0.4);
+      });
+    }
+  });
+
+  // Add market growth factor (German premium market +3% p.a.)
+  const marketGrowth = Math.pow(1.03, yearIdx);
+  revMult *= marketGrowth;
+  volMult *= (marketGrowth * 0.7 + 0.3);
+
+  const revenue = (BASELINE.revenue * revMult).toFixed(2);
+  const volume  = (BASELINE.volume * volMult).toFixed(1);
+  const ms      = Math.min(52, BASELINE.marketShare + msDelta).toFixed(1);
+
+  const segments = {};
+  Object.entries(BASELINE.segments).forEach(([seg, data]) => {
+    const newPct = Math.min(65, data.samPct + (segDeltas[seg] || 0) * 100);
+    segments[seg] = { prev: data.samPct, curr: newPct.toFixed(1) };
+  });
+
+  return { revenue, volume, ms, segments };
+}
+
+function buildYearPanel(yearData, yearIdx, baseRevenue, baseVolume, baseMS) {
+  const revDelta = ((yearData.revenue - baseRevenue) / baseRevenue * 100).toFixed(1);
+  const volDelta = ((yearData.volume - baseVolume) / baseVolume * 100).toFixed(1);
+  const msDelta  = (yearData.ms - baseMS).toFixed(1);
+  const revDir   = revDelta >= 0 ? 'up' : 'down';
+  const volDir   = volDelta >= 0 ? 'up' : 'down';
+  const msDir    = msDelta  >= 0 ? 'up' : 'down';
+
+  const segColors = {
+    Traditionalists: 'var(--amber)',
+    Expressers: 'var(--red)',
+    'Life Maximizers': 'var(--cyan)',
+    'Trend Followers': '#a78bfa',
+    'Tech Enthusiasts': '#34d399'
+  };
+
+  // max pct across all segs for scaling bars
+  const maxPct = 65;
+
+  let segBars = '';
+  Object.entries(yearData.segments).forEach(([seg, vals]) => {
+    const curr = parseFloat(vals.curr);
+    const prev = vals.prev;
+    const delta = (curr - prev).toFixed(1);
+    const deltaNum = parseFloat(delta);
+    const sign = deltaNum >= 0 ? '+' : '';
+    const col = segColors[seg] || 'var(--ink-dim)';
+    const baseW = (prev / maxPct * 100).toFixed(1);
+    const currW = (curr / maxPct * 100).toFixed(1);
+    const deltaClass = deltaNum >= 0 ? 'pos' : 'neg';
+    segBars += `<div class="sim-seg-row">
+      <div class="sim-seg-name">${seg}</div>
+      <div class="sim-seg-bar-wrap">
+        <div class="sim-seg-bar-bg"></div>
+        <div class="sim-seg-bar-baseline" style="width:${baseW}%"></div>
+        <div class="sim-seg-bar-fill" style="background:${col};width:${currW}%"></div>
+      </div>
+      <div class="sim-seg-val">
+        <span class="sim-seg-val-main">${curr}%</span>
+        <span class="sim-seg-val-delta ${deltaClass}">${sign}${delta}pp</span>
+      </div>
+    </div>`;
+  });
+
+  return `<div class="sim-kpi-row">
+    <div class="sim-kpi-cell">
+      <div class="sim-kpi-label">Revenue DE</div>
+      <div class="sim-kpi-baseline">€${baseRevenue}B baseline</div>
+      <div class="sim-kpi-val ${revDir === 'up' ? 'pos' : 'neg'}">€${yearData.revenue}B</div>
+      <div class="sim-kpi-delta ${revDir}">${revDir === 'up' ? '↑' : '↓'} ${Math.abs(revDelta)}%</div>
+    </div>
+    <div class="sim-kpi-cell">
+      <div class="sim-kpi-label">Units Sold</div>
+      <div class="sim-kpi-baseline">${baseVolume}M baseline</div>
+      <div class="sim-kpi-val ${volDir === 'up' ? 'pos' : 'neg'}">${yearData.volume}M</div>
+      <div class="sim-kpi-delta ${volDir}">${volDir === 'up' ? '↑' : '↓'} ${Math.abs(volDelta)}%</div>
+    </div>
+    <div class="sim-kpi-cell">
+      <div class="sim-kpi-label">Market Share</div>
+      <div class="sim-kpi-baseline">${baseMS}% baseline</div>
+      <div class="sim-kpi-val ${msDir === 'up' ? 'pos' : 'neg'}">${yearData.ms}%</div>
+      <div class="sim-kpi-delta ${msDir}">${msDir === 'up' ? '↑' : '↓'} ${Math.abs(msDelta)}pp</div>
+    </div>
+  </div>
+  <div>
+    <div class="sim-segment-title">Samsung Share by Segment — bars show change vs baseline</div>
+    <div class="sim-segment-bars">${segBars}</div>
+  </div>`;
+}
+
+function showYear(n) {
+  document.querySelectorAll('.sim-year-tab').forEach((t, i) => t.classList.toggle('active', i === n - 1));
+  document.querySelectorAll('.sim-year-panel').forEach((p, i) => p.classList.toggle('active', i === n - 1));
+}
+
+let simYearData = [];
+
+async function runSimulator() {
+  const btn = document.getElementById('sim-run-btn');
+  const label = document.getElementById('sim-run-label');
+  btn.classList.add('running');
+  btn.disabled = true;
+  label.textContent = 'Computing…';
+
+  // Compute model
+  simYearData = [1,2,3].map(i => computeYear(i));
+
+  // Build panels
+  const panelsEl = document.getElementById('sim-year-panels');
+  panelsEl.innerHTML = simYearData.map((d, i) =>
+    `<div class="sim-year-panel ${i === 0 ? 'active' : ''}" id="sim-panel-${i+1}">${buildYearPanel(d, i+1, BASELINE.revenue, BASELINE.volume, BASELINE.marketShare)}</div>`
+  ).join('');
+
+  // Show results skeleton
+  document.getElementById('sim-placeholder').style.display = 'none';
+  document.getElementById('sim-results').classList.add('visible');
+  document.getElementById('sim-ai-text').innerHTML = '<span style="color:var(--ink-faint);font-family:\'DM Mono\',monospace;font-size:10px;letter-spacing:1px;">Generating AI analysis…</span>';
+
+  // Describe lever configuration for AI
+  const leverDesc = Object.entries(leverState).map(([id, val]) => {
+    const names = { f1:'Foldable Awareness', f2:'Gen Z Channel Shift', f3:'Expresser Activation', f6:'Innovation Narrative', f7:'Premium Repositioning', f8:'Loyalty & Ecosystem' };
+    return `${names[id]}: ${val}%`;
+  }).join(', ');
+
+  const y3 = simYearData[2];
+  const msGain = (y3.ms - BASELINE.marketShare).toFixed(1);
+  const revGain = ((y3.revenue - BASELINE.revenue) / BASELINE.revenue * 100).toFixed(0);
+
+  const prompt = `You are a strategic analyst for Samsung Germany. Analyse this marketing investment scenario and provide a sharp, opinionated strategic narrative.
+
+Investment levels: ${leverDesc}
+
+Projected 3-year outcomes vs 2025 baseline:
+- Revenue: €${BASELINE.revenue}B → €${y3.revenue}B (+${revGain}%)
+- Market Share: ${BASELINE.marketShare}% → ${y3.ms}% (+${msGain}pp)
+- Expresser segment Samsung share: ${BASELINE.segments.Expressers.samPct}% → ${simYearData[2].segments.Expressers.curr}%
+- Life Maximizer share: ${BASELINE.segments['Life Maximizers'].samPct}% → ${simYearData[2].segments['Life Maximizers'].curr}%
+
+Write a 3-paragraph strategic narrative (150-200 words total):
+1. What this scenario bets on and why it could work
+2. The biggest risk or blind spot in this configuration
+3. One specific recommendation to sharpen the strategy
+
+Be direct and opinionated. Use specific numbers from the projection. No headers, just flowing strategic prose.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 400,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await response.json();
+    const text = data.content?.find(b => b.type === 'text')?.text || 'Analysis unavailable.';
+    document.getElementById('sim-ai-text').innerHTML = text.replace(/\n\n/g, '<br><br>');
+  } catch(err) {
+    document.getElementById('sim-ai-text').innerHTML = 'AI analysis unavailable. Check connection.';
+  }
+
+  btn.classList.remove('running');
+  btn.disabled = false;
+  label.textContent = 'Re-run Projection + AI Analysis';
+}
+
+// ── KEYBOARD NAV ──
+const sceneList = Array.from(scenes);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeExpand();
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+    const current = sceneList.findIndex(s => {
+      const r = s.getBoundingClientRect();
+      return r.top >= -50;
+    });
+    if (current < sceneList.length - 1) {
+      sceneList[current + 1]?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    const current = sceneList.findIndex(s => {
+      const r = s.getBoundingClientRect();
+      return r.top >= -50;
+    });
+    if (current > 0) {
+      sceneList[current - 1]?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+});
+</script>
+</body>
+</html>
