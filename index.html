@@ -1544,6 +1544,1046 @@ body::before {
   font-weight: 300;
 }
 
+
+/* ── BUBBLE RANKING SCENE ── */
+#scene-bubble-rank {
+  min-height: 100vh;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.brank-top {
+  padding: 80px 10vw 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+.brank-body {
+  flex: 1;
+  padding: 52px 10vw 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.brank-half {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 0;
+}
+
+.brank-half.winners { border-bottom: 1px solid rgba(240,237,232,0.06); }
+
+.brank-half-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brank-half.winners .brank-half-label { color: var(--cyan); }
+.brank-half.losers .brank-half-label { color: var(--red); }
+
+.brank-half-label::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.brank-half-subtitle {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: var(--ink-faint);
+  margin-left: auto;
+}
+
+.brank-bubbles {
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  flex: 1;
+  padding-bottom: 0;
+}
+
+.brank-bubbles.losers-row {
+  align-items: flex-start;
+}
+
+.brank-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  max-width: 180px;
+}
+
+.brank-bubble {
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.25s, filter 0.25s;
+  cursor: default;
+  flex-shrink: 0;
+}
+
+.brank-bubbles.winners-row .brank-bubble {
+  background: radial-gradient(circle at 35% 35%, rgba(74,240,200,0.55), rgba(74,240,200,0.18));
+  border: 1px solid rgba(74,240,200,0.3);
+  box-shadow: 0 0 32px rgba(74,240,200,0.1);
+}
+
+.brank-bubbles.losers-row .brank-bubble {
+  background: radial-gradient(circle at 35% 35%, rgba(255,77,90,0.5), rgba(167,139,250,0.2));
+  border: 1px solid rgba(255,77,90,0.25);
+  box-shadow: 0 0 32px rgba(255,77,90,0.08);
+}
+
+.brank-bubble:hover {
+  transform: scale(1.06);
+  filter: brightness(1.2);
+}
+
+.brank-val {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(13px, 2vw, 20px);
+  letter-spacing: -0.5px;
+  color: #fff;
+  line-height: 1;
+}
+
+.brank-rank {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 2px;
+}
+
+.brank-country {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--ink-dim);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.brank-flag {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.brank-country-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-faint);
+  text-align: center;
+  line-height: 1.3;
+  max-width: 120px;
+}
+
+
+/* ── TREEMAP SCENE ── */
+#scene-treemap {
+  min-height: 100vh;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Atmospheric glow behind the Apple cell */
+#scene-treemap::before {
+  content: '';
+  position: absolute;
+  top: 180px; left: -10vw;
+  width: 60vw; height: 75vh;
+  background: radial-gradient(ellipse at 25% 45%,
+    rgba(240,237,232,0.035) 0%,
+    rgba(240,237,232,0.008) 45%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tmap-top {
+  padding: 80px 10vw 48px;
+  border-bottom: 1px solid var(--border);
+  position: relative; z-index: 1;
+}
+
+.tmap-body {
+  flex: 1;
+  padding: 32px 10vw 0;
+  display: flex;
+  flex-direction: column;
+  position: relative; z-index: 1;
+  overflow: hidden;
+}
+
+.tmap-legend {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding: 0 10vw;
+}
+
+.tmap-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.tmap-legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* ── GRID: Apple column intentionally massive but contained in 10vw padding ── */
+.tmap-grid {
+  display: grid;
+  gap: 3px;
+  /* 4.8fr Apple dominance makes the 44x gap visceral */
+  grid-template-columns: 4.8fr 1fr 0.85fr 0.72fr;
+  grid-template-rows: 260px 180px;
+  flex: 1;
+}
+
+.tmap-cell {
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition: filter 0.3s;
+}
+
+.tmap-cell:hover {
+  filter: brightness(1.12);
+  transform: scale(1.005);
+  z-index: 2;
+}
+
+/* Sector colours */
+.tmap-cell.cat-apple     { background: rgba(240,237,232,0.09); border: 1px solid rgba(240,237,232,0.12); }
+.tmap-cell.cat-samsung   { background: rgba(74,240,200,0.10); border: 1px solid rgba(74,240,200,0.22); }
+.tmap-cell.cat-google    { background: rgba(74,113,245,0.18); border: 1px solid rgba(74,113,245,0.28); }
+.tmap-cell.cat-microsoft { background: rgba(74,113,245,0.11); border: 1px solid rgba(74,113,245,0.18); }
+.tmap-cell.cat-meta      { background: rgba(74,113,245,0.08); border: 1px solid rgba(74,113,245,0.15); }
+.tmap-cell.cat-nvidia    { background: rgba(118,232,118,0.12); border: 1px solid rgba(118,232,118,0.22); }
+.tmap-cell.cat-sony      { background: rgba(240,237,232,0.05); border: 1px solid rgba(240,237,232,0.08); }
+.tmap-cell.cat-xiaomi    { background: rgba(255,140,50,0.10);  border: 1px solid rgba(255,140,50,0.2); }
+.tmap-cell.cat-huawei    { background: rgba(220,60,60,0.09);   border: 1px solid rgba(220,60,60,0.18); }
+
+.tmap-cell:hover { filter: brightness(1.15); z-index: 3; }
+
+.tmap-cell-brand {
+  font-family: 'DM Serif Display', serif;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.tmap-cell-sector {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.4;
+  margin-bottom: 6px;
+}
+
+.tmap-cell-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--ink-dim);
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.tmap-cell-delta {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  margin-top: 5px;
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+
+.tmap-cell-delta.gap {
+  color: var(--red);
+  background: rgba(255,77,90,0.1);
+  border: 1px solid rgba(255,77,90,0.2);
+}
+
+.tmap-cell-delta.lead {
+  color: var(--cyan);
+  background: rgba(74,240,200,0.08);
+  border: 1px solid rgba(74,240,200,0.2);
+}
+
+/* ── APPLE: bleeds LEFT off viewport — starts before the edge ── */
+.tmap-cell.cat-apple {
+  margin-left: -10vw;
+  padding-left: calc(10vw + 24px);
+  margin-top: -3px;
+}
+
+/* Giant ghost "44×" watermark — floats behind Apple content */
+.tmap-cell.cat-apple::before {
+  content: '44×';
+  position: absolute;
+  right: -16px; bottom: -24px;
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(90px, 13vw, 160px);
+  color: rgba(240,237,232,0.035);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -4px;
+}
+
+/* ── SAMSUNG: glowing pulse border, annotation breaking below ── */
+.tmap-cell.cat-samsung {
+  overflow: visible; /* allow ::after to escape cell */
+}
+
+.tmap-cell.cat-samsung::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  box-shadow: 0 0 0 1px rgba(74,240,200,0.35),
+              0 0 32px rgba(74,240,200,0.1);
+  pointer-events: none;
+  animation: samsungPulse 2.8s ease-in-out infinite;
+}
+
+@keyframes samsungPulse {
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 1; }
+}
+
+/* Arrow annotation breaks OUT of the grid */
+.tmap-cell.cat-samsung::after {
+  content: '▲ YOU ARE HERE';
+  position: absolute;
+  bottom: -24px; left: 0; right: 0;
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: var(--cyan);
+  opacity: 0.65;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Font sizes scaled to cell importance */
+.tmap-cell.cat-apple .tmap-cell-brand     { font-size: clamp(40px, 5.5vw, 80px); }
+.tmap-cell.cat-samsung .tmap-cell-brand   { font-size: clamp(15px, 1.9vw, 24px); }
+.tmap-cell.cat-google .tmap-cell-brand,
+.tmap-cell.cat-microsoft .tmap-cell-brand { font-size: clamp(12px, 1.5vw, 19px); }
+.tmap-cell.cat-meta .tmap-cell-brand,
+.tmap-cell.cat-nvidia .tmap-cell-brand    { font-size: clamp(10px, 1.2vw, 15px); }
+.tmap-cell.cat-sony .tmap-cell-brand,
+.tmap-cell.cat-xiaomi .tmap-cell-brand,
+.tmap-cell.cat-huawei .tmap-cell-brand    { font-size: 11px; }
+
+/* ── CALLOUT: floats OVER the bottom edge of the grid ── */
+.tmap-callout {
+  position: relative;
+  margin: -24px 0 44px;
+  z-index: 10;
+  padding: 18px 24px;
+  border-left: 2px solid var(--red);
+  background: rgba(7,9,13,0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  font-size: 12px;
+  color: var(--ink-dim);
+  line-height: 1.75;
+  border-radius: 0 3px 3px 0;
+  border-top: 1px solid rgba(240,237,232,0.07);
+  border-bottom: 1px solid rgba(240,237,232,0.07);
+  border-right: 1px solid rgba(240,237,232,0.07);
+  box-shadow: 0 8px 48px rgba(0,0,0,0.5);
+}
+
+.tmap-callout strong { color: var(--ink); }
+
+/* Grid placement */
+.tmap-apple     { grid-column: 1; grid-row: 1 / 3; }
+.tmap-samsung   { grid-column: 2; grid-row: 1; }
+.tmap-google    { grid-column: 3; grid-row: 1; }
+.tmap-microsoft { grid-column: 4; grid-row: 1; }
+.tmap-nvidia    { grid-column: 2; grid-row: 2; }
+.tmap-meta      { grid-column: 3; grid-row: 2; }
+.tmap-others    { grid-column: 4; grid-row: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 0; background: transparent; border: none; overflow: visible; }
+
+/* ── DUAL BAR CHART SCENE ── */
+#scene-media-bars {
+  min-height: 100vh;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.mbar-top {
+  padding: 80px 10vw 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mbar-body {
+  flex: 1;
+  padding: 48px 10vw 52px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 60px;
+  align-items: start;
+}
+
+.mbar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mbar-ref-line-wrap {
+  position: relative;
+  margin-bottom: 8px;
+  padding-left: 180px;
+}
+
+.mbar-ref-line {
+  position: absolute;
+  top: 0; bottom: -9999px;
+  width: 1px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.mbar-ref-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin-left: 4px;
+}
+
+.mbar-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: center;
+  gap: 0;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(240,237,232,0.04);
+  position: relative;
+}
+
+.mbar-row:last-child { border-bottom: none; }
+
+.mbar-label-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 16px;
+}
+
+.mbar-icon {
+  font-size: 14px;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.mbar-label {
+  font-size: 11px;
+  color: var(--ink-dim);
+  line-height: 1.2;
+}
+
+.mbar-label-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: var(--ink-faint);
+  margin-top: 1px;
+  letter-spacing: 0.5px;
+}
+
+.mbar-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+}
+
+.mbar-track-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 18px;
+}
+
+.mbar-bar-bg {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  overflow: visible;
+}
+
+.mbar-fill {
+  height: 100%;
+  border-radius: 0 3px 3px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  position: relative;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  min-width: 4px;
+}
+
+.mbar-fill.animated { transform: scaleX(1); }
+
+.mbar-fill.samsung-spend {
+  background: linear-gradient(90deg, rgba(255,77,90,0.5), rgba(255,77,90,0.85));
+}
+
+.mbar-fill.audience-reach {
+  background: linear-gradient(90deg, rgba(74,240,200,0.3), rgba(74,240,200,0.65));
+}
+
+.mbar-fill-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  white-space: nowrap;
+}
+
+.mbar-track-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  width: 64px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.mbar-track-label.spend { color: rgba(255,77,90,0.7); }
+.mbar-track-label.reach { color: rgba(74,240,200,0.7); }
+
+/* overflow bar that breaks out */
+.mbar-fill.overflow {
+  border-radius: 0 3px 3px 0;
+  position: relative;
+}
+
+.mbar-fill.overflow::after {
+  content: '';
+  position: absolute;
+  right: -6px; top: 20%; bottom: 20%;
+  width: 3px;
+  background: inherit;
+  border-radius: 0 2px 2px 0;
+  opacity: 0.4;
+}
+
+.mbar-sidebar {
+  padding-top: 8px;
+}
+
+.mbar-sidebar-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mbar-stat-block {
+  margin-bottom: 20px;
+  padding: 16px;
+  border: 1px solid var(--border-soft);
+  border-radius: 3px;
+  background: rgba(240,237,232,0.02);
+}
+
+.mbar-stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.mbar-stat-val {
+  font-family: 'DM Serif Display', serif;
+  font-size: 36px;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.mbar-stat-desc {
+  font-size: 11px;
+  color: var(--ink-faint);
+  line-height: 1.5;
+}
+
+.mbar-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.mbar-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--ink-dim);
+}
+
+.mbar-legend-bar {
+  width: 28px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ── SIMULATOR LAYOUT & CONTROLS ── */
+#scene-simulator {
+  min-height: 100vh;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.sim-top {
+  padding: 80px 10vw 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sim-body {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 640px);
+  min-height: calc(100vh - 300px);
+  padding: 0 10vw;
+  max-width: 1400px;
+  width: 100%;
+}
+
+.sim-controls {
+  padding: 36px 32px 40px 0;
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sim-output {
+  padding: 36px 0 36px 48px;
+  overflow-y: auto;
+}
+
+/* Section label with extending rule */
+.sim-section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+.sim-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  min-width: 0;
+}
+
+/* ── INDIVIDUAL LEVER ── */
+.sim-lever {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(240,237,232,0.05);
+}
+.sim-lever:last-of-type { border-bottom: none; }
+
+.sim-lever-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.sim-lever-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-dim);
+  line-height: 1.2;
+}
+
+.sim-lever-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cyan);
+  min-width: 38px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── SLIDER ── */
+.sim-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(240,237,232,0.1);
+  outline: none;
+  cursor: pointer;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.sim-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--cyan);
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(74,240,200,0.15), 0 0 12px rgba(74,240,200,0.3);
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+
+.sim-slider::-webkit-slider-thumb:hover,
+.sim-slider:active::-webkit-slider-thumb {
+  box-shadow: 0 0 0 5px rgba(74,240,200,0.12), 0 0 20px rgba(74,240,200,0.45);
+  transform: scale(1.15);
+}
+
+/* Dynamic fill — JS updates --val on each lever */
+.sim-slider {
+  background: linear-gradient(
+    to right,
+    rgba(74,240,200,0.5) 0%,
+    rgba(74,240,200,0.5) var(--val, 50%),
+    rgba(240,237,232,0.1) var(--val, 50%),
+    rgba(240,237,232,0.1) 100%
+  );
+}
+
+.sim-lever-desc {
+  font-size: 10px;
+  color: var(--ink-faint);
+  line-height: 1.5;
+}
+
+/* ── RUN BUTTON ── */
+.sim-run-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px 20px;
+  background: rgba(74,240,200,0.08);
+  border: 1px solid rgba(74,240,200,0.3);
+  color: var(--cyan);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.sim-run-btn:hover {
+  background: rgba(74,240,200,0.14);
+  border-color: rgba(74,240,200,0.5);
+  box-shadow: 0 0 28px rgba(74,240,200,0.1);
+}
+
+.sim-run-btn:disabled { opacity: 0.5; cursor: wait; }
+
+.sim-spinner {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(74,240,200,0.3);
+  border-top-color: var(--cyan);
+  display: none;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+.sim-run-btn.running .sim-spinner { display: block; }
+
+/* ── OUTPUT PLACEHOLDER ── */
+.sim-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 360px;
+  gap: 14px;
+  color: var(--ink-faint);
+  text-align: center;
+}
+
+.sim-placeholder-icon {
+  font-size: 28px;
+  opacity: 0.2;
+}
+
+.sim-placeholder-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+/* ── YEAR TABS ── */
+.sim-results { display: none; }
+.sim-results.visible { display: block; animation: fadeIn 0.4s ease; }
+
+.sim-year-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sim-year-tab {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 10px 18px;
+  color: var(--ink-faint);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s;
+  background: none;
+  border-top: none; border-left: none; border-right: none;
+}
+
+.sim-year-tab:hover { color: var(--ink-dim); }
+.sim-year-tab.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+
+.sim-year-panel { display: none; }
+.sim-year-panel.active { display: block; }
+
+.sim-ai-narrative {
+  padding: 20px 24px;
+  border-left: 2px solid var(--cyan);
+  background: rgba(74,240,200,0.03);
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--ink-dim);
+  border-radius: 0 2px 2px 0;
+  margin-top: 20px;
+}
+
+.sim-ai-narrative strong { color: var(--ink); }
+
+.sim-ai-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  opacity: 0.7;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+
+/* ── BEST PRACTICE BUTTON + CARDS ── */
+.best-practice {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.bp-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 18px;
+  background: rgba(245,200,66,0.06);
+  border: 1px solid rgba(245,200,66,0.28);
+  color: var(--amber);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: left;
+}
+
+.bp-trigger:hover {
+  background: rgba(245,200,66,0.12);
+  border-color: rgba(245,200,66,0.5);
+  box-shadow: 0 0 24px rgba(245,200,66,0.07);
+}
+
+.bp-trigger:disabled { opacity: 0.5; cursor: wait; }
+
+.bp-spark {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(245,200,66,0.4);
+  background: rgba(245,200,66,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+  transition: all 0.25s;
+}
+
+.bp-trigger.loading .bp-spark {
+  animation: spin 1s linear infinite;
+  border-color: var(--amber);
+  border-right-color: transparent;
+  font-size: 0;
+}
+
+.bp-label { flex: 1; font-weight: 500; }
+
+.bp-arrow {
+  margin-left: auto;
+  font-size: 14px;
+  opacity: 0.5;
+  transition: transform 0.2s;
+}
+
+.bp-trigger.open .bp-arrow { transform: rotate(90deg); }
+
+.bp-results {
+  display: none;
+  margin-top: 14px;
+  animation: fadeIn 0.3s ease;
+}
+.bp-results.visible { display: block; }
+
+.bp-example {
+  border: 1px solid var(--border-soft);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.bp-example-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  background: rgba(240,237,232,0.03);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.bp-company-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 1px;
+  border: 1px solid;
+  flex-shrink: 0;
+}
+.bp-company-tag.competitor      { color: var(--red);   border-color: rgba(255,77,90,0.35); }
+.bp-company-tag.cross-industry  { color: var(--cyan);  border-color: rgba(74,240,200,0.35); }
+
+.bp-company-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.bp-result-badge {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--cyan);
+  border: 1px solid rgba(74,240,200,0.25);
+  padding: 3px 8px;
+  border-radius: 1px;
+  white-space: nowrap;
+}
+
+.bp-example-body {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.bp-col-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.bp-col-text {
+  font-size: 12px;
+  color: var(--ink-dim);
+  line-height: 1.6;
+}
+.bp-col-text strong { color: var(--ink); }
+
 /* ── ANIMATIONS ── */
 @keyframes revealUp {
   from { opacity: 0; transform: translateY(16px); }
@@ -1757,6 +2797,9 @@ body::before {
   <div class="ch-dot" data-target="scene-f6"><span class="dot-label">Innovation Story</span></div>
   <div class="ch-dot" data-target="scene-f7"><span class="dot-label">Premium Gap</span></div>
   <div class="ch-dot" data-target="scene-f8"><span class="dot-label">Loyalty Gap</span></div>
+  <div class="ch-dot" data-target="scene-bubble-rank"><span class="dot-label">Segment Ranking</span></div>
+  <div class="ch-dot" data-target="scene-treemap"><span class="dot-label">Brand Value Map</span></div>
+  <div class="ch-dot" data-target="scene-media-bars"><span class="dot-label">Media Mismatch</span></div>
   <div class="ch-dot" data-target="scene-opportunity"><span class="dot-label">Opportunity Map</span></div>
   <div class="ch-dot" data-target="scene-simulator"><span class="dot-label">Impact Simulator</span></div>
   <div class="ch-dot" data-target="scene-closing"><span class="dot-label">The Brief</span></div>
@@ -2655,6 +3698,433 @@ body::before {
   </div>
 </section>
 
+
+
+
+
+
+<!-- ═══════════════════════════════════════════
+     VISUAL 03 — MEDIA MISMATCH BAR CHART
+═══════════════════════════════════════════ -->
+<section id="scene-media-bars">
+  <div class="mbar-top">
+    <div class="priority-label">
+      <span class="priority-rank">Visual · 03</span>
+      MX Strategy
+    </div>
+    <div class="insight-type-tag reveal">Media Budget vs. Audience Reach</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      86% of budget.<br><em>8% of the audience.</em>
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      Samsung's media spend mapped against the actual channel reach of its highest-opportunity segments — Expressers and Trend Followers. Every bar where red exceeds cyan is money spent away from the people who matter most.
+    </div>
+  </div>
+
+  <div class="mbar-body">
+    <div class="mbar-chart" id="mbar-chart">
+
+      <!-- Reference line markers (visual only, positioned via CSS vars) -->
+      <div style="padding-left:180px;display:flex;gap:0;margin-bottom:6px;position:relative;">
+        <div style="flex:1;display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:8px;color:rgba(255,77,90,0.5);letter-spacing:1.5px;text-transform:uppercase;">
+          <div style="width:1px;height:12px;background:rgba(255,77,90,0.3);margin-right:4px"></div>
+          Samsung spend →
+        </div>
+      </div>
+
+      <div class="mbar-row">
+        <div class="mbar-label-wrap">
+          <span class="mbar-icon">📺</span>
+          <div>
+            <div class="mbar-label">TV / Linear</div>
+            <div class="mbar-label-sub">86% budget · declining youth reach</div>
+          </div>
+        </div>
+        <div class="mbar-tracks">
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill samsung-spend overflow" data-width="95.6">
+                <span class="mbar-fill-val">86%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label spend">Budget</span>
+          </div>
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill audience-reach" data-width="8.9">
+                <span class="mbar-fill-val">8%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label reach">Reach</span>
+          </div>
+        </div>
+      </div>
+      <div class="mbar-row">
+        <div class="mbar-label-wrap">
+          <span class="mbar-icon">▶</span>
+          <div>
+            <div class="mbar-label">YouTube</div>
+            <div class="mbar-label-sub">4% budget · 62% segment reach</div>
+          </div>
+        </div>
+        <div class="mbar-tracks">
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill samsung-spend" data-width="4.4">
+                <span class="mbar-fill-val">4%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label spend">Budget</span>
+          </div>
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill audience-reach" data-width="68.9">
+                <span class="mbar-fill-val">62%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label reach">Reach</span>
+          </div>
+        </div>
+      </div>
+      <div class="mbar-row">
+        <div class="mbar-label-wrap">
+          <span class="mbar-icon">♪</span>
+          <div>
+            <div class="mbar-label">TikTok</div>
+            <div class="mbar-label-sub">2% budget · #1 platform Expressers</div>
+          </div>
+        </div>
+        <div class="mbar-tracks">
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill samsung-spend" data-width="2.2">
+                <span class="mbar-fill-val">2%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label spend">Budget</span>
+          </div>
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill audience-reach" data-width="78.9">
+                <span class="mbar-fill-val">71%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label reach">Reach</span>
+          </div>
+        </div>
+      </div>
+      <div class="mbar-row">
+        <div class="mbar-label-wrap">
+          <span class="mbar-icon">◈</span>
+          <div>
+            <div class="mbar-label">Instagram</div>
+            <div class="mbar-label-sub">3% budget · visual-first creators</div>
+          </div>
+        </div>
+        <div class="mbar-tracks">
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill samsung-spend" data-width="3.3">
+                <span class="mbar-fill-val">3%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label spend">Budget</span>
+          </div>
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill audience-reach" data-width="75.6">
+                <span class="mbar-fill-val">68%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label reach">Reach</span>
+          </div>
+        </div>
+      </div>
+      <div class="mbar-row">
+        <div class="mbar-label-wrap">
+          <span class="mbar-icon">🏙</span>
+          <div>
+            <div class="mbar-label">Out-of-Home / Print</div>
+            <div class="mbar-label-sub">3% budget · passive medium</div>
+          </div>
+        </div>
+        <div class="mbar-tracks">
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill samsung-spend" data-width="3.3">
+                <span class="mbar-fill-val">3%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label spend">Budget</span>
+          </div>
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill audience-reach" data-width="20.0">
+                <span class="mbar-fill-val">18%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label reach">Reach</span>
+          </div>
+        </div>
+      </div>
+      <div class="mbar-row">
+        <div class="mbar-label-wrap">
+          <span class="mbar-icon">⚡</span>
+          <div>
+            <div class="mbar-label">Creator / Influencer</div>
+            <div class="mbar-label-sub">1% budget · highest trust index</div>
+          </div>
+        </div>
+        <div class="mbar-tracks">
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill samsung-spend" data-width="1.1">
+                <span class="mbar-fill-val">1%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label spend">Budget</span>
+          </div>
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill audience-reach" data-width="82.2">
+                <span class="mbar-fill-val">74%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label reach">Reach</span>
+          </div>
+        </div>
+      </div>
+      <div class="mbar-row">
+        <div class="mbar-label-wrap">
+          <span class="mbar-icon">🔍</span>
+          <div>
+            <div class="mbar-label">Search / Display</div>
+            <div class="mbar-label-sub">1% budget · high-intent channel</div>
+          </div>
+        </div>
+        <div class="mbar-tracks">
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill samsung-spend" data-width="1.1">
+                <span class="mbar-fill-val">1%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label spend">Budget</span>
+          </div>
+          <div class="mbar-track-row">
+            <div class="mbar-bar-bg">
+              <div class="mbar-fill audience-reach" data-width="48.9">
+                <span class="mbar-fill-val">44%</span>
+              </div>
+            </div>
+            <span class="mbar-track-label reach">Reach</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mbar-sidebar">
+      <div class="mbar-sidebar-title">Key Metrics</div>
+
+      <div class="mbar-stat-block">
+        <div class="mbar-stat-label">TV Budget Share</div>
+        <div class="mbar-stat-val" style="color:var(--red)">86%</div>
+        <div class="mbar-stat-desc">of €134M German media spend on linear TV — the channel with lowest reach among under-25s</div>
+      </div>
+
+      <div class="mbar-stat-block">
+        <div class="mbar-stat-label">Creator Budget Share</div>
+        <div class="mbar-stat-val" style="color:var(--cyan)">1%</div>
+        <div class="mbar-stat-desc">on creator/influencer — the channel with 74% reach among Expressers and highest trust index</div>
+      </div>
+
+      <div class="mbar-stat-block">
+        <div class="mbar-stat-label">Mismatch Multiplier</div>
+        <div class="mbar-stat-val" style="color:var(--amber)">74×</div>
+        <div class="mbar-stat-desc">creator reach vs creator spend. The single most actionable reallocation available to Cheil.</div>
+      </div>
+
+      <div class="mbar-legend">
+        <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--ink-faint);text-transform:uppercase;margin-bottom:4px;">Legend</div>
+        <div class="mbar-legend-row">
+          <div class="mbar-legend-bar" style="background:rgba(255,77,90,0.7)"></div>
+          Samsung media spend %
+        </div>
+        <div class="mbar-legend-row">
+          <div class="mbar-legend-bar" style="background:rgba(74,240,200,0.7)"></div>
+          Expresser + Trend Follower reach %
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     VISUAL 02 — BRAND VALUE TREEMAP
+═══════════════════════════════════════════ -->
+<section id="scene-treemap">
+  <div class="tmap-top">
+    <div class="priority-label">
+      <span class="priority-rank">Visual · 02</span>
+      Brand Health
+    </div>
+    <div class="insight-type-tag reveal">Market Cap &amp; Brand Value Map</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      The size of the gap<br><em>nobody talks about.</em>
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      Consumer electronics brand values mapped by area. Samsung leads in revenue and patents — but Apple's brand is worth 44× more. The visual makes the strategic gap impossible to ignore.
+    </div>
+  </div>
+
+  <div class="tmap-body">
+    <div class="tmap-legend">
+      <div class="tmap-legend-item"><div class="tmap-legend-dot" style="background:rgba(240,237,232,0.4)"></div>Consumer Hardware</div>
+      <div class="tmap-legend-item"><div class="tmap-legend-dot" style="background:rgba(74,113,245,0.6)"></div>Software / Platform</div>
+      <div class="tmap-legend-item"><div class="tmap-legend-dot" style="background:rgba(118,232,118,0.6)"></div>Semiconductor</div>
+      <div class="tmap-legend-item"><div class="tmap-legend-dot" style="background:rgba(74,240,200,0.6)"></div>Samsung</div>
+      <div class="tmap-legend-item" style="margin-left:auto;color:var(--ink-faint)">Area = Brand Value (Interbrand 2024)</div>
+    </div>
+
+    <div class="tmap-grid">
+
+      <!-- Apple — massive, spans both rows -->
+      <div class="tmap-cell cat-apple tmap-apple">
+        <div>
+          <div class="tmap-cell-sector">Consumer Hardware</div>
+          <div class="tmap-cell-brand">Apple</div>
+        </div>
+        <div>
+          <div class="tmap-cell-val">$1,299B brand value</div>
+          <div class="tmap-cell-delta gap">44× larger than Samsung</div>
+        </div>
+      </div>
+
+      <!-- Samsung -->
+      <div class="tmap-cell cat-samsung tmap-samsung">
+        <div>
+          <div class="tmap-cell-sector">Consumer Hardware</div>
+          <div class="tmap-cell-brand">Samsung</div>
+        </div>
+        <div>
+          <div class="tmap-cell-val">$29B brand value</div>
+          <div class="tmap-cell-delta gap">#1 patents · #1 market share</div>
+        </div>
+      </div>
+
+      <!-- Google -->
+      <div class="tmap-cell cat-google tmap-google">
+        <div>
+          <div class="tmap-cell-sector">Platform</div>
+          <div class="tmap-cell-brand">Google</div>
+        </div>
+        <div>
+          <div class="tmap-cell-val">$291B</div>
+        </div>
+      </div>
+
+      <!-- Microsoft -->
+      <div class="tmap-cell cat-microsoft tmap-microsoft">
+        <div>
+          <div class="tmap-cell-sector">Platform</div>
+          <div class="tmap-cell-brand">Microsoft</div>
+        </div>
+        <div>
+          <div class="tmap-cell-val">$278B</div>
+        </div>
+      </div>
+
+      <!-- Nvidia -->
+      <div class="tmap-cell cat-nvidia tmap-nvidia">
+        <div>
+          <div class="tmap-cell-sector">Semiconductor</div>
+          <div class="tmap-cell-brand">Nvidia</div>
+        </div>
+        <div>
+          <div class="tmap-cell-val">$141B</div>
+        </div>
+      </div>
+
+      <!-- Meta -->
+      <div class="tmap-cell cat-meta tmap-meta">
+        <div>
+          <div class="tmap-cell-sector">Platform</div>
+          <div class="tmap-cell-brand">Meta</div>
+        </div>
+        <div>
+          <div class="tmap-cell-val">$70B</div>
+        </div>
+      </div>
+
+      <!-- Others grid -->
+      <div class="tmap-cell tmap-others">
+        <div class="tmap-cell cat-sony" style="border-radius:3px;padding:10px 12px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div class="tmap-cell-sector" style="font-size:7px">Hardware</div>
+          <div class="tmap-cell-brand" style="font-size:13px">Sony</div>
+          <div class="tmap-cell-val" style="font-size:9px">$16B</div>
+        </div>
+        <div class="tmap-cell cat-xiaomi" style="border-radius:3px;padding:10px 12px;display:flex;flex-direction:column;justify-content:space-between;">
+          <div class="tmap-cell-sector" style="font-size:7px">Hardware</div>
+          <div class="tmap-cell-brand" style="font-size:13px">Xiaomi</div>
+          <div class="tmap-cell-val" style="font-size:9px">$8B</div>
+        </div>
+        <div class="tmap-cell cat-huawei" style="border-radius:3px;padding:10px 12px;display:flex;flex-direction:column;justify-content:space-between;grid-column:1/-1;">
+          <div class="tmap-cell-sector" style="font-size:7px">Hardware</div>
+          <div class="tmap-cell-brand" style="font-size:13px">Huawei</div>
+          <div class="tmap-cell-val" style="font-size:9px">$6B</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="tmap-callout">
+      <strong>The paradox in one image:</strong> Samsung leads Apple in units sold, patent filings, and product differentiation — yet Apple's brand is worth 44× more. This is not a product problem. Every €1 Samsung invests in pure product R&D without brand narrative investment widens this gap further.
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     VISUAL 01 — SEGMENT BUBBLE RANKING
+═══════════════════════════════════════════ -->
+<section id="scene-bubble-rank">
+  <div class="brank-top">
+    <div class="priority-label">
+      <span class="priority-rank">Visual · 01</span>
+      Consumers
+    </div>
+    <div class="insight-type-tag reveal">Segment Ranking</div>
+    <div class="insight-headline reveal reveal-delay-1">
+      Which segments are Samsung's<br><em>biggest opportunity vs. biggest threat?</em>
+    </div>
+    <div class="insight-thesis reveal reveal-delay-2">
+      Ranked by the gap between Samsung's current share in the segment and its reachable potential — given product fit, AI affinity, and budget alignment. Winners are winnable. Losers are at structural risk.
+    </div>
+  </div>
+
+  <div class="brank-body">
+
+    <!-- WINNERS -->
+    <div class="brank-half winners">
+      <div class="brank-half-label">
+        Top 3 segments by Samsung opportunity
+        <span class="brank-half-subtitle">Opportunity gap = product fit score × AI affinity × reachability</span>
+      </div>
+      <div class="brank-bubbles winners-row" id="brank-winners"></div>
+    </div>
+
+    <!-- LOSERS -->
+    <div class="brank-half losers">
+      <div class="brank-half-label">
+        Bottom 2 segments — structural risk
+        <span class="brank-half-subtitle">Risk score = churn rate × competitor lock-in strength</span>
+      </div>
+      <div class="brank-bubbles losers-row" id="brank-losers"></div>
+    </div>
+
+  </div>
+</section>
 
 
 <!-- ═══════════════════════════════════════════
@@ -3560,7 +5030,17 @@ const LEVER_IMPACT = {
 function updateLever(id, val) {
   leverState[id] = parseInt(val);
   document.getElementById('lv-' + id + '-val').textContent = val + '%';
+  const slider = document.getElementById('lv-' + id);
+  if (slider) slider.style.setProperty('--val', val + '%');
 }
+
+// Init slider fills on load
+document.addEventListener('DOMContentLoaded', () => {
+  Object.entries(leverState).forEach(([id, val]) => {
+    const slider = document.getElementById('lv-' + id);
+    if (slider) slider.style.setProperty('--val', val + '%');
+  });
+});
 
 function applyPreset(name) {
   const presets = {
@@ -3766,6 +5246,75 @@ Be direct and opinionated. Use specific numbers from the projection. No headers,
   btn.disabled = false;
   label.textContent = 'Re-run Projection + AI Analysis';
 }
+
+
+// ── BUBBLE RANKING ──
+(function() {
+  const winners = [
+    { rank: 1, label: 'Expressers', flag: '🎨', val: '+10.1pp', size: 140,
+      sub: '75% AI affinity · Z Flip fit · 7% ownership today' },
+    { rank: 2, label: 'Life Maximizers', flag: '💼', val: '+7.8pp', size: 110,
+      sub: '46% productivity use · highest WTP · DeX fit' },
+    { rank: 3, label: 'Trend Followers', flag: '📱', val: '+5.4pp', size: 88,
+      sub: 'TikTok-native · Gen Z adjacent · social-first' },
+  ];
+  const losers = [
+    { rank: 1, label: 'Gen Z / Apple', flag: '🍎', val: '−19pp', size: 140,
+      sub: '34% Apple enthusiasts · 61–66% lock-in · compounding yearly' },
+    { rank: 2, label: 'Traditionalists', flag: '📉', val: '−6.2pp', size: 100,
+      sub: 'Defecting to Xiaomi · lowest premium potential · aging cohort' },
+  ];
+
+  function buildBubbles(data, containerId, isLoser) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    el.innerHTML = data.map(d => `
+      <div class="brank-item">
+        ${isLoser ? `<div class="brank-country-sub">${d.sub}</div>` : ''}
+        ${isLoser ? `<div class="brank-country"><span class="brank-flag">${d.flag}</span>${d.label}</div>` : ''}
+        <div class="brank-bubble" style="width:${d.size}px;height:${d.size}px">
+          <div class="brank-val">${d.val}</div>
+          <div class="brank-rank">#${d.rank}</div>
+        </div>
+        ${!isLoser ? `<div class="brank-country"><span class="brank-flag">${d.flag}</span>${d.label}</div>` : ''}
+        ${!isLoser ? `<div class="brank-country-sub">${d.sub}</div>` : ''}
+      </div>
+    `).join('');
+  }
+
+  buildBubbles(winners, 'brank-winners', false);
+  buildBubbles(losers,  'brank-losers',  true);
+})();
+
+
+// ── MEDIA BAR CHART ANIMATION ──
+(function() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.target.id === 'scene-media-bars') {
+        setTimeout(() => {
+          entry.target.querySelectorAll('.mbar-fill').forEach((bar, i) => {
+            const w = bar.dataset.width;
+            setTimeout(() => {
+              bar.style.width = w + '%';
+              bar.classList.add('animated');
+            }, i * 60);
+          });
+        }, 200);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  const sec = document.getElementById('scene-media-bars');
+  if (sec) observer.observe(sec);
+
+  // Set initial width 0 via style
+  document.querySelectorAll('.mbar-fill').forEach(b => {
+    b.style.width = '0%';
+    b.style.transition = 'width 0.9s cubic-bezier(0.16,1,0.3,1)';
+  });
+})();
 
 // ── KEYBOARD NAV ──
 const sceneList = Array.from(scenes);
