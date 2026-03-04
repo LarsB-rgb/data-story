@@ -146,7 +146,7 @@ html, body {
 }
 #panel-counter span { color: var(--lime); }
 
-/* ─── SCROLL HINT ───────────────────────────────────── */
+/* ─── SCROLL HINT (desktop) ─────────────────────────── */
 #scroll-hint {
   position: fixed;
   bottom: 2rem; left: 50%;
@@ -162,10 +162,14 @@ html, body {
   text-transform: uppercase;
   animation: hintPulse 2.5s ease-in-out infinite;
   transition: opacity 0.5s;
+  pointer-events: none;
 }
 #scroll-hint svg { animation: hintArrow 1.5s ease-in-out infinite; }
 @keyframes hintPulse { 0%,100%{opacity:0.3} 50%{opacity:0.7} }
 @keyframes hintArrow { 0%,100%{transform:translateX(0)} 50%{transform:translateX(6px)} }
+
+/* ─── SWIPE HINT (mobile only) ──────────────────────── */
+#swipe-hint { display: none; }
 
 /* ─── KEYBOARD HINT ─────────────────────────────────── */
 #key-hint {
@@ -1124,6 +1128,12 @@ html, body {
   #panel-counter { display: none; }
   .nav-dot { width: 5px; height: 5px; }
 
+  /* Allow vertical scroll inside panels */
+  html, body {
+    overflow: hidden;  /* keep — container handles clipping */
+    touch-action: pan-y; /* allow vertical touch scroll */
+  }
+
   /* PANELS — base */
   .panel {
     padding: 4.5rem 1.4rem 2rem;
@@ -1131,10 +1141,44 @@ html, body {
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
   }
 
   /* SCROLL HINT */
-  #scroll-hint { bottom: 1rem; font-size: 0.55rem; letter-spacing: 1.5px; }
+  #scroll-hint { display: none; }
+  #swipe-hint {
+    display: flex;
+    position: fixed;
+    bottom: 1.8rem; left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    pointer-events: none;
+    animation: hintPulse 2.5s ease-in-out infinite;
+    transition: opacity 0.5s;
+  }
+  .swipe-arrows {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .swipe-arrow {
+    width: 30px; height: 30px;
+    border: 1.5px solid rgba(150,250,0,0.45);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(150,250,0,0.07);
+  }
+  .swipe-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(150,250,0,0.65);
+  }
+  @keyframes thumbSlide { 0%,100%{left:4px;opacity:0.4} 50%{left:22px;opacity:1} }
 
   /* PANEL 0: HERO */
   .hero-bg-text { font-size: 55vw; bottom: -4vh; right: -4vw; }
@@ -1313,6 +1357,26 @@ html, body {
   <svg width="24" height="14" viewBox="0 0 24 14" fill="none">
     <path d="M2 7h18M16 3l4 4-4 4" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
+</div>
+
+<!-- Mobile swipe hint -->
+<div id="swipe-hint">
+  <div class="swipe-arrows">
+    <div class="swipe-arrow">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M8 6H2M4 3l-3 3 3 3" stroke="rgba(150,250,0,0.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div style="width:36px;height:20px;border:1.5px solid rgba(150,250,0,0.3);border-radius:10px;position:relative;display:flex;align-items:center;justify-content:center;">
+      <div id="swipe-thumb" style="width:8px;height:8px;border-radius:50%;background:rgba(150,250,0,0.7);position:absolute;left:4px;animation:thumbSlide 1.6s ease-in-out infinite;"></div>
+    </div>
+    <div class="swipe-arrow">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M4 6h6M8 3l3 3-3 3" stroke="rgba(150,250,0,0.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+  <div class="swipe-label">Swipe to navigate</div>
 </div>
 
 
@@ -1819,7 +1883,11 @@ function render() {
   panels.forEach((p, i) => p.classList.toggle('active', i === current));
 
   // Scroll hint — hide after first move
-  if (current > 0) document.getElementById('scroll-hint').style.opacity = '0';
+  if (current > 0) {
+    document.getElementById('scroll-hint').style.opacity = '0';
+    const sh = document.getElementById('swipe-hint');
+    if (sh) sh.style.opacity = '0';
+  }
 
   // Trigger chart animations for the newly active panel
   triggerCharts(panels[current]);
@@ -1871,18 +1939,39 @@ window.addEventListener('wheel', (e) => {
   }
 }, { passive: false });
 
-// Touch
+// Touch — allow vertical scroll inside panels, horizontal swipe to navigate
 let touchStartX = 0;
 let touchStartY = 0;
+let touchMoved = false;
+
 window.addEventListener('touchstart', (e) => {
   touchStartX = e.touches[0].clientX;
   touchStartY = e.touches[0].clientY;
+  touchMoved = false;
 }, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+  touchMoved = true;
+  const dx = Math.abs(e.touches[0].clientX - touchStartX);
+  const dy = Math.abs(e.touches[0].clientY - touchStartY);
+  // If scrolling vertically inside a scrollable panel, don't interfere
+  const activePanel = panels[current];
+  const isScrollable = activePanel.scrollHeight > activePanel.clientHeight;
+  if (isScrollable && dy > dx) {
+    // vertical scroll — let default behaviour happen
+    return;
+  }
+  // Horizontal swipe in progress — prevent page scroll
+  if (dx > dy * 1.2) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
 window.addEventListener('touchend', (e) => {
+  if (!touchMoved) return;
   const dx = touchStartX - e.changedTouches[0].clientX;
   const dy = touchStartY - e.changedTouches[0].clientY;
-  // Only swipe horizontally if horizontal movement dominates
-  if (Math.abs(dx) > Math.abs(dy) * 1.5 && Math.abs(dx) > 40) {
+  if (Math.abs(dx) > Math.abs(dy) * 1.5 && Math.abs(dx) > 45) {
     goTo(dx > 0 ? current + 1 : current - 1);
   }
 });
