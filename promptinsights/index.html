@@ -46,20 +46,29 @@
     line-height: 1;
   }
   .hero-client {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .hero-client-label {
     font-family: 'Space Mono', monospace;
-    font-size: 1rem;
+    font-size: 0.9rem;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--grey);
-    margin-top: 1.2rem;
-    margin-bottom: 0.5rem;
   }
-  .hero-client span {
+  .osram-logo {
+    height: 2.2rem;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+  }
+  .osram-fallback {
     color: var(--orange);
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: 4px;
-    vertical-align: middle;
   }
   .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a {
@@ -659,7 +668,116 @@
     letter-spacing: 1px;
   }
 
-  /* ANIMATIONS */
+  /* USP SECTION */
+  .usp-section { background: var(--dark); }
+  .usp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.05);
+    margin-top: 4rem;
+  }
+  .usp-card {
+    background: var(--dark);
+    padding: 2rem 2rem 2.5rem;
+    transition: background 0.2s;
+  }
+  .usp-card:hover { background: rgba(150,250,0,0.04); }
+  .usp-icon-wrap {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1.2rem;
+  }
+  .usp-icon-wrap svg {
+    width: 100%;
+    height: 100%;
+  }
+  .usp-card h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+    color: var(--lime);
+    margin-bottom: 0.6rem;
+  }
+  .usp-card p {
+    font-size: 0.88rem;
+    color: var(--grey);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .report-preview {
+    margin-top: 5rem;
+  }
+  .report-tag {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  .report-source {
+    font-size: 0.8rem;
+    color: var(--grey);
+    font-weight: 300;
+    font-style: italic;
+  }
+  .report-images {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .report-img-wrap {
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .report-img-wrap:hover { border-color: rgba(150,250,0,0.3); }
+  .report-img-wrap img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 16/10;
+    object-fit: cover;
+    filter: brightness(0.85);
+    transition: filter 0.3s, transform 0.3s;
+  }
+  .report-img-wrap:hover img { filter: brightness(1); transform: scale(1.02); }
+  .report-caption {
+    padding: 0.7rem 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    color: var(--grey);
+    text-transform: uppercase;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .win-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 5rem;
+    padding-top: 4rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .win-left h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 3.5vw, 3.5rem);
+    line-height: 1.05;
+  }
+  .win-left h3 span { color: var(--lime); }
+  .win-right img {
+    width: 100%;
+    display: block;
+    border: 1px solid rgba(150,250,0,0.15);
+  }
+
+  /* SCENE responsive */
+  @media (max-width: 900px) {
+    .scene-inner { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 1.5rem 2rem; }
+    .scene-stats { flex-wrap: wrap; gap: 1.5rem; }
+    .usp-grid { grid-template-columns: 1fr; }
+    .report-images { grid-template-columns: 1fr; }
+    .win-section { grid-template-columns: 1fr; gap: 2rem; }
+  }
   .fade-in {
     opacity: 0;
     transform: translateY(30px);
@@ -670,19 +788,69 @@
     transform: translateY(0);
   }
 
-  /* TICKER */
-  .ticker {
+  /* SCENE SHIFT */
+  .scene-shift {
+    background: var(--dark);
+    overflow: hidden;
+  }
+  .scene-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    padding: 6rem 3rem 3rem;
+  }
+  .scene-text h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 4vw, 4.5rem);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+  .scene-text em { color: var(--lime); font-style: normal; }
+  .scene-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .scene-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    line-height: 1;
+  }
+  .scene-stat-label {
+    font-size: 0.75rem;
+    color: var(--grey);
+    font-weight: 300;
+    line-height: 1.4;
+    margin-top: 0.3rem;
+  }
+  .scene-visual {
+    position: relative;
+    border: 1px solid rgba(150,250,0,0.15);
+    overflow: hidden;
+  }
+  .scene-visual img {
+    width: 100%;
+    display: block;
+    filter: brightness(0.9);
+    transition: filter 0.4s;
+  }
+  .scene-visual:hover img { filter: brightness(1); }
+  .scene-marquee {
     background: var(--orange);
     overflow: hidden;
     padding: 0.6rem 0;
     white-space: nowrap;
+    margin-top: 0;
   }
-  .ticker-inner {
+  .scene-marquee-inner {
     display: inline-flex;
-    gap: 4rem;
-    animation: ticker 25s linear infinite;
+    gap: 2rem;
+    animation: ticker 30s linear infinite;
   }
-  .ticker-inner span {
+  .scene-marquee-inner span {
     font-family: 'Space Mono', monospace;
     font-size: 0.7rem;
     letter-spacing: 2px;
@@ -690,9 +858,109 @@
     color: var(--black);
     font-weight: 700;
   }
+  .scene-marquee-inner .sep { opacity: 0.4; }
   @keyframes ticker {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
+  }
+
+  /* OSRAM SVG LOGO */
+  .osram-logo { height: 2.2rem; width: auto; opacity: 0.92; }
+
+  /* DASHBOARD MOCKUP */
+  .mockup-dashboard {
+    background: #111;
+    border: 1px solid rgba(150,250,0,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    font-family: 'Space Mono', monospace;
+  }
+  .mockup-bar {
+    background: #1a1a1a;
+    padding: 0.6rem 1rem;
+    display: flex; gap: 0.4rem; align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .mockup-bar span {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+  }
+  .mockup-body { padding: 1.5rem; }
+  .mockup-chart-title { font-size: 0.65rem; color: var(--grey); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 1.2rem; }
+  .mockup-bars-wrap { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1.5rem; }
+  .mockup-bar-row { display: flex; align-items: center; gap: 0.7rem; }
+  .mockup-label { font-size: 0.6rem; color: var(--grey); width: 70px; flex-shrink: 0; }
+  .mockup-bar-fill {
+    height: 22px; display: flex; align-items: center; padding: 0 0.5rem;
+    font-size: 0.6rem; color: var(--black); font-weight: 700;
+    transition: width 1s ease; border-radius: 2px;
+  }
+  .mockup-metrics { display: flex; gap: 1.5rem; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1rem; }
+  .mockup-metric-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; line-height: 1; }
+  .mockup-metric-label { font-size: 0.55rem; color: var(--grey); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.2rem; }
+
+  /* REPORT MOCKUPS */
+  .mockup-report {
+    background: #111;
+    padding: 1.5rem;
+    height: 100%;
+    min-height: 200px;
+    font-family: 'Space Mono', monospace;
+  }
+  .mockup-report-head {
+    font-size: 0.65rem; color: var(--lime); letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 1rem;
+    padding-bottom: 0.5rem; border-bottom: 1px solid rgba(150,250,0,0.2);
+  }
+  .mockup-report-row {
+    font-size: 0.72rem; color: var(--grey); line-height: 1.5;
+    margin-bottom: 0.7rem; display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+  .dot.green { background: var(--lime); }
+  .dot.red { background: var(--pink); }
+  .mockup-gap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-top: 0.5rem; }
+  .mockup-gap-item { border: 1px solid; padding: 0.8rem; text-align: center; }
+  .gap-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; }
+  .gap-label { font-size: 0.55rem; color: var(--grey); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.2rem; }
+  .mockup-matrix {
+    position: relative; height: 160px;
+    border-left: 1px solid rgba(255,255,255,0.15);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    margin-top: 0.5rem;
+  }
+  .matrix-dot {
+    position: absolute; width: 10px; height: 10px; border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .matrix-dot span {
+    position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+    font-size: 0.55rem; color: var(--grey); white-space: nowrap;
+  }
+  .matrix-axis-x { position: absolute; bottom: -18px; right: 0; font-size: 0.55rem; color: var(--grey); }
+  .matrix-axis-y { position: absolute; top: 0; left: -24px; font-size: 0.55rem; color: var(--grey); writing-mode: vertical-lr; transform: rotate(180deg); }
+
+  /* CHAT MOCKUP */
+  .mockup-chat {
+    background: #111;
+    border: 1px solid rgba(150,250,0,0.15);
+    padding: 1rem;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .mockup-chat-header {
+    display: flex; align-items: center; gap: 0.3rem;
+    padding-bottom: 0.8rem; margin-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .chat-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); }
+  .chat-msg { font-size: 0.82rem; line-height: 1.5; margin-bottom: 0.8rem; padding: 0.7rem 1rem; border-radius: 6px; }
+  .chat-msg.user { background: rgba(255,255,255,0.05); color: var(--grey); align-self: flex-end; }
+  .chat-msg.ai { background: rgba(150,250,0,0.05); color: var(--white); border-left: 2px solid var(--lime); }
+  .chat-win-tag {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    color: var(--lime); letter-spacing: 1px;
+    padding: 0.4rem 0.7rem; background: rgba(150,250,0,0.08);
+    display: inline-block; margin-top: 0.5rem;
   }
 
   @media (max-width: 900px) {
@@ -718,7 +986,7 @@
     <li><a href="#problem">The Problem</a></li>
     <li><a href="#platform">Platform</a></li>
     <li><a href="#metrics">Metrics</a></li>
-    <li><a href="#actions">Actions</a></li>
+    <li><a href="#usp">Why Us</a></li>
     <li><a href="#pricing">Pricing</a></li>
   </ul>
 </nav>
@@ -728,43 +996,78 @@
   <div class="hero-big-bg">AI</div>
   <div class="hero-tag">AI Research Intelligence</div>
   <h1>PROMPT<br><span>INSIGHTS</span></h1>
-  <div class="hero-client">Relevant für <span>OSRAM</span></div>
+  <div class="hero-client">
+    <span class="hero-client-label">Prepared for</span>
+    <svg class="osram-logo" viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg" fill="white">
+      <ellipse cx="20" cy="20" rx="18" ry="18" fill="none" stroke="white" stroke-width="2.5"/>
+      <ellipse cx="20" cy="20" rx="10" ry="10" fill="white"/>
+      <text x="46" y="27" font-family="Arial, sans-serif" font-weight="700" font-size="22" letter-spacing="2" fill="white">OSRAM</text>
+    </svg>
+  </div>
   <p class="hero-sub">The world's first AI Conversation Research Platform — tracking how real humans interact with AI to find, evaluate, and choose your brand.</p>
   <a href="#problem" class="hero-cta">Discover the New Reality →</a>
   <div class="hero-scroll">Scroll</div>
 </section>
 
-<!-- TICKER -->
-<div class="ticker">
-  <div class="ticker-inner">
-    <span>AI is changing search</span><span>///</span>
-    <span>Zero-click is the new default</span><span>///</span>
-    <span>Brand visibility is now AI-trained</span><span>///</span>
-    <span>ChatGPT · Claude · Gemini</span><span>///</span>
-    <span>AI is changing search</span><span>///</span>
-    <span>Zero-click is the new default</span><span>///</span>
-    <span>Brand visibility is now AI-trained</span><span>///</span>
-    <span>ChatGPT · Claude · Gemini</span><span>///</span>
+<!-- SCENE: AI SHIFT -->
+<section class="scene-shift">
+  <div class="scene-inner">
+    <div class="scene-text">
+      <div class="section-tag">// The New Reality for Osram</div>
+      <h2>AI is Changing How<br>Customers Find Osram</h2>
+      <p class="lead">Organic traffic and clicks are declining — more and more people research directly in AI systems like ChatGPT, Gemini or Perplexity and make decisions there, <em>without ever visiting a website</em>.</p>
+      <div class="scene-stats">
+        <div class="scene-stat">
+          <div class="scene-stat-num" style="color:var(--lime)">−54.6%</div>
+          <div class="scene-stat-label">Organic CTR in SERPs<br>with AI Overviews</div>
+        </div>
+        <div class="scene-stat">
+          <div class="scene-stat-num" style="color:var(--pink)">−28.6%</div>
+          <div class="scene-stat-label">Paid CTR on Google<br>overall</div>
+        </div>
+        <div class="scene-stat">
+          <div class="scene-stat-num" style="color:var(--orange)">85%</div>
+          <div class="scene-stat-label">of 25–34 year-olds<br>use AI for research</div>
+        </div>
+      </div>
+    </div>
+    <div class="scene-visual">
+      <div class="mockup-dashboard">
+        <div class="mockup-bar"><span></span><span></span><span></span></div>
+        <div class="mockup-body">
+          <div class="mockup-chart-title">AI Conversation Win Rate — Osram vs. Competitors</div>
+          <div class="mockup-bars-wrap">
+            <div class="mockup-bar-row"><span class="mockup-label">Osram</span><div class="mockup-bar-fill" style="width:62%;background:var(--lime)"><span>62%</span></div></div>
+            <div class="mockup-bar-row"><span class="mockup-label">Philips</span><div class="mockup-bar-fill" style="width:48%;background:var(--grey)"><span>48%</span></div></div>
+            <div class="mockup-bar-row"><span class="mockup-label">Signify</span><div class="mockup-bar-fill" style="width:35%;background:var(--grey)"><span>35%</span></div></div>
+            <div class="mockup-bar-row"><span class="mockup-label">GE Lighting</span><div class="mockup-bar-fill" style="width:27%;background:var(--grey)"><span>27%</span></div></div>
+          </div>
+          <div class="mockup-metrics">
+            <div class="mockup-metric"><div class="mockup-metric-val" style="color:var(--lime)">74%</div><div class="mockup-metric-label">Mention Rate</div></div>
+            <div class="mockup-metric"><div class="mockup-metric-val" style="color:var(--yellow)">+0.42</div><div class="mockup-metric-label">Sentiment</div></div>
+            <div class="mockup-metric"><div class="mockup-metric-val" style="color:var(--orange)">38%</div><div class="mockup-metric-label">Share of Voice</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-
-<!-- STAT BAR -->
-<div class="stat-bar">
-  <div class="stat-items-row">
-    <div class="stat-item fade-in">
-      <div class="stat-num">−54.6%</div>
-      <div class="stat-label">Organic CTR drop in SERPs<br>where AI Overviews are present</div>
-    </div>
-    <div class="stat-item fade-in">
-      <div class="stat-num">−28.6%</div>
-      <div class="stat-label">Paid CTR decline<br>across all Google searches</div>
-    </div>
-    <div class="stat-item fade-in">
-      <div class="stat-num">85%</div>
-      <div class="stat-label">of 25–34 year-olds now use<br>AI tools for supplier research</div>
+  <div class="scene-marquee">
+    <div class="scene-marquee-inner">
+      <span>ChatGPT</span><span class="sep">///</span>
+      <span>Google Gemini</span><span class="sep">///</span>
+      <span>Perplexity</span><span class="sep">///</span>
+      <span>Claude</span><span class="sep">///</span>
+      <span>Zero-Click Is the New Default</span><span class="sep">///</span>
+      <span>AI Is Changing the Customer Journey</span><span class="sep">///</span>
+      <span>ChatGPT</span><span class="sep">///</span>
+      <span>Google Gemini</span><span class="sep">///</span>
+      <span>Perplexity</span><span class="sep">///</span>
+      <span>Claude</span><span class="sep">///</span>
+      <span>Zero-Click Is the New Default</span><span class="sep">///</span>
+      <span>AI Is Changing the Customer Journey</span><span class="sep">///</span>
     </div>
   </div>
-</div>
+</section>
 
 <!-- PROBLEM -->
 <section class="problem" id="problem">
@@ -1082,6 +1385,140 @@
           <li>Clear linkage between brand, product, and retail locations</li>
           <li>Staff as Signal Multipliers</li>
         </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USPs + CHEIL IMAGES -->
+<section class="usp-section" id="usp">
+  <div class="section-tag fade-in">// Why PromptInsights</div>
+  <h2 class="fade-in">Real People.<br>Real Conversations.<br>Real Insights.</h2>
+  <p class="lead fade-in">Not a classic GEO tool — but comprehensive market research on visibility, topics and target groups across the entire customer journey.</p>
+
+  <div class="usp-grid">
+    <div class="usp-card fade-in">
+      <div class="usp-icon-wrap">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="16" r="8" stroke="#96FA00" stroke-width="2"/>
+          <circle cx="10" cy="20" r="5" stroke="#96FA00" stroke-width="1.5" opacity="0.5"/>
+          <circle cx="38" cy="20" r="5" stroke="#96FA00" stroke-width="1.5" opacity="0.5"/>
+          <path d="M4 40c0-6 4-10 10-10h20c6 0 10 4 10 10" stroke="#96FA00" stroke-width="2" stroke-linecap="round"/>
+          <path d="M2 36c0-4 2.5-7 6-8" stroke="#96FA00" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+          <path d="M46 36c0-4-2.5-7-6-8" stroke="#96FA00" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+      </div>
+      <h4>Real People</h4>
+      <p>No synthetic prompts — we recruit real users who have genuine AI conversations.</p>
+    </div>
+    <div class="usp-card fade-in">
+      <div class="usp-icon-wrap">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="6" width="36" height="36" rx="3" stroke="#96FA00" stroke-width="2"/>
+          <path d="M14 24l6 6 14-14" stroke="#96FA00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6 16h36" stroke="#96FA00" stroke-width="1.5" opacity="0.4"/>
+        </svg>
+      </div>
+      <h4>Recognised Standards</h4>
+      <p>Methodology based on established market research standards — reliable benchmarks, no black box.</p>
+    </div>
+    <div class="usp-card fade-in">
+      <div class="usp-icon-wrap">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 12h32M8 24h24M8 36h16" stroke="#96FA00" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="38" cy="36" r="7" stroke="#96FA00" stroke-width="2"/>
+          <path d="M35 36l2 2 4-4" stroke="#96FA00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h4>Full Conversations</h4>
+      <p>We analyse entire conversation flows — not just individual search queries.</p>
+    </div>
+    <div class="usp-card fade-in">
+      <div class="usp-icon-wrap">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="32" width="8" height="10" rx="1" fill="#96FA00" opacity="0.3" stroke="#96FA00" stroke-width="1.5"/>
+          <rect x="20" y="22" width="8" height="20" rx="1" fill="#96FA00" opacity="0.5" stroke="#96FA00" stroke-width="1.5"/>
+          <rect x="34" y="10" width="8" height="32" rx="1" fill="#96FA00" stroke="#96FA00" stroke-width="1.5"/>
+          <path d="M10 28l10-8 14-6" stroke="#96FA00" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+        </svg>
+      </div>
+      <h4>Full-Funnel Analysis</h4>
+      <p>From the first question to the purchase decision — we follow the complete customer journey inside AI.</p>
+    </div>
+    <div class="usp-card fade-in">
+      <div class="usp-icon-wrap">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="16" stroke="#96FA00" stroke-width="2"/>
+          <circle cx="24" cy="24" r="8" stroke="#96FA00" stroke-width="1.5" opacity="0.5"/>
+          <circle cx="24" cy="24" r="2" fill="#96FA00"/>
+          <path d="M24 8v4M24 36v4M8 24h4M36 24h4" stroke="#96FA00" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M14 14l3 3M31 31l3 3M14 34l3-3M31 17l3-3" stroke="#96FA00" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+      </div>
+      <h4>Beyond GEO</h4>
+      <p>Deep insights on visibility, topics, audiences and narratives — not just keyword tracking.</p>
+    </div>
+    <div class="usp-card fade-in">
+      <div class="usp-icon-wrap">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 6l4 12h12l-10 7 4 12-10-7-10 7 4-12L8 18h12z" stroke="#96FA00" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M34 34l8 8" stroke="#96FA00" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="36" cy="36" r="1.5" fill="#96FA00"/>
+        </svg>
+      </div>
+      <h4>Actionable Recommendations</h4>
+      <p>Concrete marketing action recommendations — derived directly from the data, immediately actionable.</p>
+    </div>
+  </div>
+
+  <!-- Report Preview Images from Cheil -->
+  <div class="report-preview fade-in">
+    <div class="report-tag">
+      <span class="section-tag" style="margin-bottom:0">// Sample Reports</span>
+      <span class="report-source">Excerpts from real PromptInsights analyses</span>
+    </div>
+    <div class="report-images" style="grid-template-columns: 1fr 1fr;">
+      <div class="report-img-wrap">
+        <div class="mockup-report">
+        <div class="mockup-report-head">High & Lowlight Insights</div>
+        <div class="mockup-report-row highlight"><span class="dot green"></span>Osram recommended as #1 for smart lighting in 62% of commercial conversations</div>
+        <div class="mockup-report-row highlight"><span class="dot green"></span>Strong performance in "energy efficiency" queries — outranks all competitors</div>
+        <div class="mockup-report-row lowlight"><span class="dot red"></span>Underperforms in "smart home integration" — Philips Hue dominates this cluster</div>
+        <div class="mockup-report-row lowlight"><span class="dot red"></span>Price perception gap: AI positions Osram as "premium" without justification in 40% of queries</div>
+      </div>
+        <div class="report-caption">High- & Lowlight Insights from the Report</div>
+      </div>
+      <div class="report-img-wrap">
+        <div class="mockup-report">
+          <div class="mockup-report-head">Impact Gap Analysis</div>
+          <div class="mockup-gap-grid">
+            <div class="mockup-gap-item" style="border-color:var(--lime)"><div class="gap-val" style="color:var(--lime)">HIGH</div><div class="gap-label">Win Rate Potential</div></div>
+            <div class="mockup-gap-item" style="border-color:var(--orange)"><div class="gap-val" style="color:var(--orange)">MED</div><div class="gap-label">Content Gaps</div></div>
+            <div class="mockup-gap-item" style="border-color:var(--pink)"><div class="gap-val" style="color:var(--pink)">LOW</div><div class="gap-label">Entity Strength</div></div>
+            <div class="mockup-gap-item" style="border-color:var(--yellow)"><div class="gap-val" style="color:var(--yellow)">HIGH</div><div class="gap-label">Quick Win Ops</div></div>
+          </div>
+        </div>
+        <div class="report-caption">Impact Gap Analysis</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Win vs Mentioned -->
+  <div class="win-section fade-in">
+    <div class="win-left">
+      <div class="section-tag">// The Decisive Difference</div>
+      <h3>Being Mentioned Is Not<br>Enough. <span>Being Recommended</span><br>Is the Goal.</h3>
+      <p class="lead" style="margin-top:1.5rem;">In AI search, being mentioned is not enough. What matters is whether the AI recommends your brand as the first choice — and with what framing. The Conversation Win Rate captures exactly that.</p>
+      <p class="lead" style="margin-top:1rem;">We analyse under which conditions Osram wins or loses: price/performance, features, availability, trust signals, reviews and comparisons.</p>
+    </div>
+    <div class="win-right">
+      <div class="mockup-chat">
+        <div class="mockup-chat-header"><span class="chat-dot"></span><span class="chat-dot"></span><span class="chat-dot"></span><span style="margin-left:0.5rem;font-size:0.7rem;color:var(--grey)">ChatGPT</span></div>
+        <div class="chat-msg user">Which lighting brand is best for smart office environments?</div>
+        <div class="chat-msg ai">For smart office environments, <strong style="color:var(--lime)">Osram</strong> stands out as a top recommendation due to its DALI-2 compatibility and advanced energy management systems. Their LEDVANCE smart range integrates seamlessly with building management systems...</div>
+        <div class="chat-msg user">How does Osram compare to Philips in terms of longevity?</div>
+        <div class="chat-msg ai"><strong style="color:var(--lime)">Osram</strong> LED products typically offer 50,000+ hour lifespans with L70 ratings, placing them alongside Philips in the premium segment. Independent benchmarks consistently rank both brands highly, with Osram having a slight edge in industrial applications.</div>
+        <div class="chat-win-tag">✓ Conversation Win for Osram</div>
       </div>
     </div>
   </div>
