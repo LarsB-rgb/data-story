@@ -835,6 +835,244 @@ html, body {
 }
 
 
+
+/* ═══════════════════════════════════════════════════
+   PANEL 8b — MARKETING ACTIONS (Matrix)
+══════════════════════════════════════════════════ */
+.panel-actions {
+  background: var(--dark);
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 5.5rem;
+  overflow: hidden;
+}
+.actions-header { margin-bottom: 1.2rem; flex-shrink: 0; }
+.actions-header .panel-h2 { font-size: clamp(1.8rem, 3vw, 3.5rem); }
+.actions-header .lead { font-size: 0.85rem; }
+
+/* ── Matrix grid ── */
+.hvm-matrix {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 6rem repeat(4, 1fr);
+  grid-template-rows: 2.4rem 1fr 1fr;
+  gap: 1px;
+  background: rgba(255,255,255,0.06);
+  grid-template-rows: 2.4rem 1fr 1fr;
+}
+
+/* Phase header cells */
+.hvm-phase-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 1rem;
+  background: var(--dark);
+  gap: 0.1rem;
+  position: relative;
+}
+.hvm-phase-head::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+}
+.hvm-phase-head[data-phase="0"]::after { background: var(--lime); }
+.hvm-phase-head[data-phase="1"]::after { background: var(--yellow); }
+.hvm-phase-head[data-phase="2"]::after { background: var(--orange); }
+.hvm-phase-head[data-phase="3"]::after { background: var(--pink); }
+.hvm-phase-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.42rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.4;
+}
+.hvm-phase-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 1.5px;
+  line-height: 1;
+}
+.hvm-phase-head[data-phase="0"] .hvm-phase-name { color: var(--lime); }
+.hvm-phase-head[data-phase="1"] .hvm-phase-name { color: var(--yellow); }
+.hvm-phase-head[data-phase="2"] .hvm-phase-name { color: var(--orange); }
+.hvm-phase-head[data-phase="3"] .hvm-phase-name { color: var(--pink); }
+
+/* Row label cells (left axis) */
+.hvm-row-label {
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.8rem 0.8rem 0.8rem 0.4rem;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+.hvm-row-label span {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: var(--grey);
+  line-height: 1;
+}
+.hvm-row-label.branded span { color: var(--lime); opacity: 0.7; }
+.hvm-row-label.external span { color: var(--grey); opacity: 0.7; }
+
+/* Corner cell */
+.hvm-corner {
+  background: var(--dark);
+  position: relative;
+}
+.hvm-corner::after {
+  content: '← Touchpoint';
+  position: absolute;
+  bottom: 0.5rem; right: 0.5rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.38rem;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.15);
+  text-transform: uppercase;
+}
+
+/* Content cells */
+.hvm-cell {
+  background: var(--dark);
+  padding: 0.65rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  overflow: hidden;
+  transition: background 0.2s;
+  cursor: default;
+  position: relative;
+}
+.hvm-cell:hover { background: var(--dark2); }
+.hvm-cell.branded {
+  background: var(--dark);
+}
+.hvm-cell.branded:hover { background: var(--dark2); }
+
+/* Branded cell — single focal action */
+.hvm-cell-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.45rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--grey);
+  opacity: 0.6;
+  margin-bottom: 0.1rem;
+}
+.hvm-branded-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  color: var(--white);
+  line-height: 1;
+}
+.hvm-branded-desc {
+  font-size: 0.72rem;
+  color: var(--grey);
+  font-weight: 300;
+  line-height: 1.5;
+}
+.hvm-branded-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: auto;
+}
+.hvm-chip {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.42rem;
+  letter-spacing: 1px;
+  padding: 0.2rem 0.5rem;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.05);
+  color: var(--grey);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* External cell — action list */
+.hvm-action-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+}
+.hvm-action {
+  display: flex;
+  gap: 0.45rem;
+  align-items: flex-start;
+}
+.hvm-action-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.35rem;
+  opacity: 0.5;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.hvm-action-body { flex: 1; min-width: 0; }
+.hvm-action-title {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--white);
+  line-height: 1.3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+.hvm-cell.external .hvm-action { cursor: pointer; }
+.hvm-cell.external .hvm-action-title::after {
+  content: '›';
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--grey);
+  flex-shrink: 0;
+  transition: transform 0.25s, color 0.2s;
+  line-height: 1;
+}
+.hvm-cell.external .hvm-action:hover .hvm-action-title { color: var(--lime); }
+.hvm-cell.external .hvm-action:hover .hvm-action-title::after { color: var(--lime); }
+.hvm-cell.external .hvm-action.open .hvm-action-title::after { transform: rotate(90deg); color: var(--lime); }
+.hvm-action-desc {
+  font-size: 0.67rem;
+  color: var(--grey);
+  font-weight: 300;
+  line-height: 1.5;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.25s;
+  opacity: 0;
+}
+.hvm-action.open .hvm-action-desc { max-height: 6rem; opacity: 1; }
+.hvm-action-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.42rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0.15rem 0.4rem;
+  border-radius: 2px;
+  width: fit-content;
+  margin-top: 0.3rem;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.hvm-action.open .hvm-action-badge { opacity: 1; }
+
+/* Phase colour dots for external row */
+.hvm-matrix > .hvm-cell:nth-child(7)  .hvm-action-dot { background: var(--lime); }
+.hvm-matrix > .hvm-cell:nth-child(8)  .hvm-action-dot { background: var(--yellow); }
+.hvm-matrix > .hvm-cell:nth-child(9)  .hvm-action-dot { background: var(--orange); }
+.hvm-matrix > .hvm-cell:nth-child(10) .hvm-action-dot { background: var(--pink); }
+
 /* ═══════════════════════════════════════════════════
    PANEL 9 — PROCESS
 ══════════════════════════════════════════════════ */
@@ -1303,7 +1541,46 @@ html, body {
   .j-step p { font-size: 0.72rem; }
 
   /* PANEL 8: METRICS */
-  .panel-metrics { padding: 4.5rem 1.4rem 2rem; overflow-y: auto; }
+  .panel-metrics { padding: 4.5rem 1.4rem 2rem; }
+
+  /* PANEL 8b: MARKETING ACTIONS */
+  .panel-actions { padding: 6rem 0 2rem; overflow: visible; }
+  .actions-header { padding: 0 1.4rem; margin-bottom: 0.8rem; }
+  .hvm-matrix {
+    grid-template-columns: 2.8rem 1fr;
+    grid-template-rows: auto;
+    flex: unset;
+    overflow: visible;
+    background: transparent;
+    gap: 0;
+  }
+  /* On mobile: show phases stacked, hide column headers */
+  .hvm-corner { display: none; }
+  .hvm-phase-head { display: none; }
+  .hvm-row-label {
+    writing-mode: horizontal-tb;
+    justify-content: flex-start;
+    padding: 0.5rem 0.4rem;
+    grid-column: 1;
+    align-items: flex-start;
+    border-right: 2px solid rgba(255,255,255,0.08);
+    border-bottom: none;
+  }
+  .hvm-row-label span {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 0.42rem;
+  }
+  /* Stack all 4 external cells into single scrollable column */
+  .hvm-matrix > .hvm-cell {
+    grid-column: 2;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 0.9rem 1.2rem;
+  }
+  .hvm-branded-title { font-size: 0.9rem; }
+  .hvm-branded-desc { font-size: 0.68rem; }
+  .hvm-action-title { font-size: 0.72rem; }
+  .hvm-action-desc { font-size: 0.65rem; }
   .metrics-header { margin-bottom: 1rem; }
   .metrics-header .panel-h2 { font-size: clamp(1.8rem, 7vw, 3rem); }
   .metrics-grid { grid-template-columns: 1fr 1fr; flex: unset; min-height: unset; }
@@ -1713,6 +1990,215 @@ html, body {
   </div>
 
 
+
+  <!-- ── PANEL 8b: MARKETING ACTIONS ── -->
+  <div class="panel panel-actions" data-label="Recommendations">
+    <div class="actions-header">
+      <div class="section-tag reveal">// From Insights to Impact</div>
+      <h2 class="panel-h2 reveal delay-1">The Result: Concrete Marketing Recommendations</h2>
+      <p class="lead reveal delay-2">Based on our findings, we develop targeted recommendations for each stage of the AI buyer journey — turning data into a concrete action roadmap.</p>
+    </div>
+
+    <div class="hvm-matrix reveal delay-3">
+
+      <!-- Row 0: Corner + Phase headers -->
+      <div class="hvm-corner"></div>
+      <div class="hvm-phase-head" data-phase="0"><span class="hvm-phase-num">Phase 01</span><span class="hvm-phase-name">Information</span></div>
+      <div class="hvm-phase-head" data-phase="1"><span class="hvm-phase-num">Phase 02</span><span class="hvm-phase-name">Navigation</span></div>
+      <div class="hvm-phase-head" data-phase="2"><span class="hvm-phase-num">Phase 03</span><span class="hvm-phase-name">Commercial</span></div>
+      <div class="hvm-phase-head" data-phase="3"><span class="hvm-phase-num">Phase 04</span><span class="hvm-phase-name">Transaction</span></div>
+
+
+      <!-- Row 1: External touchpoints -->
+      <div class="hvm-row-label external"><span>External Touchpoints</span></div>
+
+      <div class="hvm-cell external">
+        <div class="hvm-action-list">
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Entity Engineering</div>
+              <div class="hvm-action-desc">Build clear brand, product &amp; category entities across Wikipedia-like sources, industry directories &amp; knowledge-graph pages.</div>
+              <span class="hvm-action-badge" style="background:rgba(150,250,0,0.1);color:#96FA00">Owned + Earned</span>
+            </div>
+          </div>
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Third-Party Authority Seeding</div>
+              <div class="hvm-action-desc">Neutral "What is X?" content on trade media, review platforms, Reddit AMAs &amp; expert-led threads.</div>
+              <span class="hvm-action-badge" style="background:rgba(150,250,0,0.1);color:#96FA00">Earned</span>
+            </div>
+          </div>
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">AI-Readable Proof Points</div>
+              <div class="hvm-action-desc">Certifications, studies, benchmarks &amp; awards in machine-readable formats on authoritative third-party sources.</div>
+              <span class="hvm-action-badge" style="background:rgba(150,250,0,0.1);color:#96FA00">Earned</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hvm-cell external">
+        <div class="hvm-action-list">
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Comparative Content Engineering</div>
+              <div class="hvm-action-desc">Explicit "X vs Y" content, feature matrices and decision-support tools — including neutral framings AI cites.</div>
+              <span class="hvm-action-badge" style="background:rgba(255,240,0,0.1);color:#FFF000">Owned</span>
+            </div>
+          </div>
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Community Signal Amplification</div>
+              <div class="hvm-action-desc">Systematic presence in Reddit, Quora &amp; open communities where purchase decisions form.</div>
+              <span class="hvm-action-badge" style="background:rgba(255,240,0,0.1);color:#FFF000">Earned</span>
+            </div>
+          </div>
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Review Velocity Management</div>
+              <div class="hvm-action-desc">Recency, response behavior &amp; thematic breadth of reviews — the signals AI uses to judge trustworthiness.</div>
+              <span class="hvm-action-badge" style="background:rgba(255,240,0,0.1);color:#FFF000">Earned</span>
+            </div>
+          </div>
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Partnership Signal Engineering</div>
+              <div class="hvm-action-desc">Comparison sites, analyst platforms, ecosystem listings &amp; co-created evaluation content.</div>
+              <span class="hvm-action-badge" style="background:rgba(255,240,0,0.1);color:#FFF000">Partner</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hvm-cell external">
+        <div class="hvm-action-list">
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Use-Case Dominance</div>
+              <div class="hvm-action-desc">Clear positioning "Best product for X" with dedicated proof points per use case.</div>
+              <span class="hvm-action-badge" style="background:rgba(255,115,0,0.1);color:#FF7300">Owned</span>
+            </div>
+          </div>
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Price-Trust Engineering</div>
+              <div class="hvm-action-desc">Transparent pricing, Total Cost of Ownership &amp; upgrade path content that removes AI-generated hesitation.</div>
+              <span class="hvm-action-badge" style="background:rgba(255,115,0,0.1);color:#FF7300">Owned</span>
+            </div>
+          </div>
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Risk Reduction Content</div>
+              <div class="hvm-action-desc">Returns policies, guarantees, onboarding &amp; post-purchase explanations that make AI confident recommending you.</div>
+              <span class="hvm-action-badge" style="background:rgba(255,115,0,0.1);color:#FF7300">Owned</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hvm-cell external">
+        <div class="hvm-action-list">
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Channel Partner Alignment</div>
+              <div class="hvm-action-desc">Unified product descriptions &amp; consistent benefit framing across all channel partners.</div>
+              <span class="hvm-action-badge" style="background:rgba(250,80,220,0.1);color:#FA50DC">Partner</span>
+            </div>
+          </div>
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Post-Purchase Signal Design</div>
+              <div class="hvm-action-desc">Buyers sharing experiences, early reviews &amp; follow-up content that turns customers into ongoing AI training signals.</div>
+              <span class="hvm-action-badge" style="background:rgba(250,80,220,0.1);color:#FA50DC">Earned</span>
+            </div>
+          </div>
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Local Entity Consistency</div>
+              <div class="hvm-action-desc">Accurate store data across Google Business Profiles, Apple Maps, Bing Places &amp; local directories.</div>
+              <span class="hvm-action-badge" style="background:rgba(250,80,220,0.1);color:#FA50DC">Owned</span>
+            </div>
+          </div>
+          <div class="hvm-action" onclick="this.classList.toggle('open')">
+            <div class="hvm-action-dot"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Staff as Signal Multipliers</div>
+              <div class="hvm-action-desc">Authentic, AI-readable signals generated at branded &amp; external touchpoints by staff.</div>
+              <span class="hvm-action-badge" style="background:rgba(250,80,220,0.1);color:#FA50DC">Earned</span>
+            </div>
+          </div>
+        </div>
+      </div>      <!-- Row 2: Branded touchpoints -->
+      <div class="hvm-row-label branded"><span>Branded Touchpoints</span></div>
+
+      <div class="hvm-cell branded">
+        <div class="hvm-action-list">
+          <div class="hvm-action">
+            <div class="hvm-action-dot" style="background:var(--lime)"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Structured Data &amp; Markdown for Agents</div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hvm-cell branded">
+        <div class="hvm-action-list">
+          <div class="hvm-action">
+            <div class="hvm-action-dot" style="background:var(--yellow)"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Structured Data &amp; Markdown for Agents</div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hvm-cell branded">
+        <div class="hvm-action-list">
+          <div class="hvm-action">
+            <div class="hvm-action-dot" style="background:var(--orange)"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Structured Data &amp; Markdown for Agents</div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hvm-cell branded">
+        <div class="hvm-action-list">
+          <div class="hvm-action">
+            <div class="hvm-action-dot" style="background:var(--pink)"></div>
+            <div class="hvm-action-body">
+              <div class="hvm-action-title">Structured Data &amp; Markdown for Agents</div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div><!-- /hvm-matrix -->
+  </div>
+
+
+
   <!-- ── PANEL 9: PROCESS ── -->
   <div class="panel panel-process" data-label="Methodology">
     <div class="process-header">
@@ -2012,6 +2498,7 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'Home') goTo(0);
   if (e.key === 'End') goTo(totalPanels - 1);
 });
+
 
 // ── INIT ───────────────────────────────────────────
 render();
