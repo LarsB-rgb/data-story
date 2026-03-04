@@ -50,12 +50,7 @@ html, body {
   position: relative;
   overflow: hidden;
 }
-@media (max-width: 768px) {
-  /* Panel basics handled in the main mobile block below */
-  #scroll-container {
-    align-items: flex-start;
-  }
-}
+
 
 .nav-divider {
   width: 1px;
@@ -1162,31 +1157,25 @@ html, body {
   #panel-counter { display: none; }
   .nav-dot { width: 5px; height: 5px; }
 
-  /* Allow vertical scroll on mobile */
+  /* Mobile: keep horizontal layout, each panel scrolls vertically */
   html, body {
-    overflow-x: hidden;
-      height: auto;
+    overflow: hidden;
+    height: 100%;
   }
 
-  /* Make scroll container a normal block — no more fixed horizontal track */
   #scroll-container {
-    position: relative !important;
-    display: block !important;
-    transform: none !important;
-    transition: none !important;
-    width: 100%;
-    height: auto;
-    inset: auto;
+    align-items: stretch;
   }
 
-  /* PANELS — stack vertically, scroll naturally */
   .panel {
-    width: 100%;
-    height: auto;
-    min-height: 100svh;
+    height: 100svh;
+    min-height: unset;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     padding: 4.5rem 1.4rem 2.5rem;
     justify-content: flex-start;
-    overflow: visible;
+    align-items: flex-start;
     touch-action: pan-y;
   }
 
@@ -1873,16 +1862,10 @@ function goTo(index) {
 
 function render() {
   const container = document.getElementById('scroll-container');
-  if (!isMobile()) {
-    // Desktop: horizontal slide via transform
-    container.style.transform = `translateX(-${current * 100}vw)`;
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-  } else {
-    // Mobile: scroll to the panel's vertical position
-    container.style.transform = '';
-    panels[current].scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  // Always use horizontal transform (desktop + mobile)
+  container.style.transform = `translateX(-${current * 100}vw)`;
+  // Reset any vertical scroll so panel content starts at top
+  window.scrollTo(0, 0);
 
   // Progress bar
   const pct = totalPanels > 1 ? (current / (totalPanels - 1)) * 100 : 100;
