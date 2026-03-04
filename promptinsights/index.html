@@ -1872,18 +1872,16 @@ function goTo(index) {
 }
 
 function render() {
-  // On mobile: no horizontal transform, panels are stacked vertically
   const container = document.getElementById('scroll-container');
-  if (window.innerWidth > 768) {
+  if (!isMobile()) {
+    // Desktop: horizontal slide via transform
     container.style.transform = `translateX(-${current * 100}vw)`;
-  } else {
-    container.style.transform = '';
-  }
-
-  // Reset vertical scroll to top on panel change (desktop only)
-  if (window.innerWidth > 768) {
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
+  } else {
+    // Mobile: scroll to the panel's vertical position
+    container.style.transform = '';
+    panels[current].scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // Progress bar
@@ -1960,35 +1958,48 @@ window.addEventListener('wheel', (e) => {
   }
 }, { passive: false });
 
-// Touch — desktop: horizontal swipe to navigate; mobile: native vertical scroll
+// Touch handling
 let touchStartX = 0;
 let touchStartY = 0;
 let touchMoved = false;
+let swipeIntent = null; // 'h' = horizontal, 'v' = vertical, null = undecided
 
 window.addEventListener('touchstart', (e) => {
   touchStartX = e.touches[0].clientX;
   touchStartY = e.touches[0].clientY;
   touchMoved = false;
+  swipeIntent = null;
 }, { passive: true });
 
 window.addEventListener('touchmove', (e) => {
-  if (isMobile()) return; // let native scroll handle it
   touchMoved = true;
   const dx = Math.abs(e.touches[0].clientX - touchStartX);
   const dy = Math.abs(e.touches[0].clientY - touchStartY);
-  if (dx > dy * 1.2) {
-    e.preventDefault();
+
+  // Determine intent on first significant move
+  if (!swipeIntent && (dx > 8 || dy > 8)) {
+    swipeIntent = dx > dy ? 'h' : 'v';
+  }
+
+  if (!isMobile()) {
+    // Desktop: prevent default on horizontal swipe
+    if (swipeIntent === 'h') e.preventDefault();
+  } else {
+    // Mobile: only block scroll if clearly horizontal swipe
+    if (swipeIntent === 'h') e.preventDefault();
+    // vertical swipe: let browser scroll naturally
   }
 }, { passive: false });
 
 window.addEventListener('touchend', (e) => {
-  if (isMobile()) return;
   if (!touchMoved) return;
   const dx = touchStartX - e.changedTouches[0].clientX;
   const dy = touchStartY - e.changedTouches[0].clientY;
-  if (Math.abs(dx) > Math.abs(dy) * 1.5 && Math.abs(dx) > 45) {
+  // Navigate if horizontal swipe is dominant and long enough
+  if (swipeIntent === 'h' && Math.abs(dx) > Math.abs(dy) * 1.5 && Math.abs(dx) > 45) {
     goTo(dx > 0 ? current + 1 : current - 1);
   }
+  swipeIntent = null;
 });
 
 // Keyboard (desktop only)
