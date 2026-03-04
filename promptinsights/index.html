@@ -1153,7 +1153,10 @@ html, body {
   /* NAV */
   #topnav { padding: 0.85rem 1.2rem; }
   .nav-logo { font-size: 1.1rem; letter-spacing: 2px; }
-  .nav-divider, .nav-prepared, .nav-panel-label { display: none; }
+  .nav-divider, .nav-panel-label { display: none; }
+  .nav-prepared { display: flex; }
+  .nav-for-label { font-size: 0.5rem; }
+  .osram-img { height: 1.1rem; }
   #panel-counter { display: none; }
   .nav-dot { width: 5px; height: 5px; }
 
@@ -1244,7 +1247,14 @@ html, body {
     padding: 5rem 1.4rem 2rem;
     align-items: flex-start;
     }
-  .prob-num { font-size: 4.5rem; top: 3.8rem; left: 1.4rem; }
+  .prob-num {
+    font-size: 3.5rem;
+    position: static;
+    color: rgba(255,255,255,0.12);
+    margin-bottom: 0.2rem;
+    line-height: 1;
+  }
+  .panel-label-strip { display: none; }
   .panel-label-strip { top: 3.8rem; right: 1.4rem; }
   .prob-big-stat { font-size: clamp(3.5rem, 17vw, 6rem); }
   .prob-right { width: 100%; }
