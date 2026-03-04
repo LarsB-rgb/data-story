@@ -43,6 +43,23 @@
     font-size: 1.6rem;
     color: var(--lime);
     letter-spacing: 2px;
+    line-height: 1;
+  }
+  .hero-client {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-top: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+  .hero-client span {
+    color: var(--orange);
+    font-size: 1.4rem;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 4px;
+    vertical-align: middle;
   }
   .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a {
@@ -53,8 +70,22 @@
     letter-spacing: 1px;
     text-transform: uppercase;
     transition: color 0.2s;
+    position: relative;
+    padding-bottom: 2px;
   }
-  .nav-links a:hover { color: var(--lime); }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 2px;
+    background: var(--lime);
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+    transform-origin: left;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a.active { color: var(--lime); }
+  .nav-links a.active::after { transform: scaleX(1); }
 
   /* HERO */
   .hero {
@@ -148,10 +179,35 @@
 
   /* STAT BAR */
   .stat-bar {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
     border-top: 1px solid rgba(255,255,255,0.08);
     border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .stat-bar-header {
+    padding: 1rem 3rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .stat-bar-client {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+  .stat-bar-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    color: var(--orange);
+    background: rgba(255,115,0,0.08);
+    border: 1px solid rgba(255,115,0,0.3);
+    padding: 0.1rem 0.7rem;
+  }
+  .stat-items-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
   }
   .stat-item {
     padding: 2.5rem 3rem;
@@ -643,7 +699,7 @@
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
     section { padding: 4rem 1.5rem; }
-    .stat-bar { grid-template-columns: 1fr; }
+    .stat-items-row { grid-template-columns: 1fr; }
     .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
     .problem-grid, .journey-steps, .process-steps, .action-grid, .pricing-grid { grid-template-columns: 1fr; }
     .b2b-section { grid-template-columns: 1fr; gap: 2rem; }
@@ -672,6 +728,7 @@
   <div class="hero-big-bg">AI</div>
   <div class="hero-tag">AI Research Intelligence</div>
   <h1>PROMPT<br><span>INSIGHTS</span></h1>
+  <div class="hero-client">Relevant für <span>OSRAM</span></div>
   <p class="hero-sub">The world's first AI Conversation Research Platform — tracking how real humans interact with AI to find, evaluate, and choose your brand.</p>
   <a href="#problem" class="hero-cta">Discover the New Reality →</a>
   <div class="hero-scroll">Scroll</div>
@@ -693,17 +750,19 @@
 
 <!-- STAT BAR -->
 <div class="stat-bar">
-  <div class="stat-item fade-in">
-    <div class="stat-num">−54.6%</div>
-    <div class="stat-label">Organic CTR drop in SERPs<br>where AI Overviews are present</div>
-  </div>
-  <div class="stat-item fade-in">
-    <div class="stat-num">−28.6%</div>
-    <div class="stat-label">Paid CTR decline<br>across all Google searches</div>
-  </div>
-  <div class="stat-item fade-in">
-    <div class="stat-num">85%</div>
-    <div class="stat-label">of 25–34 year-olds now use<br>AI tools for supplier research</div>
+  <div class="stat-items-row">
+    <div class="stat-item fade-in">
+      <div class="stat-num">−54.6%</div>
+      <div class="stat-label">Organic CTR drop in SERPs<br>where AI Overviews are present</div>
+    </div>
+    <div class="stat-item fade-in">
+      <div class="stat-num">−28.6%</div>
+      <div class="stat-label">Paid CTR decline<br>across all Google searches</div>
+    </div>
+    <div class="stat-item fade-in">
+      <div class="stat-num">85%</div>
+      <div class="stat-label">of 25–34 year-olds now use<br>AI tools for supplier research</div>
+    </div>
   </div>
 </div>
 
@@ -1086,19 +1145,39 @@
 </footer>
 
 <script>
-  // Intersection Observer for fade-in animations
+  // Fade-in animations
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        setTimeout(() => {
-          entry.target.classList.add('visible');
-        }, 80 * (Array.from(entry.target.parentElement?.children || []).indexOf(entry.target)));
+        const siblings = Array.from(entry.target.parentElement?.children || []);
+        const delay = 80 * siblings.indexOf(entry.target);
+        setTimeout(() => entry.target.classList.add('visible'), delay);
         observer.unobserve(entry.target);
       }
     });
   }, { threshold: 0.15 });
 
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Active nav highlighting via scroll
+  const sections = document.querySelectorAll('section[id], div[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + id) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.35, rootMargin: '-10% 0px -55% 0px' });
+
+  sections.forEach(sec => navObserver.observe(sec));
 
   // Tab switching
   function showTab(index) {
