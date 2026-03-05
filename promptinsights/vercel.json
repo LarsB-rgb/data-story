@@ -1,9 +1,6 @@
 {
-  "rewrites": [
-    { "source": "/osram", "destination": "/api/osram" },
-    { "source": "/osram/(.*)", "destination": "/api/osram" }
-  ],
   "routes": [
+    { "src": "/osram(.*)", "dest": "/api/osram" },
     { "src": "/", "dest": "/index.html" }
   ]
 }
