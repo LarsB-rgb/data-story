@@ -1,7 +1,7 @@
 {
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/osram", "destination": "/api/osram" },
-    { "source": "/", "destination": "/index.html" }
+  "routes": [
+    { "src": "/osram", "dest": "/api/osram" },
+    { "src": "^/$", "dest": "/index.html" }
   ]
 }
