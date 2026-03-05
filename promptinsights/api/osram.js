@@ -6,7 +6,7 @@ export default function handler(req, res) {
     const [user, pass] = credentials.split(':')
     if (user === 'osram' && pass === 'CheilOsram2026!2tw#') {
       res.setHeader('Content-Type', 'text/html')
-      return res.send('<h1>Osram</h1>') // später ersetzen wir das durch die echte Seite
+      return res.send('<h1>Osram</h1>')
     }
   }
 
