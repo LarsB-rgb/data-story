@@ -154,6 +154,8 @@ html, body {
   font-size: 1.5rem;
   color: var(--lime);
   letter-spacing: 3px;
+  text-decoration: none;
+  cursor: pointer;
 }
 .nav-dots {
   display: flex;
@@ -1641,6 +1643,7 @@ html, body {
   letter-spacing: 1px;
   cursor: pointer;
   text-align: center;
+  text-decoration: none;
   transition: all 0.2s;
   border: 1px solid rgba(255,255,255,0.15);
   color: var(--white);
@@ -1685,6 +1688,7 @@ html, body {
   justify-content: center;
   align-items: flex-start;
   position: relative;
+  padding: 5rem 5vw;
 }
 .panel-cta::before {
   content: '';
@@ -1693,58 +1697,50 @@ html, body {
     radial-gradient(ellipse at 50% 50%, rgba(150,250,0,0.07) 0%, transparent 60%);
   pointer-events: none;
 }
-.cta-bg-text {
-  position: absolute;
-  right: -3vw; bottom: -5vh;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 28vw;
-  color: rgba(150,250,0,0.025);
-  line-height: 1;
-  pointer-events: none;
-  user-select: none;
+.cta-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4vw;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  align-items: center;
 }
-.cta-inner { position: relative; z-index: 1; max-width: 700px; }
+.cta-inner { max-width: 540px; }
 .cta-h2 {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(3.5rem, 7vw, 8rem);
+  font-size: clamp(3rem, 5.5vw, 7rem);
   line-height: 0.9;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 .cta-h2 em { color: var(--lime); font-style: normal; }
 .cta-body {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--grey);
   font-weight: 300;
   line-height: 1.7;
-  margin-bottom: 2.5rem;
-  max-width: 500px;
+  max-width: 460px;
 }
-.cta-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
-.btn-primary {
-  background: var(--lime);
-  color: var(--black);
-  padding: 1rem 2.5rem;
+.cta-form {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-top: 2px solid var(--lime);
+  padding: 1.5rem 1.8rem 1rem;
+}
+.cta-form-label {
   font-family: 'Space Mono', monospace;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  cursor: pointer;
+  font-size: 0.5rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+.cta-form iframe {
+  display: block;
   border: none;
-  transition: background 0.2s, transform 0.2s;
-}
-.btn-primary:hover { background: var(--yellow); transform: translateX(4px); }
-.btn-secondary {
   background: transparent;
-  color: var(--white);
-  padding: 1rem 2.5rem;
-  font-family: 'Space Mono', monospace;
-  font-size: 0.8rem;
-  letter-spacing: 1px;
-  cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.2);
-  transition: border-color 0.2s, color 0.2s;
 }
-.btn-secondary:hover { border-color: var(--lime); color: var(--lime); }
 .cta-footer-line {
   position: absolute;
   bottom: 2.5rem;
@@ -2057,7 +2053,10 @@ html, body {
   .price-include-item { font-size: 0.56rem; }
 
   /* PANEL 12: CTA */
-  .panel-cta { padding: 4.5rem 1.4rem 3rem; }
+  .panel-cta { padding: 4.5rem 1.4rem 3rem; overflow-y: auto; }
+  .cta-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .cta-h2 { font-size: clamp(2.5rem, 10vw, 4rem); }
+  .cta-form { padding: 1.2rem 1.2rem 0.8rem; }
   .cta-bg-text { font-size: 55vw; }
   .cta-h2 { font-size: clamp(3rem, 13vw, 5rem); }
   .cta-body { font-size: 0.85rem; }
@@ -2090,7 +2089,7 @@ html, body {
 <!-- TOP NAV -->
 <div id="topnav">
   <div style="display:flex;align-items:center;gap:1.8rem;">
-    <div class="nav-logo">PromptInsights</div>
+    <a class="nav-logo" href="#" onclick="goTo(0);return false;">PromptInsights</a>
     <div class="nav-divider"></div>
     <div class="nav-prepared">
       <span class="nav-for-label">Prepared for</span>
@@ -2722,7 +2721,7 @@ html, body {
           <div class="price-include-item">✓ 2 AI platforms</div>
           <div class="price-include-item">✓ Baseline report + recommendations</div>
         </div>
-        <div class="price-cta">Request a Quote →</div>
+        <a class="price-cta" href="#" onclick="goTo(document.querySelectorAll('.panel').length-1);return false;">Request a Quote →</a>
       </div>
       <div class="price-card featured" style="border-top: 2px solid var(--lime);">
         <div class="price-badge">Most Popular</div>
@@ -2735,7 +2734,7 @@ html, body {
           <div class="price-include-item">✓ 3 AI platforms</div>
           <div class="price-include-item">✓ Competitive benchmarking + roadmap</div>
         </div>
-        <div class="price-cta">Request a Quote →</div>
+        <a class="price-cta" href="#" onclick="goTo(document.querySelectorAll('.panel').length-1);return false;">Request a Quote →</a>
       </div>
       <div class="price-card" style="border-top: 2px solid var(--orange);">
         <div class="price-tier-icon" style="color:var(--orange)">🚀</div>
@@ -2747,7 +2746,7 @@ html, body {
           <div class="price-include-item">✓ All AI platforms</div>
           <div class="price-include-item">✓ Dedicated strategy consulting</div>
         </div>
-        <div class="price-cta">Request a Quote →</div>
+        <a class="price-cta" href="#" onclick="goTo(document.querySelectorAll('.panel').length-1);return false;">Request a Quote →</a>
       </div>
     </div>
   </div>
@@ -2755,14 +2754,24 @@ html, body {
 
   <!-- ── PANEL 12: CTA ── -->
   <div class="panel panel-cta" data-label="Contact">
-    <div class="cta-bg-text">GO</div>
-    <div class="cta-inner">
-      <div class="section-tag reveal">// Next Steps</div>
-      <h2 class="cta-h2 reveal delay-1">Be Visible<br>Where Decisions<br>Are <em>Made</em></h2>
-      <p class="cta-body reveal delay-2">Your customers are already asking AI about your brand. PromptInsights shows you exactly what it's saying — and what to do about it.</p>
-      <div class="cta-btns reveal delay-3">
-        <button class="btn-primary">Request a Demo →</button>
-        <button class="btn-secondary">Download Sample Report</button>
+    <div class="cta-layout">
+      <div class="cta-inner">
+        <div class="section-tag reveal">// Next Steps</div>
+        <h2 class="cta-h2 reveal delay-1">Be Visible<br>Where Decisions<br>Are <em>Made</em></h2>
+        <p class="cta-body reveal delay-2">Your customers are already asking AI about your brand. PromptInsights shows you exactly what it's saying — and what to do about it.</p>
+      </div>
+      <div class="cta-form reveal delay-3">
+        <div class="cta-form-label">// Request a Quote</div>
+        <iframe
+          data-tally-src="https://tally.so/embed/LZdQJ2?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+          loading="lazy"
+          width="100%"
+          height="340"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+          title="Request a Quote"
+        ></iframe>
       </div>
     </div>
     <div class="cta-footer-line">© 2025 PromptInsights.ai — A Cheil Product</div>
@@ -3002,6 +3011,7 @@ function render() {
 render();
 
   </script>
+  <script async src="https://tally.so/widgets/embed.js"></script>
 
 </body>
 </html>
