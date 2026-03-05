@@ -1,11 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PromptInsights.ai — AI Conversation Research Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptInsights.ai — AI Conversation Research Platform</title>
+
+  <!-- Google Fonts (defined in tokens.css) -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!--
+    STYLESHEET LOAD ORDER — important, do not reorder:
+    1. tokens.css      Design tokens (colours, fonts). Edit this for rebranding.
+    2. layout.css      Global structure, nav, scroll container.
+    3. components.css  Panel-specific components and content styles.
+    4. animations.css  Reveal animations + all mobile overrides. Always last.
+  -->
+  <style>
+/* ============================================================
+   tokens.css  —  Design Tokens
+   ============================================================
+   All CSS custom properties, colour palette, font stack
+   and base reset live here.
+
+   HOW TO CUSTOMISE:
+   • Change --lime / --pink / --orange / --yellow for brand colours
+   • Swap the Google Fonts @import for your own typefaces
+   • Adjust --black / --dark / --grey for background tones
+
+   This is the ONLY file you need to touch for a rebrand.
+   ============================================================ */
+
 :root {
   --black: #0A0A0A;
   --dark: #111111;
@@ -20,6 +44,13 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* ── Custom scrollbars ── */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(150,250,0,0.35); }
+* { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.12) transparent; }
+
 html, body {
   width: 100%;
   height: 100%;
@@ -28,6 +59,23 @@ html, body {
   color: var(--white);
   font-family: 'DM Sans', sans-serif;
 }
+
+/* ============================================================
+   layout.css  —  Global Structure & Navigation
+   ============================================================
+   Defines the horizontal scroll container, the base .panel
+   class, top nav bar, progress bar, panel counter and the
+   scroll/swipe hint overlay.
+
+   DEPENDENCIES: tokens.css
+
+   REUSE NOTES:
+   • #scroll-container + .panel = the core horizontal layout
+   • #topnav is fully self-contained; swap logo text in HTML
+   • #progress-bar width is driven by scroll.js
+   • .section-tag and .reveal are utility classes used
+     throughout all panels — keep these here.
+   ============================================================ */
 
 /* ─── SCROLL CONTAINER ─────────────────────────────── */
 #scroll-container {
@@ -289,6 +337,35 @@ html, body {
 }
 .hero-cta:hover { background: var(--yellow); transform: translateX(4px); }
 
+/* ============================================================
+   components.css  —  Panel Components
+   ============================================================
+   One section per panel, each separated by ═══ headers.
+   Add new panels by appending a new section at the bottom
+   before the closing comment.
+
+   DEPENDENCIES: tokens.css
+
+   SECTIONS:
+   PANEL 1  — AI Shift (scene)
+   PANEL 2  — Hero
+   PANEL 3–6 — Problem panels
+   PANEL 7  — B2B Insight
+   PANEL 8  — AI Journey / Platform
+   PANEL 9  — Metrics
+   PANEL 8b — Marketing Actions (Hierarchical Value Map)
+   PANEL 10 — Process / Methodology
+   PANEL 11 — USPs
+   PANEL 12 — Pricing
+   PANEL 13 — CTA
+
+   REUSE NOTES:
+   • .metric-card, .process-card, .hvm-matrix are standalone
+     components — copy the HTML + their CSS section to reuse
+     them in other projects.
+   • The .hvm-matrix Value Map is driven by interactions.js;
+     make sure that script is included if you reuse it.
+   ============================================================ */
 
 /* ═══════════════════════════════════════════════════
    PANEL 1 — AI IS CHANGING (Scene)
@@ -1131,6 +1208,315 @@ html, body {
 
 
 /* ═══════════════════════════════════════════════════
+   PANEL 8b — GEO PLAYBOOK (Recommendations)
+══════════════════════════════════════════════════ */
+
+/* Cyan accent for community column */
+:root { --cyan: #00D4FF; }
+
+.panel-playbook {
+  background: var(--black);
+  padding: 3.5rem 5vw 2rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.panel-playbook .section-tag { margin-bottom: 0.5rem; }
+.panel-playbook .panel-h2 { margin-bottom: 0.3rem; }
+.panel-playbook .lead { margin-bottom: 0.9rem; font-size: 0.82rem; }
+
+/* ══════════════════════════════════════════
+   3-COLUMN GRID
+══════════════════════════════════════════ */
+.playbook-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 2fr 1.4fr;
+  gap: 1px;
+  background: rgba(255,255,255,0.07);
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Column wrapper ── */
+.pb-col {
+  background: var(--dark);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Column top bar ── */
+.pb-col-head {
+  padding: 1rem 1.4rem 0.8rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.pb-col-head::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.pb-col--branded .pb-col-head::before  { background: var(--lime); }
+.pb-col--external .pb-col-head::before { background: var(--orange); }
+
+.pb-col--community .pb-col-head::before{ background: var(--cyan); }
+
+
+.pb-col-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.45rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.pb-col--branded  .pb-col-eyebrow { color: var(--lime); }
+.pb-col--external .pb-col-eyebrow { color: var(--orange); }
+
+.pb-col--community .pb-col-eyebrow{ color: var(--cyan); }
+
+
+.pb-col-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 1.5px;
+  color: var(--white);
+  line-height: 1;
+}
+
+.pb-col-sub {
+  font-size: 0.65rem;
+  color: var(--grey);
+  font-weight: 300;
+  margin-top: 0.2rem;
+  line-height: 1.4;
+}
+
+/* ── Team rows inside each column ── */
+.pb-teams {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: rgba(255,255,255,0.04);
+}
+
+.pb-team {
+  background: var(--dark);
+  padding: 0.75rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  transition: background 0.2s;
+  cursor: default;
+  border-left: 2px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.pb-team:hover { background: var(--dark2); }
+
+
+.pb-col--branded  .pb-team:hover { border-left-color: rgba(150,250,0,0.4); }
+.pb-col--external .pb-team:hover { border-left-color: rgba(255,115,0,0.4); }
+
+.pb-col--community .pb-team:hover{ border-left-color: rgba(0,212,255,0.4); }
+
+
+.pb-team-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pb-team-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.pb-team-name {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+.pb-col--branded  .pb-team-name { color: rgba(150,250,0,0.6); }
+.pb-col--external .pb-team-name { color: rgba(255,115,0,0.6); }
+
+.pb-col--community .pb-team-name{ color: rgba(0,212,255,0.6); }
+
+
+.pb-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.pb-action {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.pb-action-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+  margin-top: 0.38rem;
+}
+
+.pb-col--branded  .pb-action-dot { background: rgba(150,250,0,0.35); }
+.pb-col--external .pb-action-dot { background: rgba(255,115,0,0.35); }
+
+.pb-col--community .pb-action-dot{ background: rgba(0,212,255,0.35); }
+
+
+.pb-action-text {
+  font-size: 0.71rem;
+  color: rgba(255,255,255,0.7);
+  font-weight: 300;
+  line-height: 1.45;
+}
+
+.pb-action-text strong {
+  color: var(--white);
+  font-weight: 500;
+}
+
+/* ── Divider between teams ── */
+.pb-team + .pb-team {
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+/* ── Output badge at bottom of each column ── */
+.pb-output {
+  flex-shrink: 0;
+  padding: 0.65rem 1.4rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--dark);
+}
+
+.pb-output-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.44rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--grey);
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.pb-output-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.pb-output-chip {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.42rem;
+  letter-spacing: 1px;
+  padding: 0.18rem 0.5rem;
+  border-radius: 2px;
+}
+
+.pb-col--branded  .pb-output-chip { background: rgba(150,250,0,0.08); color: rgba(150,250,0,0.7); border: 1px solid rgba(150,250,0,0.15); }
+.pb-col--external .pb-output-chip { background: rgba(255,115,0,0.08);  color: rgba(255,115,0,0.7);  border: 1px solid rgba(255,115,0,0.15); }
+
+.pb-col--community .pb-output-chip{ background: rgba(0,212,255,0.08);  color: rgba(0,212,255,0.7);  border: 1px solid rgba(0,212,255,0.15); }
+
+
+/* ── Emerging tech highlight bar ── */
+.pb-emerging {
+  margin-top: 0.9rem;
+  border: 1px solid rgba(250,80,220,0.25);
+  border-radius: 3px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.pb-emerging-head {
+  background: rgba(250,80,220,0.08);
+  padding: 0.4rem 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid rgba(250,80,220,0.15);
+}
+
+.pb-emerging-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.42rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+
+.pb-emerging-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.38rem;
+  letter-spacing: 1px;
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
+  background: rgba(250,80,220,0.15);
+  color: var(--pink);
+  border: 1px solid rgba(250,80,220,0.2);
+  margin-left: auto;
+}
+
+.pb-emerging-body {
+  padding: 0.6rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pb-emerging-item {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+.pb-emerging-icon {
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+.pb-emerging-content {}
+.pb-emerging-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.15rem;
+}
+
+.pb-emerging-desc {
+  font-size: 0.63rem;
+  color: var(--grey);
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.pb-emerging-desc strong { color: rgba(250,80,220,0.85); font-weight: 500; }
+.pb-emerging-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.05);
+}
+
+/* ═══════════════════════════════════════════════════
    PANEL 10 — USPs
 ══════════════════════════════════════════════════ */
 .panel-usp {
@@ -1382,6 +1768,29 @@ html, body {
 .reveal.delay-3 { transition-delay: 0.3s; }
 .reveal.delay-4 { transition-delay: 0.4s; }
 
+/* ============================================================
+   animations.css  —  Animations & Responsive Overrides
+   ============================================================
+   Contains:
+   • .reveal entrance animation (opacity + translateY)
+   • .delay-1 … .delay-5 stagger helpers
+   • Chart animation classes (.stat-bar-fill.anim, donut arcs)
+   • @keyframes definitions
+   • All @media (max-width: 768px) overrides
+
+   DEPENDENCIES: tokens.css, layout.css, components.css
+
+   IMPORT ORDER MATTERS — always import this file last so
+   media queries correctly override desktop styles.
+
+   REUSE NOTES:
+   • The .reveal / .delay-* system works independently —
+     drop it into any project alongside interactions.js
+     (which manages the IntersectionObserver trigger).
+   • Mobile overrides assume the horizontal scroll model
+     from scroll.js; if you use a different scroll approach
+     review the .panel and #scroll-container overrides.
+   ============================================================ */
 
 /* ══════════════════════════════════════════════════
    MOBILE — max-width 768px
@@ -1645,7 +2054,8 @@ html, body {
 }
 .reveal.delay-5 { transition-delay: 0.5s; }
 .panel.active .reveal { opacity: 1; transform: translateY(0); }
-</style>
+
+  </style>
 </head>
 <body>
 
@@ -1991,215 +2401,211 @@ html, body {
 
 
 
-  <!-- ── PANEL 8b: MARKETING ACTIONS ── -->
-  <div class="panel panel-actions" data-label="Recommendations">
-    <div class="actions-header">
-      <div class="section-tag reveal">// From Insights to Impact</div>
-      <h2 class="panel-h2 reveal delay-1">The Result: Concrete Marketing Recommendations</h2>
-      <p class="lead reveal delay-2">Based on our findings, we develop targeted recommendations for each stage of the AI buyer journey — turning data into a concrete action roadmap.</p>
+  <!-- ── PANEL 8b: GEO PLAYBOOK ── -->
+  <div class="panel panel-playbook" data-label="Recommendations">
+<div class="section-tag">// Turning Data into Action</div>
+  <h2 class="panel-h2">Recommendations Per Team & Channel</h2>
+  <p class="lead">Based on your AI visibility data, PromptInsights identifies where you're losing ground to competitors — and translates that into prioritised recommendations across every team.</p>
+
+  <!-- ── Emerging: llms.txt + Cloudflare Markdown for Agents ── -->
+  <div class="pb-emerging">
+    <div class="pb-emerging-head">
+      <span class="pb-emerging-eyebrow">⚡ Emerging Infrastructure</span>
+      <span class="pb-emerging-tag">New in 2025/26</span>
+    </div>
+    <div class="pb-emerging-body">
+      <div class="pb-emerging-item">
+        <span class="pb-emerging-icon">📄</span>
+        <div class="pb-emerging-content">
+          <div class="pb-emerging-title">llms.txt</div>
+          <div class="pb-emerging-desc">A structured file in your site root that tells AI agents directly how to interpret your brand, what pages are authoritative, and what to ignore. Like <strong>robots.txt — but for LLMs.</strong> Already supported by Perplexity and Anthropic.</div>
+        </div>
+      </div>
+      <div class="pb-emerging-divider"></div>
+      <div class="pb-emerging-item">
+        <span class="pb-emerging-icon">🌐</span>
+        <div class="pb-emerging-content">
+          <div class="pb-emerging-title">Cloudflare Markdown for Agents</div>
+          <div class="pb-emerging-desc">Launched Feb 2026. Cloudflare auto-converts your HTML to Markdown at the edge when AI crawlers request it — <strong>80% fewer tokens,</strong> cleaner signal. Claude Code and OpenCode already request it natively. Opt-in, no code changes needed. Note: default Content-Signal allows AI training — <strong>review before enabling.</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="playbook-grid">
+
+    <!-- ══ COLUMN 1: BRANDED TOUCHPOINTS ══ -->
+    <div class="pb-col pb-col--branded">
+      <div class="pb-col-head">
+        <div class="pb-col-eyebrow">Owned</div>
+        <div class="pb-col-title">Branded Touchpoints</div>
+        <div class="pb-col-sub">Your website, product pages & owned content — made machine-readable.</div>
+      </div>
+      <div class="pb-teams">
+
+        <div class="pb-team">
+          <div class="pb-team-label">
+            <span class="pb-team-icon">✍️</span>
+            <span class="pb-team-name">Content Team</span>
+          </div>
+          <div class="pb-actions">
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Product pages:</strong> Q&amp;A structure, conversational queries, no marketing filler</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Feature descriptions:</strong> What it does — not why to buy it</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Editorial:</strong> AI summary block (3–5 bullets) at the top of every article</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Answer Type optimisation:</strong> Move from mere mention → direct recommendation by owning the first sentence AI cites per intent cluster</div></div>
+          </div>
+        </div>
+
+        <div class="pb-team">
+          <div class="pb-team-label">
+            <span class="pb-team-icon">🖥️</span>
+            <span class="pb-team-name">UX Team</span>
+          </div>
+          <div class="pb-actions">
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Information architecture:</strong> Core answer always above the fold</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Microcopy:</strong> Tooltips &amp; labels written as citable short answers</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Schema.org:</strong> Product, FAQ and HowTo markup on all relevant pages</div></div>
+          </div>
+        </div>
+
+        <div class="pb-team">
+          <div class="pb-team-label">
+            <span class="pb-team-icon">💳</span>
+            <span class="pb-team-name">Paid & Media</span>
+          </div>
+          <div class="pb-actions">
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Search Ads:</strong> Keyword = AI prompt — same terms in ads and landing pages</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Landing Pages:</strong> Answer the campaign's core question within the first 100 words</div></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="pb-output">
+        <span class="pb-output-label">Output</span>
+        <div class="pb-output-items">
+          <span class="pb-output-chip">Content Brief</span>
+          <span class="pb-output-chip">UX Checklist</span>
+          <span class="pb-output-chip">Schema Spec</span>
+          <span class="pb-output-chip">LP Template</span>
+        </div>
+      </div>
     </div>
 
-    <div class="hvm-matrix reveal delay-3">
+    <!-- ══ COLUMN 2: EXTERNAL TOUCHPOINTS ══ -->
+    <div class="pb-col pb-col--external">
+      <div class="pb-col-head">
+        <div class="pb-col-eyebrow">Earned + Partner</div>
+        <div class="pb-col-title">External Touchpoints</div>
+        <div class="pb-col-sub">PR, editorial media &amp; channel partners — where AI finds your brand mentioned by others.</div>
+      </div>
+      <div class="pb-teams">
 
-      <!-- Row 0: Corner + Phase headers -->
-      <div class="hvm-corner"></div>
-      <div class="hvm-phase-head" data-phase="0"><span class="hvm-phase-num">Phase 01</span><span class="hvm-phase-name">Information</span></div>
-      <div class="hvm-phase-head" data-phase="1"><span class="hvm-phase-num">Phase 02</span><span class="hvm-phase-name">Navigation</span></div>
-      <div class="hvm-phase-head" data-phase="2"><span class="hvm-phase-num">Phase 03</span><span class="hvm-phase-name">Commercial</span></div>
-      <div class="hvm-phase-head" data-phase="3"><span class="hvm-phase-num">Phase 04</span><span class="hvm-phase-name">Transaction</span></div>
-
-
-      <!-- Row 1: External touchpoints -->
-      <div class="hvm-row-label external"><span>External Touchpoints</span></div>
-
-      <div class="hvm-cell external">
-        <div class="hvm-action-list">
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Entity Engineering</div>
-              <div class="hvm-action-desc">Build clear brand, product &amp; category entities across Wikipedia-like sources, industry directories &amp; knowledge-graph pages.</div>
-              <span class="hvm-action-badge" style="background:rgba(150,250,0,0.1);color:#96FA00">Owned + Earned</span>
-            </div>
+        <div class="pb-team">
+          <div class="pb-team-label">
+            <span class="pb-team-icon">📰</span>
+            <span class="pb-team-name">PR Team</span>
           </div>
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Third-Party Authority Seeding</div>
-              <div class="hvm-action-desc">Neutral "What is X?" content on trade media, review platforms, Reddit AMAs &amp; expert-led threads.</div>
-              <span class="hvm-action-badge" style="background:rgba(150,250,0,0.1);color:#96FA00">Earned</span>
-            </div>
+          <div class="pb-actions">
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Press releases:</strong> AI summary (2–3 sentences) right after the headline — fully self-contained</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Tier-1 briefings:</strong> Terminology guide + narrative phrasing suggestions for top-tier media</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Partner data sheets:</strong> Specs consistent with your own site — prevents AI citing wrong data</div></div>
           </div>
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">AI-Readable Proof Points</div>
-              <div class="hvm-action-desc">Certifications, studies, benchmarks &amp; awards in machine-readable formats on authoritative third-party sources.</div>
-              <span class="hvm-action-badge" style="background:rgba(150,250,0,0.1);color:#96FA00">Earned</span>
-            </div>
+        </div>
+
+        <div class="pb-team">
+          <div class="pb-team-label">
+            <span class="pb-team-icon">🔍</span>
+            <span class="pb-team-name">Service Team</span>
           </div>
+          <div class="pb-actions">
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Comparison pages:</strong> AI summary above the fold — "What is the key difference?"</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>How-Tos:</strong> Solution before explanation, numbered steps, FAQ at the end</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Feature pages:</strong> Use cases as H2 — each answers a concrete user question</div></div>
+          </div>
+        </div>
+
+        <div class="pb-team">
+          <div class="pb-team-label">
+            <span class="pb-team-icon">📱</span>
+            <span class="pb-team-name">Social Team</span>
+          </div>
+          <div class="pb-actions">
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Paid Social:</strong> Concrete number as hook ("200 MP. In your pocket.") — no superlatives</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Copy formula:</strong> Fact → everyday scenario → product name → curiosity CTA</div></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="pb-output">
+        <span class="pb-output-label">Output</span>
+        <div class="pb-output-items">
+          <span class="pb-output-chip">PR Narrative Guide</span>
+          <span class="pb-output-chip">Media Briefing</span>
+          <span class="pb-output-chip">Partner Data Sheet</span>
+          <span class="pb-output-chip">Social Copy Formulas</span>
         </div>
       </div>
+    </div>
 
-      <div class="hvm-cell external">
-        <div class="hvm-action-list">
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Comparative Content Engineering</div>
-              <div class="hvm-action-desc">Explicit "X vs Y" content, feature matrices and decision-support tools — including neutral framings AI cites.</div>
-              <span class="hvm-action-badge" style="background:rgba(255,240,0,0.1);color:#FFF000">Owned</span>
-            </div>
+    <!-- ══ COLUMN 3: COMMUNITY ══ -->
+    <div class="pb-col pb-col--community">
+      <div class="pb-col-head">
+        <div class="pb-col-eyebrow">Community</div>
+        <div class="pb-col-title">UGC & Community</div>
+        <div class="pb-col-sub">YouTube, Reddit &amp; forums — 12% of AI citations and rising.</div>
+      </div>
+      <div class="pb-teams">
+
+        <div class="pb-team">
+          <div class="pb-team-label">
+            <span class="pb-team-icon">▶️</span>
+            <span class="pb-team-name">YouTube</span>
           </div>
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Community Signal Amplification</div>
-              <div class="hvm-action-desc">Systematic presence in Reddit, Quora &amp; open communities where purchase decisions form.</div>
-              <span class="hvm-action-badge" style="background:rgba(255,240,0,0.1);color:#FFF000">Earned</span>
-            </div>
+          <div class="pb-actions">
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Creator briefing:</strong> Correct product naming, specs to cite, feature terminology</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Transcripts:</strong> AI reads every word — clear statements, no insider jargon</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Timestamps:</strong> Set per feature — increases AI citability</div></div>
           </div>
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Review Velocity Management</div>
-              <div class="hvm-action-desc">Recency, response behavior &amp; thematic breadth of reviews — the signals AI uses to judge trustworthiness.</div>
-              <span class="hvm-action-badge" style="background:rgba(255,240,0,0.1);color:#FFF000">Earned</span>
-            </div>
+        </div>
+
+        <div class="pb-team">
+          <div class="pb-team-label">
+            <span class="pb-team-icon">💬</span>
+            <span class="pb-team-name">Reddit & Foren</span>
           </div>
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Partnership Signal Engineering</div>
-              <div class="hvm-action-desc">Comparison sites, analyst platforms, ecosystem listings &amp; co-created evaluation content.</div>
-              <span class="hvm-action-badge" style="background:rgba(255,240,0,0.1);color:#FFF000">Partner</span>
-            </div>
+          <div class="pb-actions">
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Monitoring:</strong> Keyword alerts for product names, sentiment tracking in top threads</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Community replies:</strong> Experience-based, with concrete numbers, link to official source</div></div>
           </div>
+        </div>
+
+        <div class="pb-team">
+          <div class="pb-team-label">
+            <span class="pb-team-icon">⭐</span>
+            <span class="pb-team-name">Reviews</span>
+          </div>
+          <div class="pb-actions">
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Structure:</strong> Short verdict in 2–3 sentences, then thematic H2 sections</div></div>
+            <div class="pb-action"><div class="pb-action-dot"></div><div class="pb-action-text"><strong>Tone:</strong> "In my experience…" — explicit firsthand use, no vague impressions</div></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="pb-output">
+        <span class="pb-output-label">Output</span>
+        <div class="pb-output-items">
+          <span class="pb-output-chip">Creator Brief</span>
+          <span class="pb-output-chip">Monitoring Setup</span>
+          <span class="pb-output-chip">Review Template</span>
         </div>
       </div>
+    </div>
 
-      <div class="hvm-cell external">
-        <div class="hvm-action-list">
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Use-Case Dominance</div>
-              <div class="hvm-action-desc">Clear positioning "Best product for X" with dedicated proof points per use case.</div>
-              <span class="hvm-action-badge" style="background:rgba(255,115,0,0.1);color:#FF7300">Owned</span>
-            </div>
-          </div>
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Price-Trust Engineering</div>
-              <div class="hvm-action-desc">Transparent pricing, Total Cost of Ownership &amp; upgrade path content that removes AI-generated hesitation.</div>
-              <span class="hvm-action-badge" style="background:rgba(255,115,0,0.1);color:#FF7300">Owned</span>
-            </div>
-          </div>
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Risk Reduction Content</div>
-              <div class="hvm-action-desc">Returns policies, guarantees, onboarding &amp; post-purchase explanations that make AI confident recommending you.</div>
-              <span class="hvm-action-badge" style="background:rgba(255,115,0,0.1);color:#FF7300">Owned</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="hvm-cell external">
-        <div class="hvm-action-list">
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Channel Partner Alignment</div>
-              <div class="hvm-action-desc">Unified product descriptions &amp; consistent benefit framing across all channel partners.</div>
-              <span class="hvm-action-badge" style="background:rgba(250,80,220,0.1);color:#FA50DC">Partner</span>
-            </div>
-          </div>
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Post-Purchase Signal Design</div>
-              <div class="hvm-action-desc">Buyers sharing experiences, early reviews &amp; follow-up content that turns customers into ongoing AI training signals.</div>
-              <span class="hvm-action-badge" style="background:rgba(250,80,220,0.1);color:#FA50DC">Earned</span>
-            </div>
-          </div>
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Local Entity Consistency</div>
-              <div class="hvm-action-desc">Accurate store data across Google Business Profiles, Apple Maps, Bing Places &amp; local directories.</div>
-              <span class="hvm-action-badge" style="background:rgba(250,80,220,0.1);color:#FA50DC">Owned</span>
-            </div>
-          </div>
-          <div class="hvm-action" onclick="this.classList.toggle('open')">
-            <div class="hvm-action-dot"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Staff as Signal Multipliers</div>
-              <div class="hvm-action-desc">Authentic, AI-readable signals generated at branded &amp; external touchpoints by staff.</div>
-              <span class="hvm-action-badge" style="background:rgba(250,80,220,0.1);color:#FA50DC">Earned</span>
-            </div>
-          </div>
-        </div>
-      </div>      <!-- Row 2: Branded touchpoints -->
-      <div class="hvm-row-label branded"><span>Branded Touchpoints</span></div>
-
-      <div class="hvm-cell branded">
-        <div class="hvm-action-list">
-          <div class="hvm-action">
-            <div class="hvm-action-dot" style="background:var(--lime)"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Structured Data &amp; Markdown for Agents</div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="hvm-cell branded">
-        <div class="hvm-action-list">
-          <div class="hvm-action">
-            <div class="hvm-action-dot" style="background:var(--yellow)"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Structured Data &amp; Markdown for Agents</div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="hvm-cell branded">
-        <div class="hvm-action-list">
-          <div class="hvm-action">
-            <div class="hvm-action-dot" style="background:var(--orange)"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Structured Data &amp; Markdown for Agents</div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="hvm-cell branded">
-        <div class="hvm-action-list">
-          <div class="hvm-action">
-            <div class="hvm-action-dot" style="background:var(--pink)"></div>
-            <div class="hvm-action-body">
-              <div class="hvm-action-title">Structured Data &amp; Markdown for Agents</div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-    </div><!-- /hvm-matrix -->
+  </div><!-- /playbook-grid -->
   </div>
 
 
-
-  <!-- ── PANEL 9: PROCESS ── -->
+    <!-- ── PANEL 9: PROCESS ── -->
   <div class="panel panel-process" data-label="Methodology">
     <div class="process-header">
       <div class="section-tag reveal">// Our Methodology</div>
@@ -2339,63 +2745,43 @@ html, body {
 
 </div><!-- /scroll-container -->
 
+  <!--
+    SCRIPT LOAD ORDER — important, do not reorder:
+    1. interactions.js  Chart animations + accordion. Must load before scroll.js.
+    2. scroll.js        Horizontal navigation engine. Calls triggerCharts() from above.
+  -->
+  <script>
+/* ============================================================
+   interactions.js  —  UI Interactions & Chart Animations
+   ============================================================
+   Handles all non-navigation interactivity:
 
-<script>
-// ── STATE ──────────────────────────────────────────
-const panels = document.querySelectorAll('.panel');
-const totalPanels = panels.length;
-let current = 0;
-let isAnimating = false;
+   1. REVEAL OBSERVER
+      IntersectionObserver on .reveal elements — adds the
+      .panel.active class trigger is handled by scroll.js,
+      but individual element reveals are managed here.
 
-// ── BUILD NAV DOTS ─────────────────────────────────
-const dotsContainer = document.getElementById('nav-dots');
-panels.forEach((p, i) => {
-  const d = document.createElement('button');
-  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
-  d.title = p.dataset.label || '';
-  d.addEventListener('click', () => goTo(i));
-  dotsContainer.appendChild(d);
-});
-document.getElementById('tot-panels').textContent = totalPanels;
+   2. CHART ANIMATIONS  (triggerCharts)
+      Called by scroll.js on every panel transition.
+      • Stat bar fills (.stat-bar-fill → .anim)
+      • Donut arc animations (stroke-dashoffset)
+      • SCT gap bar fills
 
-// ── GO TO PANEL ────────────────────────────────────
-function goTo(index) {
-  if (index < 0 || index >= totalPanels || index === current) return;
-  current = index;
-  render();
-}
+   3. VALUE MAP ACCORDION  (hvmSelect — REMOVED, now static)
+      The .hvm-action accordion (External Touchpoints) uses
+      inline onclick="this.classList.toggle('open')" in HTML.
+      No JS coordination needed — pure CSS transitions.
 
-function render() {
-  const container = document.getElementById('scroll-container');
-  // Always use horizontal transform (desktop + mobile)
-  container.style.transform = `translateX(-${current * 100}vw)`;
-  // Reset any vertical scroll so panel content starts at top
-  window.scrollTo(0, 0);
+   DEPENDENCIES:
+   • Must be loaded BEFORE scroll.js
+   • Expects .stat-bar-fill, .donut-arc-el, .sct-fill in DOM
 
-  // Progress bar
-  const pct = totalPanels > 1 ? (current / (totalPanels - 1)) * 100 : 100;
-  document.getElementById('progress-bar').style.width = pct + '%';
-
-  // Nav dots
-  document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === current));
-
-  // Counter
-  document.getElementById('cur-panel').textContent = current + 1;
-
-  // Label
-  document.getElementById('panel-label').textContent = panels[current].dataset.label || '';
-
-  // Active panel
-  panels.forEach((p, i) => p.classList.toggle('active', i === current));
-
-  // Scroll/swipe hint — only on first panel
-  document.getElementById('scroll-hint').style.visibility = current === 0 ? 'visible' : 'hidden';
-  const sh = document.getElementById('swipe-hint');
-  if (sh) sh.style.visibility = current === 0 ? 'visible' : 'hidden';
-
-  // Trigger chart animations for the newly active panel
-  triggerCharts(panels[current]);
-}
+   HOW TO REUSE:
+   • triggerCharts() is the main entry point — call it
+     whenever a panel becomes visible.
+   • The reveal system only needs .reveal on elements and
+     the parent .panel to receive .active from scroll.js.
+   ============================================================ */
 
 // ── CHART ANIMATIONS ───────────────────────────────
 const animatedPanels = new Set();
@@ -2499,9 +2885,98 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'End') goTo(totalPanels - 1);
 });
 
+/* ============================================================
+   scroll.js  —  Horizontal Scroll Engine
+   ============================================================
+   Manages all panel navigation for the horizontal scroll layout.
+
+   EXPORTS (globals used by HTML onclick attributes):
+   • goTo(index)   — navigate to panel by index (0-based)
+
+   INTERNAL:
+   • render()      — updates DOM state for current panel
+                     (progress bar, nav dots, counter, label,
+                      reveal classes, chart trigger)
+   • triggerCharts() — called from interactions.js; bridged here
+
+   INPUT METHODS HANDLED:
+   • Mouse wheel / trackpad  (desktop only)
+   • Touch swipe             (distinguishes h/v intent)
+   • Keyboard ← →            (desktop only)
+
+   DEPENDENCIES:
+   • interactions.js must be loaded BEFORE this file so
+     triggerCharts() is available when render() calls it.
+   • DOM elements: #scroll-container, #progress-bar,
+     #nav-dots, #cur-panel, #panel-label, #scroll-hint,
+     .panel, .nav-dot, .reveal
+
+   HOW TO REUSE:
+   1. Keep the same HTML structure (#scroll-container > .panel)
+   2. Include interactions.js first, then this file
+   3. Call goTo(0) manually if you need a programmatic start
+   ============================================================ */
+
+// ── STATE ──────────────────────────────────────────
+const panels = document.querySelectorAll('.panel');
+const totalPanels = panels.length;
+let current = 0;
+let isAnimating = false;
+
+// ── BUILD NAV DOTS ─────────────────────────────────
+const dotsContainer = document.getElementById('nav-dots');
+panels.forEach((p, i) => {
+  const d = document.createElement('button');
+  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  d.title = p.dataset.label || '';
+  d.addEventListener('click', () => goTo(i));
+  dotsContainer.appendChild(d);
+});
+document.getElementById('tot-panels').textContent = totalPanels;
+
+// ── GO TO PANEL ────────────────────────────────────
+function goTo(index) {
+  if (index < 0 || index >= totalPanels || index === current) return;
+  current = index;
+  render();
+}
+
+function render() {
+  const container = document.getElementById('scroll-container');
+  // Always use horizontal transform (desktop + mobile)
+  container.style.transform = `translateX(-${current * 100}vw)`;
+  // Reset any vertical scroll so panel content starts at top
+  window.scrollTo(0, 0);
+
+  // Progress bar
+  const pct = totalPanels > 1 ? (current / (totalPanels - 1)) * 100 : 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+
+  // Nav dots
+  document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === current));
+
+  // Counter
+  document.getElementById('cur-panel').textContent = current + 1;
+
+  // Label
+  document.getElementById('panel-label').textContent = panels[current].dataset.label || '';
+
+  // Active panel
+  panels.forEach((p, i) => p.classList.toggle('active', i === current));
+
+  // Scroll/swipe hint — only on first panel
+  document.getElementById('scroll-hint').style.visibility = current === 0 ? 'visible' : 'hidden';
+  const sh = document.getElementById('swipe-hint');
+  if (sh) sh.style.visibility = current === 0 ? 'visible' : 'hidden';
+
+  // Trigger chart animations for the newly active panel
+  triggerCharts(panels[current]);
+}
 
 // ── INIT ───────────────────────────────────────────
 render();
-</script>
+
+  </script>
+
 </body>
 </html>
