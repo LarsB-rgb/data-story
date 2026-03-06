@@ -1,0 +1,318 @@
+/* ============================================================
+   animations.css  —  Animations & Responsive Overrides
+   ============================================================
+   Contains:
+   • .reveal entrance animation (opacity + translateY)
+   • .delay-1 … .delay-5 stagger helpers
+   • Chart animation classes (.stat-bar-fill.anim, donut arcs)
+   • @keyframes definitions
+   • All @media (max-width: 768px) overrides
+
+   DEPENDENCIES: tokens.css, layout.css, components.css
+
+   IMPORT ORDER MATTERS — always import this file last so
+   media queries correctly override desktop styles.
+
+   REUSE NOTES:
+   • The .reveal / .delay-* system works independently —
+     drop it into any project alongside interactions.js
+     (which manages the IntersectionObserver trigger).
+   • Mobile overrides assume the horizontal scroll model
+     from scroll.js; if you use a different scroll approach
+     review the .panel and #scroll-container overrides.
+   ============================================================ */
+
+/* ══════════════════════════════════════════════════
+   MOBILE — max-width 768px
+══════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* NAV — two-row stacked layout on mobile */
+  #topnav {
+    padding: 0.6rem 1.2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+  #topnav > div:first-child { gap: 0.8rem; }
+  .nav-logo { font-size: 1.1rem; letter-spacing: 2px; }
+  .nav-divider { display: none; }
+  .nav-panel-label { display: none; }
+  
+  #topnav > div:last-child { align-self: flex-start; }
+  #panel-counter { display: none; }
+  .nav-dot { width: 5px; height: 5px; }
+
+  /* Mobile: keep horizontal layout, each panel scrolls vertically */
+  html, body {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  #scroll-container {
+    align-items: stretch;
+  }
+
+  .panel {
+    height: 100svh;
+    min-height: unset;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 6rem 1.4rem 2.5rem;
+    justify-content: flex-start;
+    align-items: flex-start;
+    touch-action: pan-y;
+  }
+
+  /* SCROLL HINT */
+  #scroll-hint { display: none; }
+  #swipe-hint {
+    display: flex;
+    position: fixed;
+    bottom: 1.8rem; left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    pointer-events: none;
+    animation: hintPulse 2.5s ease-in-out infinite;
+    transition: opacity 0.5s;
+  }
+  .swipe-hand {
+    font-size: 1.6rem;
+    animation: swipeGesture 1.6s ease-in-out infinite;
+  }
+  @keyframes swipeGesture {
+    0%   { transform: translateX(8px);  opacity: 0.5; }
+    40%  { transform: translateX(-8px); opacity: 1;   }
+    80%  { transform: translateX(8px);  opacity: 0.5; }
+    100% { transform: translateX(8px);  opacity: 0.5; }
+  }
+  .swipe-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(150,250,0,0.65);
+  }
+
+  /* PANEL 0: HERO */
+  .hero-bg-text { font-size: 55vw; bottom: -4vh; right: -4vw; }
+  .hero-layout { grid-template-columns: 1fr; gap: 1.5rem; height: auto; }
+  .hero-right { height: 220px; }
+  .hero-h1 { font-size: clamp(4.2rem, 17vw, 7rem); margin-bottom: 1rem; }
+  .hero-sub { font-size: 0.88rem; line-height: 1.6; }
+  .hero-eyebrow { margin-bottom: 1.2rem; }
+  .hero-cta { margin-top: 1.6rem; padding: 0.8rem 1.6rem; font-size: 0.72rem; }
+
+  /* PANEL 1: AI SHIFT */
+  .panel-scene {
+    display: flex !important;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 4.5rem 1.4rem 2rem;
+    align-items: flex-start;
+    }
+  .panel-h2 { font-size: clamp(2.2rem, 8.5vw, 3.5rem); }
+  .lead { font-size: 0.85rem; max-width: 100%; }
+  .scene-chart-wrap { margin-top: 1rem; }
+  .scene-right { width: 100%; height: 240px; padding: 0; }
+  .scene-insight-img { object-position: top left; }
+  .scene-ai-bubble { font-size: 0.78rem; }
+
+  /* PANELS 2-5: PROBLEMS */
+  .panel-problem {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 5rem 1.4rem 2rem;
+    align-items: flex-start;
+    }
+  .prob-num {
+    font-size: 3.5rem;
+    position: static;
+    color: rgba(255,255,255,0.12);
+    margin-bottom: 0;
+    line-height: 1;
+  }
+  .prob-icon { font-size: 2rem; margin-bottom: 0.4rem; }
+  .panel-label-strip { display: none; }
+  .panel-label-strip { top: 3.8rem; right: 1.4rem; }
+  .prob-big-stat { font-size: clamp(3.5rem, 17vw, 6rem); }
+  .prob-right { width: 100%; }
+  .donut-row { flex-wrap: wrap; gap: 1.2rem; }
+  .donut-wrap { min-width: 110px; }
+  .gap-bars { gap: 1rem; }
+
+  /* PANEL 6: B2B */
+  .panel-b2b {
+    flex-direction: column;
+    padding: 4.5rem 1.4rem 2rem;
+    align-items: flex-start;
+    gap: 1.2rem;
+    }
+  .b2b-image { width: 100%; height: 220px; border-radius: 8px; }
+  .b2b-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .b2b-stat-num { font-size: clamp(3.5rem, 17vw, 6rem); }
+
+  /* PANEL 7: JOURNEY */
+  .panel-journey {
+    padding: 4.5rem 1.4rem 2rem;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+    }
+  .journey-track {
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    overflow: visible;
+  }
+  .j-arrow { transform: rotate(90deg); align-self: center; }
+  .j-node { min-width: unset; width: 100%; padding: 0.6rem 0.8rem; }
+  .j-node-label { font-size: 0.65rem; }
+  .j-step { min-width: unset; width: 100%; padding: 0.8rem 1rem; }
+  .j-step h4 { font-size: 1.1rem; }
+  .j-step p { font-size: 0.72rem; }
+
+  /* PANEL 8: METRICS */
+  .panel-metrics { padding: 4.5rem 1.4rem 2rem; }
+
+  /* PANEL 8b: MARKETING ACTIONS */
+  .panel-actions { padding: 6rem 0 2rem; overflow: visible; }
+  .actions-header { padding: 0 1.4rem; margin-bottom: 0.8rem; }
+  .hvm-matrix {
+    grid-template-columns: 2.8rem 1fr;
+    grid-template-rows: auto;
+    flex: unset;
+    overflow: visible;
+    background: transparent;
+    gap: 0;
+  }
+  /* On mobile: show phases stacked, hide column headers */
+  .hvm-corner { display: none; }
+  .hvm-phase-head { display: none; }
+  .hvm-row-label {
+    writing-mode: horizontal-tb;
+    justify-content: flex-start;
+    padding: 0.5rem 0.4rem;
+    grid-column: 1;
+    align-items: flex-start;
+    border-right: 2px solid rgba(255,255,255,0.08);
+    border-bottom: none;
+  }
+  .hvm-row-label span {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 0.42rem;
+  }
+  /* Stack all 4 external cells into single scrollable column */
+  .hvm-matrix > .hvm-cell {
+    grid-column: 2;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 0.9rem 1.2rem;
+  }
+  .hvm-branded-title { font-size: 0.9rem; }
+  .hvm-branded-desc { font-size: 0.68rem; }
+  .hvm-action-title { font-size: 0.72rem; }
+  .hvm-action-desc { font-size: 0.65rem; }
+  .metrics-header { margin-bottom: 1rem; }
+  .metrics-header .panel-h2 { font-size: clamp(1.8rem, 7vw, 3rem); }
+  .metrics-grid { grid-template-columns: 1fr 1fr; flex: unset; min-height: unset; }
+  .metric-card { padding: 1.1rem 0.9rem; gap: 0.5rem; }
+  .metric-name { font-size: 1.1rem; }
+  .metric-def { font-size: 0.72rem; }
+
+  /* PANEL 8b: GEO PLAYBOOK */
+  .panel-playbook {
+    padding: 4.5rem 1.2rem 2rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .panel-playbook .panel-h2 { font-size: clamp(1.8rem, 7vw, 3rem); }
+  .panel-playbook .lead { font-size: 0.8rem; }
+  .pb-emerging { margin-top: 0.7rem; }
+  .pb-emerging-body { gap: 0.7rem; }
+  .playbook-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: transparent;
+    flex: unset;
+    min-height: unset;
+  }
+  .pb-col {
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 2px;
+  }
+  .pb-teams { overflow-y: visible; }
+  .pb-output-items { flex-wrap: wrap; }
+
+  /* PANEL 9: PROCESS */
+  .panel-process { padding: 4.5rem 1.4rem 2rem; overflow-y: auto; }
+  .process-header { margin-bottom: 1rem; }
+  .process-header .panel-h2 { font-size: clamp(1.8rem, 7vw, 3rem); }
+  .process-track { grid-template-columns: 1fr 1fr; flex: unset; min-height: unset; }
+  .process-card { padding: 1.2rem; gap: 0.6rem; }
+  .process-num { font-size: 2.5rem; }
+  .process-card h4 { font-size: 1.2rem; }
+  .process-card p { font-size: 0.75rem; }
+
+  /* PANEL 10: USPs */
+  .panel-usp { padding: 4.5rem 1.4rem 2rem; overflow-y: auto; }
+  .usp-header { margin-bottom: 1rem; }
+  .usp-header .panel-h2 { font-size: clamp(1.8rem, 7vw, 3rem); }
+  .usp-grid { grid-template-columns: 1fr 1fr; flex: unset; min-height: unset; }
+  .usp-card { padding: 1.1rem 0.9rem; gap: 0.6rem; }
+  .usp-icon { font-size: 1.4rem; }
+  .usp-card h4 { font-size: 1rem; }
+  .usp-card p { font-size: 0.72rem; }
+
+  /* PANEL 11: PRICING */
+  .panel-pricing {
+    padding: 4.5rem 1.4rem 2rem;
+    justify-content: flex-start;
+      gap: 0;
+  }
+  .pricing-header { margin-bottom: 1rem; }
+  .pricing-header .panel-h2 { font-size: clamp(1.8rem, 7vw, 3rem); }
+  .pricing-grid { grid-template-columns: 1fr; gap: 0.9rem; flex-shrink: unset; }
+  .price-card { padding: 1.2rem; gap: 0.7rem; }
+  .price-amount { font-size: clamp(1.4rem, 5.5vw, 2rem); }
+  .price-desc { font-size: 0.75rem; }
+  .price-include-item { font-size: 0.56rem; }
+
+  /* PANEL 12: CTA */
+  .panel-cta { padding: 4.5rem 1.4rem 3rem; overflow-y: auto; }
+  .cta-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .cta-h2 { font-size: clamp(2.5rem, 10vw, 4rem); }
+  .cta-form { padding: 1.2rem 1.2rem 0.8rem; }
+  .cta-footer-line {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    margin-top: 2rem;
+  }
+  .cta-bg-text { font-size: 55vw; }
+  .cta-h2 { font-size: clamp(3rem, 13vw, 5rem); }
+  .cta-body { font-size: 0.85rem; }
+  .cta-btns { flex-direction: column; gap: 0.8rem; align-items: stretch; }
+  .btn-primary, .btn-secondary {
+    padding: 0.85rem 1.6rem;
+    font-size: 0.72rem;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* Extra small phones (max-width 420px) */
+@media (max-width: 420px) {
+  .metrics-grid { grid-template-columns: 1fr; }
+  .process-track { grid-template-columns: 1fr; }
+  .hero-h1 { font-size: 15vw; }
+  .panel-h2 { font-size: clamp(2rem, 8vw, 3rem); }
+}
+.reveal.delay-5 { transition-delay: 0.5s; }
+.panel.active .reveal { opacity: 1; transform: translateY(0); }
