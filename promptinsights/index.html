@@ -2994,5 +2994,133 @@ render();
   </script>
   <script async src="https://tally.so/widgets/embed.js"></script>
 
+<!-- IMPRESSUM LINK (fixed, always visible) -->
+<style>
+#impressum-trigger {
+  position: fixed;
+  bottom: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(144,144,144,0.5);
+  cursor: pointer;
+  z-index: 300;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+#impressum-trigger:hover { color: rgba(255,255,255,0.7); }
+
+/* MODAL */
+#impressum-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+#impressum-overlay.active { display: flex; }
+#impressum-modal {
+  background: #1A1A1A;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  max-width: 680px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 2.5rem 3rem;
+  position: relative;
+}
+#impressum-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.5rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--grey);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+#impressum-close:hover { color: var(--white); }
+#impressum-modal h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+}
+#impressum-modal h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  color: var(--lime);
+  margin: 1.8rem 0 0.6rem;
+}
+#impressum-modal h3 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--grey);
+  margin: 1.2rem 0 0.4rem;
+}
+#impressum-modal p {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.8;
+  margin-bottom: 0.5rem;
+}
+#impressum-modal a {
+  color: var(--lime);
+  text-decoration: none;
+}
+#impressum-modal a:hover { text-decoration: underline; }
+</style>
+
+<div id="impressum-trigger" onclick="document.getElementById('impressum-overlay').classList.add('active')">Impressum</div>
+
+<div id="impressum-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+  <div id="impressum-modal">
+    <span id="impressum-close" onclick="document.getElementById('impressum-overlay').classList.remove('active')">✕ Schließen</span>
+    <h1>Impressum</h1>
+
+    <h2>Cheil Germany GmbH</h2>
+    <p>
+      Geschäftsführung: Minsoo Kee, Tai Hai Kim, Kyung Mo Lee, Daehoon Park<br>
+      Frankfurter Str. 4<br>
+      65760 Eschborn<br>
+      Deutschland
+    </p>
+    <p>
+      E-Mail: <a href="mailto:info.germany@cheil.com">info.germany@cheil.com</a><br>
+      Telefon: +49 (0) 6196 9713–0
+    </p>
+    <p>
+      Gesellschafter: Cheil Worldwide<br>
+      Registergericht &amp; Registernummer: Königstein im Taunus HRB 6360<br>
+      Umsatzsteuer-ID: DE237911006
+    </p>
+    <p>Verantwortlich für den Inhalt: Volker Selle</p>
+    <p>Plattform der Europäischen Kommission zur Online-Streitbeilegung (OS) für Verbraucher: <a href="https://ec.europa.eu/consumers/odr/" target="_blank">https://ec.europa.eu/consumers/odr/</a>. Wir sind nicht bereit und nicht verpflichtet an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+
+    <h2>Haftungsausschluss</h2>
+
+    <h3>Haftung für Inhalte</h3>
+    <p>Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
+
+    <h3>Haftung für Links</h3>
+    <p>Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.</p>
+
+    <h3>Urheberrecht</h3>
+    <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.</p>
+  </div>
+</div>
+
 </body>
 </html>
