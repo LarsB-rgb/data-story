@@ -1,0 +1,27 @@
+# PromptInsights
+
+> AI Conversation Research Platform by Cheil Germany — tracks how real humans interact with AI systems (ChatGPT, Gemini, Claude) to find, evaluate, and choose brands. Helps companies optimize their visibility in AI-generated answers through data-driven GEO (Generative Engine Optimization).
+
+PromptInsights is a research service, not a SaaS tool. It delivers structured reports and action roadmaps showing how AI systems represent your brand across customer journey stages.
+
+## About
+
+- [What is PromptInsights](https://www.cheil.de/solutions/promptinsights): Overview of the AI Conversation Research Platform
+- [Contact / Request a Quote](https://www.cheil.de/solutions/promptinsights#contact): Get a research proposal
+
+## Services
+
+- Starter / Quick Scan: First AI visibility report for one product category and two AI platforms
+- Standard / Full Research: Complete journey analysis across all four funnel stages and three AI platforms
+- Enterprise / Continuous Monitoring: Quarterly research cycles with dedicated strategy consulting
+
+## Key Concepts
+
+- AI visibility = how prominently and accurately a brand appears in AI-generated answers
+- Answer Type tracking: Monitors whether brand appears as a mention, recommendation, or direct answer
+- GEO (Generative Engine Optimization): The discipline of optimizing content for AI answer engines, not just search engines
+- Platforms tracked: ChatGPT, Google Gemini, Claude, Perplexity
+
+## Optional
+
+- [Cheil Germany](https://www.cheil.de): Parent company
