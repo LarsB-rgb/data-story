@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI & AI Agents — Marketing Agentur</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #0A0A0A; --dark: #111111; --dark2: #1A1A1A;
+  --grey: #909090; --white: #FFFFFF;
+  --lime: #96FA00; --pink: #FA50DC; --orange: #FF7300;
+  --yellow: #FFF000; --cyan: #00D4FF;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(150,250,0,0.35); }
+* { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.12) transparent; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; }
+
+.section-tag { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--lime); margin-bottom: 0.7rem; }
+.panel-h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 3.5vw, 5rem); line-height: 0.95; margin-bottom: 1rem; }
+.panel-h2 em { font-style: normal; }
+.lead { font-size: clamp(0.85rem, 1vw, 1rem); color: var(--grey); font-weight: 300; line-height: 1.7; }
+
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.delay-1 { transition-delay: 0.1s; }
+.reveal.delay-2 { transition-delay: 0.2s; }
+.reveal.delay-3 { transition-delay: 0.3s; }
+.reveal.delay-4 { transition-delay: 0.4s; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* NAV */
+.slide-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 3.2rem; background: rgba(10,10,10,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+.nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; color: var(--lime); text-decoration: none; }
+.nav-dots { display: flex; gap: 0.5rem; align-items: center; }
+.nav-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; transition: background 0.3s, transform 0.3s; }
+.nav-dot.active { background: var(--lime); transform: scale(1.4); }
+
+/* SCROLL */
+.scroll-container { display: flex; height: 100vh; overflow-x: hidden; scroll-snap-type: x mandatory; }
+.panel { flex: 0 0 100vw; height: 100vh; scroll-snap-align: start; padding: 5rem 5vw; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; background: var(--black); }
+
+/* HERO */
+.panel-hero { background: var(--black); justify-content: center; }
+.hero-content { max-width: 700px; z-index: 2; position: relative; }
+.hero-h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.5rem, 8vw, 9rem); line-height: 0.9; margin-bottom: 1.2rem; }
+.hero-h1 em { color: var(--lime); font-style: normal; }
+.hero-sub { font-size: clamp(0.9rem, 1.1vw, 1.05rem); color: var(--grey); font-weight: 300; line-height: 1.7; max-width: 480px; margin-bottom: 2rem; }
+.hero-cta { display: inline-block; background: var(--lime); color: var(--black); font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; padding: 0.85rem 2rem; border: none; cursor: pointer; transition: background 0.2s; }
+.hero-cta:hover { background: var(--yellow); }
+.hero-bg-word { position: absolute; right: -2vw; bottom: -3vh; font-family: 'Bebas Neue', sans-serif; font-size: clamp(12rem, 22vw, 28rem); line-height: 0.85; color: rgba(255,255,255,0.025); pointer-events: none; user-select: none; }
+
+/* SCENE */
+.panel-scene { background: var(--dark); }
+.scene-inner { max-width: 800px; }
+
+
+/* AGENDA PANEL */
+.panel-agenda { background: var(--black); justify-content: center; }
+.agenda-layout { display: grid; grid-template-columns: 240px 1fr; gap: 3rem; align-items: start; width: 100%; max-width: 1300px; }
+.agenda-header { padding-top: 0.5rem; }
+.agenda-items { display: flex; flex-direction: row; gap: 2.5rem; align-items: flex-start; }
+.agenda-col { display: flex; flex-direction: column; gap: 0.7rem; flex: 1; }
+.agenda-item { display: flex; gap: 1rem; align-items: flex-start; padding: 0.8rem 1rem; border-left: 2px solid rgba(150,250,0,0.15); background: rgba(150,250,0,0.02); border-radius: 0 3px 3px 0; transition: border-color 0.2s, background 0.2s; }
+.agenda-item:hover { border-left-color: var(--lime); background: rgba(150,250,0,0.05); }
+.agenda-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--lime); line-height: 1; flex-shrink: 0; width: 2.4rem; }
+.agenda-content { display: flex; flex-direction: column; gap: 0.3rem; }
+.agenda-title { font-size: 1.1rem; font-weight: 600; color: var(--white); display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+.agenda-time { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--orange); letter-spacing: 1px; background: rgba(255,115,0,0.1); padding: 0.15rem 0.4rem; border-radius: 2px; }
+
+.agenda-owner { font-family: 'Space Mono', monospace; font-size: 0.55rem; color: var(--lime); letter-spacing: 1px; background: rgba(150,250,0,0.08); padding: 0.15rem 0.4rem; border-radius: 2px; opacity: 0.8; }
+.agenda-bullets { margin: 0.3rem 0 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.25rem; }
+.agenda-bullets li { font-size: 0.88rem; color: var(--grey); line-height: 1.5; padding-left: 1rem; position: relative; }
+.agenda-bullets li::before { content: "–"; position: absolute; left: 0; color: rgba(150,250,0,0.5); }
+.agenda-bullets li strong { color: var(--white); font-weight: 600; }
+.agenda-body { font-size: 0.9rem; color: var(--grey); line-height: 1.6; font-weight: 300; }
+
+
+/* MOMENTUM PANEL */
+.panel-momentum { background: var(--black); justify-content: center; }
+.momentum-layout { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 0 3.5rem; align-items: start; width: 100%; max-width: 1300px; }
+.momentum-divider { background: rgba(255,255,255,0.07); height: 100%; min-height: 420px; align-self: stretch; }
+.momentum-signals { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 1.8rem; }
+.momentum-signal { display: flex; align-items: baseline; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.momentum-signal-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--lime); flex-shrink: 0; width: 5rem; line-height: 1; }
+.momentum-signal-label { font-size: 0.78rem; color: var(--grey); line-height: 1.5; }
+.momentum-right-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.15; color: var(--white); margin: 0.4rem 0 1.4rem; font-weight: 400; letter-spacing: 0.5px; }
+.momentum-assets { display: flex; flex-direction: column; gap: 1rem; }
+.momentum-asset { display: flex; gap: 1rem; align-items: flex-start; }
+.momentum-asset-icon { font-size: 1rem; color: var(--orange); flex-shrink: 0; padding-top: 0.15rem; }
+.momentum-asset-title { font-size: 0.92rem; font-weight: 700; color: var(--white); margin-bottom: 0.2rem; }
+.momentum-asset-desc { font-size: 0.8rem; color: var(--grey); line-height: 1.6; }
+
+/* WARDLEY PANEL */
+.panel-wardley { background: var(--black); padding: 3.8rem 2vw 1.5rem; justify-content: flex-start; }
+.wardley-svg-wrap { flex: 1; width: 100%; height: calc(100vh - 6rem); }
+
+/* PROBLEM */
+.panel-problem { background: var(--black); }
+.problem-inner { display: grid; grid-template-columns: auto 1fr; gap: 3rem; align-items: start; }
+.problem-number { font-family: 'Bebas Neue', sans-serif; font-size: clamp(6rem, 12vw, 14rem); line-height: 1; color: rgba(255,255,255,0.04); }
+.problem-content { padding-top: 1rem; }
+.problem-stat { display: flex; align-items: baseline; gap: 0.8rem; margin-top: 1.5rem; padding: 1rem 1.2rem; border-left: 2px solid var(--orange); background: rgba(255,115,0,0.04); }
+.problem-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.8rem; color: var(--orange); }
+.problem-stat-label { font-size: 0.75rem; color: var(--grey); font-weight: 300; max-width: 220px; line-height: 1.5; }
+
+/* B2B INSIGHT */
+.panel-b2b { background: var(--dark); }
+.b2b-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: center; }
+.b2b-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.b2b-stat { padding: 1.2rem; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.02); }
+.b2b-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: var(--lime); line-height: 1; margin-bottom: 0.3rem; }
+.b2b-stat-num span { font-size: 1.5rem; }
+.b2b-stat-label { font-family: 'Space Mono', monospace; font-size: 0.5rem; letter-spacing: 2px; color: var(--grey); text-transform: uppercase; line-height: 1.5; }
+
+/* PLAYBOOK */
+.panel-playbook { background: var(--black); padding-top: 6rem; }
+.playbook-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 1.5rem; }
+.pb-col { border: 1px solid rgba(255,255,255,0.07); padding: 1.2rem; }
+.pb-col--branded { border-top: 2px solid var(--lime); }
+.pb-col--external { border-top: 2px solid var(--orange); }
+.pb-col--community { border-top: 2px solid var(--cyan); }
+.pb-col-head { margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.pb-col-eyebrow { font-family: 'Space Mono', monospace; font-size: 0.45rem; letter-spacing: 3px; color: var(--grey); text-transform: uppercase; margin-bottom: 0.3rem; }
+.pb-col-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 1px; }
+.pb-col--branded .pb-col-title { color: var(--lime); }
+.pb-col--external .pb-col-title { color: var(--orange); }
+.pb-col--community .pb-col-title { color: var(--cyan); }
+.pb-col-sub { font-size: 0.7rem; color: var(--grey); margin-top: 0.3rem; line-height: 1.5; }
+.pb-team { margin-bottom: 0.8rem; }
+.pb-team-label { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.4rem; }
+.pb-team-name { font-family: 'Space Mono', monospace; font-size: 0.5rem; letter-spacing: 2px; text-transform: uppercase; color: var(--white); }
+.pb-action { display: flex; gap: 0.5rem; margin-bottom: 0.3rem; align-items: flex-start; }
+.pb-action-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--grey); margin-top: 0.35rem; flex-shrink: 0; }
+.pb-action-text { font-size: 0.7rem; color: var(--grey); line-height: 1.5; }
+.pb-action-text strong { color: var(--white); font-weight: 600; }
+
+/* PROCESS */
+.panel-process { background: var(--dark); }
+.process-header { max-width: 600px; margin-bottom: 2.5rem; }
+.process-track { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+.process-card { padding: 1.2rem 1rem; border: 1px solid rgba(255,255,255,0.07); position: relative; background: rgba(255,255,255,0.01); transition: border-color 0.3s; }
+.process-card:hover { border-color: rgba(150,250,0,0.3); }
+.process-card::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 100%; background: rgba(150,250,0,0.06); pointer-events: none; }
+.process-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: rgba(150,250,0,0.25); line-height: 1; margin-bottom: 0.5rem; }
+.process-name { font-family: 'Space Mono', monospace; font-size: 0.55rem; letter-spacing: 2px; text-transform: uppercase; color: var(--white); margin-bottom: 0.5rem; }
+.process-desc { font-size: 0.7rem; color: var(--grey); line-height: 1.6; margin-bottom: 0.5rem; }
+.process-detail { font-size: 0.65rem; color: rgba(144,144,144,0.6); line-height: 1.5; }
+
+/* USP */
+.panel-usp { background: var(--black); }
+.usp-header { margin-bottom: 2rem; max-width: 600px; }
+.usp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+.usp-card { padding: 1.4rem; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.01); transition: border-color 0.3s, background 0.3s; }
+.usp-card:hover { border-color: rgba(150,250,0,0.2); background: rgba(150,250,0,0.02); }
+.usp-icon { font-size: 1.5rem; margin-bottom: 0.8rem; }
+.usp-title { font-family: 'Space Mono', monospace; font-size: 0.55rem; letter-spacing: 2px; text-transform: uppercase; color: var(--lime); margin-bottom: 0.5rem; }
+.usp-body { font-size: 0.78rem; color: var(--grey); line-height: 1.7; }
+
+/* CTA */
+.panel-cta { background: var(--dark); justify-content: center; }
+.cta-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+.cta-h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 5vw, 6rem); line-height: 0.9; margin-bottom: 1.2rem; }
+.cta-h2 em { color: var(--lime); font-style: normal; }
+.cta-body { font-size: 0.9rem; color: var(--grey); line-height: 1.7; max-width: 380px; }
+.cta-contact { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.8rem; }
+.cta-contact-item { display: flex; align-items: center; gap: 0.8rem; font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 1px; color: var(--grey); }
+.cta-contact-item span:first-child { color: var(--lime); }
+.cta-highlight-box { border: 1px solid rgba(150,250,0,0.2); padding: 2rem; background: rgba(150,250,0,0.03); }
+.cta-highlight-box .section-tag { color: var(--lime); }
+.cta-highlight-line { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--white); margin-bottom: 0.5rem; letter-spacing: 1px; }
+.cta-highlight-sub { font-size: 0.75rem; color: var(--grey); line-height: 1.6; }
+.cta-cta-btn { display: inline-block; background: var(--lime); color: var(--black); font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; padding: 0.9rem 1.8rem; margin-top: 1.5rem; border: none; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+.cta-cta-btn:hover { background: var(--yellow); }
+.cta-footer-line { position: absolute; bottom: 1.5rem; left: 5vw; right: 5vw; display: flex; justify-content: space-between; font-family: 'Space Mono', monospace; font-size: 0.45rem; letter-spacing: 2px; color: rgba(144,144,144,0.35); text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.8rem; }
+
+
+
+@media (max-width: 768px) {
+  .panel { padding: 4.5rem 1.4rem 2rem; overflow-y: auto; }
+  .wardley-layout, .b2b-layout, .cta-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .problem-inner { grid-template-columns: 1fr; gap: 1rem; }
+  .problem-number { font-size: 5rem; }
+  .playbook-grid { grid-template-columns: 1fr; }
+  .process-track { grid-template-columns: 1fr 1fr; }
+  .usp-grid { grid-template-columns: 1fr 1fr; }
+  .b2b-stat-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<nav class="slide-nav">
+  <a class="nav-logo" href="#" onclick="goTo(0);return false;">EU AI WORKSHOP</a>
+  <div class="nav-dots" id="navDots"></div>
+</nav>
+
+<div class="scroll-container" id="scrollContainer">
+
+  <!-- 1. HERO -->
+  <div class="panel panel-hero" data-label="Intro">
+    <div class="hero-content">
+      <div class="section-tag reveal">// AI Strategy 2026</div>
+      <h1 class="hero-h1 reveal delay-1">Proposal<br><em>AI Workshop</em></h1>
+      <p class="hero-sub reveal delay-2">A European AI alignment meeting hosted by Cheil Germany — the most advanced market in AI solutions.</p>
+      <button class="hero-cta reveal delay-3" onclick="goTo(1)">View Agenda →</button>
+    </div>
+    <div class="hero-bg-word">AGENTS</div>
+  </div>
+
+  <!-- 2. MOMENTUM -->
+  <div class="panel panel-momentum" data-label="Why Now">
+    <div class="momentum-layout">
+
+      <div class="momentum-left reveal">
+        <div class="section-tag">// The Moment</div>
+        <h2 class="panel-h2" style="margin-bottom:1.2rem;">The window<br>to lead is<br><em style="color:var(--lime)">open now.</em></h2>
+        <p class="lead" style="font-size:0.95rem;line-height:1.7;max-width:340px;">AI Agents have crossed the threshold from experiment to infrastructure. Agencies that move now define the new standard — those that wait will spend years catching up.</p>
+        <div class="momentum-signals reveal delay-2">
+          <div class="momentum-signal">
+            <div class="momentum-signal-val">2025–26</div>
+            <div class="momentum-signal-label">AI Agent frameworks reach production maturity</div>
+          </div>
+          <div class="momentum-signal">
+            <div class="momentum-signal-val">EU AI Act</div>
+            <div class="momentum-signal-label">Compliance frameworks now defined — first-movers set the standard</div>
+          </div>
+          <div class="momentum-signal">
+            <div class="momentum-signal-val">Clients</div>
+            <div class="momentum-signal-label">Samsung &amp; enterprise clients already asking for AI-native workflows</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="momentum-divider reveal delay-1"></div>
+
+      <div class="momentum-right reveal delay-2">
+        <div class="section-tag">// Our Assets</div>
+        <h3 class="momentum-right-title">We have everything<br><em style="color:var(--orange)">to lead.</em></h3>
+        <div class="momentum-assets">
+
+          <div class="momentum-asset">
+            <div class="momentum-asset-icon">◈</div>
+            <div class="momentum-asset-body">
+              <div class="momentum-asset-title">AI Hub Germany</div>
+              <div class="momentum-asset-desc">An operational AI Hub with existing tools, workflows and agent prototypes — not a future plan, a present reality.</div>
+            </div>
+          </div>
+
+          <div class="momentum-asset">
+            <div class="momentum-asset-icon">◈</div>
+            <div class="momentum-asset-body">
+              <div class="momentum-asset-title">Exclusive Samsung Data</div>
+              <div class="momentum-asset-desc">Years of structured campaign data, audience insights and performance benchmarks that no other agency holds. This is our proprietary edge.</div>
+            </div>
+          </div>
+
+          <div class="momentum-asset">
+            <div class="momentum-asset-icon">◈</div>
+            <div class="momentum-asset-body">
+              <div class="momentum-asset-title">Creative Intelligence</div>
+              <div class="momentum-asset-desc">The ability to turn raw data into compelling campaigns — AI amplifies this, it doesn't replace it. Our creative methodology becomes the agent's backbone.</div>
+            </div>
+          </div>
+
+          <div class="momentum-asset">
+            <div class="momentum-asset-icon">◈</div>
+            <div class="momentum-asset-body">
+              <div class="momentum-asset-title">Enterprise Security &amp; Compliance</div>
+              <div class="momentum-asset-desc">Embedded in Cheil's global IT security infrastructure. GDPR and EU AI Act compliance is not a constraint — it's a competitive advantage in the European market.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 2. AGENDA -->
+  <div class="panel panel-agenda" data-label="Agenda">
+    <div class="agenda-layout">
+      <div class="agenda-header reveal">
+        <div class="section-tag">// European AI Workshop — April 2026</div>
+        <h2 class="panel-h2">Workshop <em style="color:var(--lime)">Agenda</em></h2>
+        <p class="lead" style="margin-top:0.5rem;">Online/Remote &nbsp;·&nbsp; ca. 4–5h &nbsp;·&nbsp; Cheil Germany AI Hub (Lead)</p>
+      </div>
+      <div class="agenda-items">
+        <div class="agenda-col">
+          <div class="agenda-item reveal delay-1">
+            <div class="agenda-num">#0</div>
+            <div class="agenda-content">
+              <div class="agenda-title">Preparation <span class="agenda-time">4–6 Weeks before</span></div>
+              <ul class="agenda-bullets">
+              <li>Send <strong>AI Survey</strong> to all European subs: tools in use, purpose &amp; needs, client-driven vs. internally initiated</li>
+              <li>Prepare "Data Storytelling AI" Approach &amp; Agent AI Hub</li>
+              <li>Standardized presentation template provided in advance for AI Status per Market</li>
+              <li>Align on dates with all European markets — propose at least 2 alternatives</li>
+              <li>Request HQ update on AI platform development progress</li>
+              <li>Germany coordinates and sends all communications and invitations</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="agenda-item reveal delay-1">
+            <div class="agenda-num">#1</div>
+            <div class="agenda-content">
+              <div class="agenda-title">Opening &amp; Context <span class="agenda-time">30 min</span> <span class="agenda-owner">AI Hub Germany</span></div>
+              <ul class="agenda-bullets">
+              <li>Welcome by Germany — Minsoo and Volker opening statement</li>
+              <li>Workshop objectives and desired outcomes</li>
+              <li>Summary of pre-workshop survey results</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="agenda-item reveal delay-2">
+            <div class="agenda-num">#2</div>
+            <div class="agenda-content">
+              <div class="agenda-title">AI Status per Market <span class="agenda-time">90 min</span></div>
+              <ul class="agenda-bullets">
+              <li>Each sub-unit presents: tools in use, in development, and identified gaps</li>
+              <li>Short Q&amp;A per market</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="agenda-item reveal delay-2">
+            <div class="agenda-num">#3</div>
+            <div class="agenda-content">
+              <div class="agenda-title">HQ AI Platform Update <span class="agenda-time">15 min</span> <span class="agenda-owner">Jin</span></div>
+              <ul class="agenda-bullets">
+              <li>Current status of HQ AI platform development</li>
+              <li>Roadmap and planned rollouts</li>
+              <li>Interfaces and relevance for European adoption</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="agenda-col">
+          <div class="agenda-item reveal delay-3">
+            <div class="agenda-num">#4</div>
+            <div class="agenda-content">
+              <div class="agenda-title">European AI Platform Strategy <span class="agenda-time">60 min</span></div>
+              <ul class="agenda-bullets">
+              <li>Prioritization: which tools are adopted as common European AI standards?</li>
+              <li>Local development vs. centrally provided solutions</li>
+              <li>Avoiding duplicate investments — concrete examples from survey</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="agenda-item reveal delay-3">
+            <div class="agenda-num">#5</div>
+            <div class="agenda-content">
+              <div class="agenda-title">AI-Driven Business Opportunities <span class="agenda-time">60 min</span> <span class="agenda-owner">AI Hub Germany</span></div>
+              <ul class="agenda-bullets">
+              <li>Data Storytelling AI Approach</li>
+              <li>AI-driven business ideas from across markets</li>
+              <li>Short pitches or inputs collected via template in advance</li>
+              <li>Goal: cross-market innovation and potential joint client offerings</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="agenda-item reveal delay-4">
+            <div class="agenda-num">#6</div>
+            <div class="agenda-content">
+              <div class="agenda-title">Next Steps <span class="agenda-time">15 min</span></div>
+              <ul class="agenda-bullets">
+              <li>How will the HQ platform be adapted and utilised in Europe?</li>
+              <li>Establishing an ongoing European AI Exchange (e.g. quarterly syncs)</li>
+              <li>AI Hub as permanent European coordination body?</li>
+              <li>Concrete to-dos with owners and deadlines</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+</div>
+
+  <!-- 3. WARDLEY MAP — faithful SVG recreation -->
+  <div class="panel panel-wardley" data-label="Wardley Map">
+    <div class="wardley-svg-wrap reveal">
+    <svg viewBox="0 0 1200 820" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;font-family:'DM Sans',sans-serif;">
+      <defs>
+        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#909090"/>
+        </marker>
+      </defs>
+
+      <!-- AXES -->
+      <line x1="110" y1="30" x2="110" y2="790" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <line x1="110" y1="790" x2="1180" y2="790" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+      <text transform="rotate(-90,26,410)" x="26" y="410" fill="#909090" font-size="11" font-family="'Space Mono',monospace" letter-spacing="2" text-anchor="middle">CLIENT VALUE &#x2191;</text>
+      <text transform="rotate(-90,64,410)" x="64" y="410" fill="rgba(255,255,255,0.2)" font-size="11" font-family="'Space Mono',monospace" letter-spacing="2" text-anchor="middle">VALUE CHAIN</text>
+      <text x="118" y="808" fill="#909090" font-size="11" font-family="'Space Mono',monospace">Genesis</text>
+      <text x="1175" y="808" fill="#909090" font-size="11" font-family="'Space Mono',monospace" text-anchor="end">Commodity</text>
+
+      <!-- VALUE CHAIN: Marketing Impact TOP, Infrastructure BOTTOM -->
+      <line x1="130" y1="760" x2="130" y2="60" stroke="#909090" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+      <text x="148" y="72"  fill="#909090" font-size="12">Marketing Impact</text>
+      <text x="148" y="90"  fill="rgba(144,144,144,0.35)" font-size="11">&#x2502;</text>
+      <text x="148" y="160" fill="#909090" font-size="12">Campaign Strategy</text>
+      <text x="148" y="178" fill="rgba(144,144,144,0.35)" font-size="11">&#x2502;</text>
+      <text x="148" y="248" fill="#909090" font-size="12">Content Creation</text>
+      <text x="148" y="266" fill="rgba(144,144,144,0.35)" font-size="11">&#x2502;</text>
+      <text x="148" y="336" fill="#909090" font-size="12">Insights &amp; Analytics</text>
+      <text x="148" y="354" fill="rgba(144,144,144,0.35)" font-size="11">&#x2502;</text>
+      <text x="148" y="424" fill="#909090" font-size="12">Structured Marketing Data</text>
+      <text x="148" y="442" fill="rgba(144,144,144,0.35)" font-size="11">&#x2502;</text>
+      <text x="148" y="512" fill="#909090" font-size="12">Data Pipelines</text>
+      <text x="148" y="530" fill="rgba(144,144,144,0.35)" font-size="11">&#x2502;</text>
+      <text x="148" y="600" fill="#909090" font-size="12">AI Models</text>
+      <text x="148" y="618" fill="rgba(144,144,144,0.35)" font-size="11">&#x2502;</text>
+      <text x="148" y="688" fill="#909090" font-size="12">Infrastructure</text>
+
+      <!-- CLIENT node removed -->
+
+      <!-- CLIENT VALUE BOX top-right -->
+      <text x="870" y="36"  fill="#ffffff" font-size="13" font-weight="600">Client Value &#x2191;</text>
+      <text x="870" y="56"  fill="#909090" font-size="11">better marketing performance</text>
+      <text x="870" y="74"  fill="#909090" font-size="11">faster campaign production</text>
+      <text x="870" y="92"  fill="#909090" font-size="11">data-driven decisions</text>
+      <text x="870" y="110" fill="#909090" font-size="11">scalable content creation</text>
+      <text x="870" y="128" fill="#909090" font-size="11">personalization</text>
+      <text x="870" y="146" fill="#909090" font-size="11">insight into audience behavior</text>
+
+      <!-- AI MARKETING AGENTS BLOCK — "1." badge outside top-left -->
+      <text x="316" y="116" fill="rgba(255,255,255,0.55)" font-size="14" font-weight="700" font-family="'Space Mono',monospace">1.</text>
+      <rect x="338" y="98" width="330" height="225" fill="rgba(250,80,220,0.04)" rx="3" stroke="rgba(250,80,220,0.2)" stroke-width="1"/>
+      <text x="354" y="118" fill="rgba(255,255,255,0.45)" font-size="11">&#x2022; proprietary workflows</text>
+      <text x="354" y="136" fill="rgba(255,255,255,0.45)" font-size="11">&#x2022; marketing intelligence</text>
+      <text x="354" y="154" fill="rgba(255,255,255,0.45)" font-size="11">&#x2022; internal <tspan fill="#FA50DC" font-weight="700">tools</tspan></text>
+      <text x="354" y="172" fill="rgba(255,255,255,0.45)" font-size="11">&#x2022; specialized AI agents</text>
+      <text x="354" y="194" fill="rgba(255,255,255,0.65)" font-size="12" font-weight="600">Examples:</text>
+      <text x="354" y="213" fill="#FA50DC" font-size="12" font-weight="700">AI Marketing Agents</text>
+      <text x="354" y="231" fill="rgba(255,255,255,0.55)" font-size="11">&#x2022; Campaign Planner Agent</text>
+      <text x="354" y="249" fill="rgba(255,255,255,0.55)" font-size="11">&#x2022; Creative Brief Agent</text>
+      <text x="354" y="267" fill="rgba(255,255,255,0.55)" font-size="11">&#x2022; Performance Analyst Agent</text>
+      <text x="354" y="285" fill="rgba(255,255,255,0.55)" font-size="11">&#x2022; Social Listening Agent</text>
+      <text x="354" y="307" fill="rgba(255,255,255,0.45)" font-size="11">These agents use:</text>
+
+
+
+      <!-- THESE AGENTS USE BOX -->
+      <rect x="338" y="350" width="285" height="72" fill="rgba(150,250,0,0.03)" rx="3" stroke="rgba(150,250,0,0.12)" stroke-width="1"/>
+      <text x="352" y="369" fill="rgba(255,255,255,0.45)" font-size="11">&#x2022; your agency's methodology</text>
+      <text x="352" y="387" fill="rgba(255,255,255,0.45)" font-size="11">&#x2022; your structured marketing data</text>
+      <text x="352" y="405" fill="rgba(255,255,255,0.45)" font-size="11">&#x2022; your campaign experience</text>
+
+
+
+      <!-- CHEIL REMIX BANNER — moved right to x=620, "3." badge outside left -->
+      <text x="632" y="433" fill="#96FA00" font-size="13" font-weight="700" font-family="'Space Mono',monospace" letter-spacing="2">AI HUB</text>
+      <text x="594" y="461" fill="rgba(255,255,255,0.55)" font-size="14" font-weight="700" font-family="'Space Mono',monospace">3.</text>
+      <rect x="620" y="442" width="440" height="28" fill="rgba(150,250,0,0.04)" rx="2" stroke="rgba(150,250,0,0.18)" stroke-width="1"/>
+      <text x="632" y="461" fill="#ffffff" font-size="12">Cheil Remix / European Agent Layer /</text>
+      <text x="926" y="461" fill="#ff2222" font-size="12" font-weight="700">GDPR/AI Act</text>
+
+
+
+      <!-- Bent arrow: agents top-right to Client Value -->
+      <path d="M 668 148 Q 760 60 860 50" stroke="#909090" stroke-width="1.2" fill="none" marker-end="url(#arrowhead)"/>
+
+      <!-- PLATFORM BLOCK (right, below Cheil) — "2." badge outside top-left -->
+      <text x="735" y="501" fill="#96FA00" font-size="13" font-weight="700" font-family="'Space Mono',monospace" letter-spacing="2">AI PLATFORM</text>
+      <text x="693" y="528" fill="rgba(255,255,255,0.55)" font-size="14" font-weight="700" font-family="'Space Mono',monospace">2.</text>
+      <rect x="720" y="510" width="280" height="128" fill="rgba(255,115,0,0.04)" rx="3" stroke="rgba(255,115,0,0.2)" stroke-width="1"/>
+      <text x="735" y="530" fill="rgba(255,255,255,0.45)" font-size="11">&#x2022; agent frameworks</text>
+      <text x="735" y="548" fill="rgba(255,255,255,0.45)" font-size="11">&#x2022; automation platforms</text>
+      <text x="735" y="566" fill="rgba(255,255,255,0.45)" font-size="11">&#x2022; data platforms</text>
+      <text x="735" y="584" fill="rgba(255,255,255,0.45)" font-size="11">&#x2022; integration systems</text>
+      <text x="735" y="604" fill="rgba(255,255,255,0.6)" font-size="11">Typical tools:</text>
+      <text x="735" y="622" fill="rgba(255,255,255,0.45)" font-size="11">&#x2022; LangChain  &#x2022; AutoGPT  &#x2022; Zapier  &#x2022; Airtable</text>
+
+
+
+      <!-- INFRASTRUCTURE BLOCK -->
+      <rect x="885" y="660" width="280" height="88" fill="rgba(0,212,255,0.04)" rx="3" stroke="rgba(0,212,255,0.15)" stroke-width="1"/>
+      <text x="900" y="680" fill="rgba(255,255,255,0.45)" font-size="11">Cloud infrastructure  &#x2022;  GPUs</text>
+      <text x="900" y="698" fill="rgba(255,255,255,0.45)" font-size="11">foundation models  &#x2022;  vector databases</text>
+      <text x="900" y="716" fill="rgba(255,255,255,0.45)" font-size="11">workflow automation</text>
+      <text x="900" y="738" fill="rgba(0,212,255,0.7)" font-size="10" font-family="'Space Mono',monospace">Platforms: AWS  &#x2022;  Azure  &#x2022;  OpenAI  &#x2022;  Pinecone</text>
+
+    </svg>
+    </div>
+  </div>
+
+
+
+<script>
+const container = document.getElementById('scrollContainer');
+const panels = Array.from(document.querySelectorAll('.panel'));
+const navDotsEl = document.getElementById('navDots');
+let current = 0;
+
+// Build nav dots
+panels.forEach((p, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  dot.title = p.dataset.label || '';
+  dot.addEventListener('click', () => goTo(i));
+  navDotsEl.appendChild(dot);
+});
+
+function goTo(i) {
+  i = Math.max(0, Math.min(panels.length - 1, i));
+  current = i;
+  panels[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+  updateNav();
+  revealPanel(i);
+}
+
+function updateNav() {
+  document.querySelectorAll('.nav-dot').forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+}
+
+function revealPanel(i) {
+  panels[i].querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+}
+
+// Scroll detection
+let scrollTimer;
+container.addEventListener('scroll', () => {
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => {
+    const idx = Math.round(container.scrollLeft / window.innerWidth);
+    if (idx !== current) {
+      current = idx;
+      updateNav();
+      revealPanel(idx);
+    }
+  }, 80);
+});
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(current - 1);
+});
+
+// Wheel
+let wheelLock = false;
+document.addEventListener('wheel', e => {
+  if (wheelLock) return;
+  wheelLock = true;
+  setTimeout(() => wheelLock = false, 800);
+  if (e.deltaY > 0 || e.deltaX > 0) goTo(current + 1);
+  else goTo(current - 1);
+}, { passive: true });
+
+// Touch
+let tx = 0;
+document.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+document.addEventListener('touchend', e => {
+  const diff = tx - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
+}, { passive: true });
+
+// Init
+revealPanel(0);
+</script>
+</body>
+</html>
